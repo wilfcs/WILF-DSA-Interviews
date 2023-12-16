@@ -327,3 +327,24 @@ public:
 // note: instead of i*i you can write i*2 as well but i*i is more efficient. Numbers smaller than i * i would have been already marked as not prime by the time we reach i.
 ```
 TC-> O(n*log(log n))
+
+# [118. Pascal's Triangle](https://leetcode.com/problems/pascals-triangle/)
+## Approach ->
+- Pretty easy approach. We will at least have numRows=1 according to the constraints. So just make a vector of vector ans and push back 1 in it. We can also observe that no matter what the row number is, it's first and the last elements are always 1. So run a loop from 1 to numRows-1 and on each iteration push back 1 at the start and end. And in the middle observe how the value is the sum of the values of the above two indexes.
+---
+## Code ->
+```cpp
+vector<vector<int>> generate(int numRows) {
+        vector<vector<int>> ans(numRows);
+        ans[0].push_back(1);
+        for(int i=1; i<numRows; i++){
+            ans[i].push_back(ans[i-1][0]);
+            for(int j=1; j<i; j++){
+                ans[i].push_back(ans[i-1][j-1] + ans[i-1][j]);
+            }
+            ans[i].push_back(1);
+        }
+
+        return ans;
+    }
+```
