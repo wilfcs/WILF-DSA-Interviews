@@ -338,7 +338,7 @@ vector<vector<int>> generate(int numRows) {
         vector<vector<int>> ans(numRows);
         ans[0].push_back(1);
         for(int i=1; i<numRows; i++){
-            ans[i].push_back(ans[i-1][0]);
+            ans[i].push_back(1);
             for(int j=1; j<i; j++){
                 ans[i].push_back(ans[i-1][j-1] + ans[i-1][j]);
             }
@@ -347,4 +347,27 @@ vector<vector<int>> generate(int numRows) {
 
         return ans;
     }
+```
+# [53. Maximum Subarray](https://leetcode.com/problems/maximum-subarray/description/)
+
+## Approach ->
+Kadane's Algorithm
+---
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int ans = nums[0];
+        int sum = 0;
+
+        for(int i=0; i<nums.size(); i++){
+            sum+=nums[i];
+            ans = max(sum, ans);
+            if(sum<0) sum = 0;     
+        }
+        return ans;
+    }
+};
 ```
