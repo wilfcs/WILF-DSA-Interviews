@@ -433,3 +433,29 @@ public:
     }
 };
 ```
+
+# [122. Best Time to Buy and Sell Stock II](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/description/)
+
+## Approaches ->
+1. Brute Force
+2. Only buy on a day if you can make profit on the next day else don't.
+---
+## Code ->
+```cpp
+class Solution
+{
+public:
+    int maxProfit(vector<int> &prices)
+    {
+        int totalProfit=0;
+        for(int i=1; i<prices.size(); i++){
+            if(prices[i] > prices[i-1])
+            {
+                totalProfit += prices[i] - prices[i-1];
+            }
+        
+        }
+        return totalProfit;
+    }
+};
+```
