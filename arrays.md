@@ -352,6 +352,7 @@ vector<vector<int>> generate(int numRows) {
 
 ## Approach ->
 Kadane's Algorithm
+
 ---
 
 ## Code ->
@@ -368,6 +369,42 @@ public:
             if(sum<0) sum = 0;     
         }
         return ans;
+    }
+};
+```
+# [75. Sort Colors](https://leetcode.com/problems/sort-colors/)
+
+## Approaches ->
+1. Sort the array
+2. Count sort -> Count the no. of 0s 1s and 2s and print or return them in order.
+3. DNF Algorithm -> Create low, mid and high. All of the elements to the left of low should be 0, right of high should be 2 and 1 should be in the middle of high and low. Let low and mid point to the first element and high point to last. When we encounter ->
+```
+0    ->    swap(arr[low], arr[mid];
+           low++; mid++;
+
+1    ->    mid++;
+
+2    ->    swap(arr[high], arr[mid]);
+           high--;
+```
+		repeat this process till mid crosses high.
+
+---
+
+Code ->
+```
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        int low =0, mid=0, high=nums.size()-1;
+        
+        while(mid<=high){
+            if(nums[mid]==0)
+                swap(nums[low++], nums[mid++]);
+            else if(nums[mid]==1)
+                mid++;
+            else swap(nums[high--], nums[mid]);
+        }
     }
 };
 ```
