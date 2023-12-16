@@ -459,3 +459,24 @@ public:
     }
 };
 ```
+# [48. Rotate Image](https://leetcode.com/problems/rotate-image/description/)
+## Approaches ->
+1. Brute force -> Take another dummy matrix of n*n, and then take the first row of the matrix and put it in the last column of the dummy matrix, take the second row of the matrix, and put it in the second last column of the matrix and so.
+2. Optimized (In place) -> By observation, we see that the first column of the original matrix is the reverse of the first row of the rotated matrix, so that’s why we transpose the matrix and then reverse each row, and since we are making changes in the matrix itself space complexity gets reduced to O(1).
+---
+
+## CODE -> 
+```
+void rotate(vector<vector<int>>& matrix) {
+        // Transpose of matrix (Try this on your own first)
+        for(int i=0; i<matrix.size(); i++)
+            for(int j=i; j<matrix[0].size(); j++)  // note how j=i
+                swap(matrix[i][j], matrix[j][i]);
+        // Reverse the matrix
+        for(int i=0; i<matrix.size(); i++){
+            int x = 0;
+            int y = matrix[0].size()-1;
+            while(x<y) swap(matrix[i][x++], matrix[i][y--]);
+        }
+    }
+```
