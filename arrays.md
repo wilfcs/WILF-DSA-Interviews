@@ -391,7 +391,7 @@ public:
 
 ---
 
-Code ->
+## Code ->
 ```
 class Solution {
 public:
@@ -405,6 +405,31 @@ public:
                 mid++;
             else swap(nums[high--], nums[mid]);
         }
+    }
+};
+```
+
+# [121. Best Time to Buy and Sell Stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/description/)
+
+## Approaches->
+1. Maintain a lmin and rmax hashtable where we store min elements from left and max elements from right respectively. Reverse the rmax. Then return the maximum difference between lmin and rmax at each index. That's your answer. SC-> O(n) TC-> O(n)
+2. Keep a minimum to store minimum price and a maximum to store maximum profit. Traverse the array, if the visited element is smaller than minimum price then update the min price and move on. Else compare the profit (p = price[i] - minNum) with max profit and update max profit.
+
+---
+## Code ->
+```
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int maxProfit = 0; // don't ever make this as INT_MIN, the least profit you can have is 0
+        int minP = prices[0];
+
+        for(int i=1; i<prices.size(); i++){
+            minP = min(minP, prices[i]);
+            maxProfit = max(maxProfit, prices[i]-minP); 
+        }
+
+        return maxProfit;
     }
 };
 ```
