@@ -20,3 +20,16 @@ public:
     }
 };
 ```
+
+# [1688. Count of Matches in Tournament](https://leetcode.com/problems/count-of-matches-in-tournament/description/)
+## Approach->
+Each team other than the winner loses exactly once.
+## Code->
+```cpp
+class Solution {
+public:
+    int numberOfMatches(int n) {
+        return n-1;
+    }
+};
+```
