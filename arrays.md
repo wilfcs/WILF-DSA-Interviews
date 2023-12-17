@@ -519,6 +519,7 @@ public:
 Put elements of nums2 in nums1 at the end and sort nums1. [TC->(N+M)log(N+M), SC->1]
 Put a pointer at nums1's start and another at nums2's start and put the elements in a sorted manner in a third array and return the third array. [TC->N+M, SC->N+M]
 The idea is to take advantage of sorted nums1 and nums2. Dry run the code to understand first because this explanation in more complex than the code itself lol. Put a pointer 'a' at position m-1 of nums1 and a pointer 'b' at position n-1 of nums2. Put a pointer 'i' at the end of nums1 i.e. n+m-1 position. Now we can compare if nums1[a] is greater than nums2[b] then place the value of nums1[a] at the end of nums1 i.e. nums1[i] and then do a-- and i--. If nums2[b] is greater than nums1[a] then place the value of nums2[b] at nums1[i] and then do b-- and i--. Please keep in mind that it is possible that at the end we might have travelled for the entire nums1 but there might be elements left in nums2, so to tackle that we place all the values inside nums2 in nums1 with another while loop. [TC->N+M, SC->1]
+
 ---
 ## Code ->
 ```cpp
@@ -535,6 +536,64 @@ public:
         }
         while(b>=0)
             nums1[i--] = nums2[b--];
+    }
+};
+```
+# [287. Find the Duplicate Number](https://leetcode.com/problems/find-the-duplicate-number/description/)
+
+## Approaches ->
+- Sort the array. Find dupl. [TC -> O(log N)]
+- Hashtable. [SC -> O(N)]
+- Using Set -> After insertion of the elements in set, if the size did not increase then the element is dupl.
+- Tortoise method aka. Linkedlist cycle method. We take a fast and a slow pointer, move the fast pointer by two steps and slow by one for each real position in array (i.e. slow = nums[slow]). When both the slow and the fast pointer have the same values, shift either the fast or the slow pointer to the beginning of the array. Now move slow and fast pointer by one step only. When thier values are same again, the value is the answer.
+- Swap sort.
+
+---
+## Codes ->
+
+Tortoise Method ->
+```cpp
+class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+        int fast = nums[0];
+        int slow = nums[0];
+        do{
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+        } while(fast!=slow);
+        fast = nums[0];
+        while(fast!=slow){
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+        return slow;
+    }
+};
+```
+
+Swap sort ->
+```cpp
+class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+        int i = 0;
+        int ans=0;
+        int sze = nums.size();
+        while(i<sze)
+        {
+            if(nums[i]!=i+1 )
+            {
+              if(nums[i] == nums[nums[i]-1])
+                    return nums[i];
+                else
+                    swap(nums[i], nums[nums[i]-1]);
+            }
+            else
+                i++;
+        }
+
+        return ans;
     }
 };
 ```
