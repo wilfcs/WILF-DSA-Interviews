@@ -512,3 +512,29 @@ public:
     }
 };
 ```
+
+# [88. Merge Sorted Array](https://leetcode.com/problems/merge-sorted-array/description/)
+
+## Approaches ->
+Put elements of nums2 in nums1 at the end and sort nums1. [TC->(N+M)log(N+M), SC->1]
+Put a pointer at nums1's start and another at nums2's start and put the elements in a sorted manner in a third array and return the third array. [TC->N+M, SC->N+M]
+The idea is to take advantage of sorted nums1 and nums2. Dry run the code to understand first because this explanation in more complex than the code itself lol. Put a pointer 'a' at position m-1 of nums1 and a pointer 'b' at position n-1 of nums2. Put a pointer 'i' at the end of nums1 i.e. n+m-1 position. Now we can compare if nums1[a] is greater than nums2[b] then place the value of nums1[a] at the end of nums1 i.e. nums1[i] and then do a-- and i--. If nums2[b] is greater than nums1[a] then place the value of nums2[b] at nums1[i] and then do b-- and i--. Please keep in mind that it is possible that at the end we might have travelled for the entire nums1 but there might be elements left in nums2, so to tackle that we place all the values inside nums2 in nums1 with another while loop. [TC->N+M, SC->1]
+---
+## Code ->
+```cpp
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        int a = m-1;
+        int b = n-1;
+        int i = m+n-1;
+       
+        while(a>=0 && b>=0){
+            if(nums1[a]>nums2[b]) nums1[i--] = nums1[a--];
+            else nums1[i--] = nums2[b--];
+        }
+        while(b>=0)
+            nums1[i--] = nums2[b--];
+    }
+};
+```
