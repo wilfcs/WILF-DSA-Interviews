@@ -480,3 +480,35 @@ void rotate(vector<vector<int>>& matrix) {
         }
     }
 ```
+
+# [56. Merge Intervals](https://leetcode.com/problems/merge-intervals/description/)
+
+## Approach ->
+First we will sort the array so that we have it sorted by the first element of all the vectors inside the vector. Now the intuition is that we will insert the first element in the answer vector and as we traverse we can find two different cases:
+Case 1: If the current interval can be merged with the last inserted interval of the answer vector:
+In this case, we will update the end of the last inserted interval with the maximum(current interval’s end, last inserted interval’s end) and continue moving afterward. 
+
+Case 2: If the current interval cannot be merged with the last inserted interval of the answer vector:
+In this case, we will insert the current interval in the answer array as it is. And after this insertion, the last inserted interval of the answer list will obviously be updated to the current interval. 
+
+How to check if the current interval is not a part of the selected interval:
+We will compare the current interval’s start with the end of the selected interval. If the start is greater than the end, we can conclude the current interval cannot be a part of the selected interval.
+
+Do see the code properly because it is an beautiful example of how to use vec.back().
+
+```cpp
+class Solution {
+public:
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        vector<vector<int>> ans;
+        sort(intervals.begin(), intervals.end()); // sort the intervals
+        for(int i=0; i<intervals.size(); i++){
+            if(ans.empty() || ans.back()[1]<intervals[i][0])  // if first element or case 2
+                ans.push_back(intervals[i]);
+            else // case 1
+                ans.back()[1] = max(ans.back()[1],intervals[i][1]); // insert the max of last element
+        }
+        return ans;
+    }
+};
+```
