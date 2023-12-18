@@ -626,7 +626,8 @@ public:
 ## Approaches->
 - Brute Force
 - Hashmap
-- 1. Initialize 4 variables:
+- Best approach->
+1. Initialize 4 variables:
 cnt1 & cnt2 –  for tracking the counts of elements
 el1 & el2 – for storing the majority of elements.
 2. Traverse through the given array.
