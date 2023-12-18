@@ -516,9 +516,9 @@ public:
 # [88. Merge Sorted Array](https://leetcode.com/problems/merge-sorted-array/description/)
 
 ## Approaches ->
-Put elements of nums2 in nums1 at the end and sort nums1. [TC->(N+M)log(N+M), SC->1]
-Put a pointer at nums1's start and another at nums2's start and put the elements in a sorted manner in a third array and return the third array. [TC->N+M, SC->N+M]
-The idea is to take advantage of sorted nums1 and nums2. Dry run the code to understand first because this explanation in more complex than the code itself lol. Put a pointer 'a' at position m-1 of nums1 and a pointer 'b' at position n-1 of nums2. Put a pointer 'i' at the end of nums1 i.e. n+m-1 position. Now we can compare if nums1[a] is greater than nums2[b] then place the value of nums1[a] at the end of nums1 i.e. nums1[i] and then do a-- and i--. If nums2[b] is greater than nums1[a] then place the value of nums2[b] at nums1[i] and then do b-- and i--. Please keep in mind that it is possible that at the end we might have travelled for the entire nums1 but there might be elements left in nums2, so to tackle that we place all the values inside nums2 in nums1 with another while loop. [TC->N+M, SC->1]
+- Put elements of nums2 in nums1 at the end and sort nums1. [TC->(N+M)log(N+M), SC->1]
+- Put a pointer at nums1's start and another at nums2's start and put the elements in a sorted manner in a third array and return the third array. [TC->N+M, SC->N+M]
+- The idea is to take advantage of sorted nums1 and nums2. Dry run the code to understand first because this explanation in more complex than the code itself lol. Put a pointer 'a' at position m-1 of nums1 and a pointer 'b' at position n-1 of nums2. Put a pointer 'i' at the end of nums1 i.e. n+m-1 position. Now we can compare if nums1[a] is greater than nums2[b] then place the value of nums1[a] at the end of nums1 i.e. nums1[i] and then do a-- and i--. If nums2[b] is greater than nums1[a] then place the value of nums2[b] at nums1[i] and then do b-- and i--. Please keep in mind that it is possible that at the end we might have travelled for the entire nums1 but there might be elements left in nums2, so to tackle that we place all the values inside nums2 in nums1 with another while loop. [TC->N+M, SC->1]
 
 ---
 ## Code ->
@@ -600,9 +600,9 @@ public:
 # [169. Majority Element](https://leetcode.com/problems/majority-element/description/)
 
 ## Approach->
-Sort the array. If any element occur size/2+1 times then that is the ans. Or the element that is in the center of the array is the ans.
-Make a map and find the occurrence of each elem.
-Maintain a majorityElement integer and a count integer to count the frequency.  Go to every element and if the count is 0 then assume that the present element is majorityElement. If the present element is equal to majorityElement then increase the count else decrease the count. This is based on the fact that the majority element will always kill the frequency of all the other elements by atleast 1. Look at the code now you will understand the approach.
+- Sort the array. If any element occur size/2+1 times then that is the ans. Or the element that is in the center of the array is the ans.
+- Make a map and find the occurrence of each elem.
+- Maintain a majorityElement integer and a count integer to count the frequency.  Go to every element and if the count is 0 then assume that the present element is majorityElement. If the present element is equal to majorityElement then increase the count else decrease the count. This is based on the fact that the majority element will always kill the frequency of all the other elements by atleast 1. Look at the code now you will understand the approach.
 
 ---
 ## Code ->
@@ -618,6 +618,61 @@ public:
             else count--;             
         }
         return ele;
+    }
+};
+```
+# [229. Majority Element II](https://leetcode.com/problems/majority-element-ii/description/)
+
+## Approaches->
+- Brute Force
+- Hashmap
+- 1. Initialize 4 variables:
+cnt1 & cnt2 –  for tracking the counts of elements
+el1 & el2 – for storing the majority of elements.
+2. Traverse through the given array.
+    - If cnt1 is 0 and the current element is not el2 then store the current element of the array as el1 along with increasing the cnt1 value by 1.
+    - If cnt2 is 0 and the current element is not el1 then store the current element of the array as el2 along with increasing the cnt2 value by 1.
+    - If the current element and el1 are the same increase the cnt1 by 1.
+    - If the current element and el2 are the same increase the cnt2 by 1.
+    - Other than all the above cases: decrease cnt1 and cnt2 by 1.
+3. The integers present in el1 & el2 should be the result we are expecting. So, using another loop, we will manually check their counts if they are greater than the floor(N/3).
+
+---
+## Code->
+```cpp
+class Solution {
+public:
+    vector<int> majorityElement(vector<int>& nums) {
+        int c1=0, c2=0;
+        int e1,e2;
+
+        for(int i=0; i<nums.size(); i++){
+            if(c1==0 && nums[i]!=e2){
+                c1++;
+                e1 = nums[i];
+            }
+            else if(c2==0 && nums[i]!=e1){
+                c2++;
+                e2 = nums[i];
+            }
+            else if(nums[i]==e1) c1++;
+            else if(nums[i]==e2) c2++;
+            else{
+                c1--; c2--;
+            }
+        }
+
+        vector <int> ans;
+        c1=0; c2=0;
+        for(int i=0; i<nums.size(); i++){
+            if(nums[i]==e1) c1++;
+            if(nums[i]==e2) c2++;
+        }
+
+        if(c1>nums.size()/3) ans.push_back(e1);
+        if(c2>nums.size()/3) ans.push_back(e2);
+
+        return ans;
     }
 };
 ```
