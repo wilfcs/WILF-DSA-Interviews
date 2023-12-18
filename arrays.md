@@ -597,3 +597,27 @@ public:
     }
 };
 ```
+# [169. Majority Element](https://leetcode.com/problems/majority-element/description/)
+
+## Approach->
+Sort the array. If any element occur size/2+1 times then that is the ans. Or the element that is in the center of the array is the ans.
+Make a map and find the occurrence of each elem.
+Maintain a majorityElement integer and a count integer to count the frequency.  Go to every element and if the count is 0 then assume that the present element is majorityElement. If the present element is equal to majorityElement then increase the count else decrease the count. This is based on the fact that the majority element will always kill the frequency of all the other elements by atleast 1. Look at the code now you will understand the approach.
+
+---
+## Code ->
+
+```cpp
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        int count=0, ele=0;
+        for(int i=0; i<nums.size(); i++){
+            if(count==0) ele=nums[i];
+            if(ele==nums[i]) count++;
+            else count--;             
+        }
+        return ele;
+    }
+};
+```
