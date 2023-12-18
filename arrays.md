@@ -745,3 +745,54 @@ public:
     }
 };
 ```
+
+# [18. 4Sum](https://leetcode.com/problems/4sum/description/)
+
+## Approaches ->
+- Brute force - O(N^4)
+- Sort the array. Run 3 for loops and then find the 4th element by finding it using binary search. - O(log N . N^3)
+- Sort the array. Run 2 for loops and then apply 3sum wali chiz to find the remaining two elements, i.e. place start at j+1 and place end at nums[size]-1 and then increment decrement as required. CATCH - IN THIS METHOD YOU WILL ENCOUNTER INTEGER OVERFLOW IF YOU CHECK THE IF CONDITIONS LIKE THIS - nums[i]+nums[j]+nums[start]+nums[end]. SO INSTEAD OF THAT, FIND TARGET2 BY SUBTRACTING TWO ELEMENTS FROM TARGET AND THEN CHECK THE IF CONDITIONS FOR TWO NUMBERS ONLY. REFER THE CODE TO UNDERSTAND.
+
+---
+## Code ->
+```cpp
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        vector <vector <int>> ans;
+        if(nums.size()<4) return ans;
+       
+        sort(nums.begin(), nums.end());
+       
+        for(int i=0; i<nums.size()-3; i++){           
+            for(int j=i+1; j<nums.size()-2; j++){
+               
+                int st = j+1;
+                int en = nums.size()-1;
+           
+                // we find target 2 to avoid overflow of integer while we find the sum of all the values of a possible quadruplets.
+                int target2 = target - nums[i] - nums[j];
+               
+                while(st<en){
+                    if(( nums[st] + nums[en]) == target2){
+                        ans.push_back({nums[i], nums[j], nums[st], nums[en]});
+                       
+                        while(st<en && nums[st]==nums[st+1]) st++; // To avoid duplicate array
+                        while(st<en && nums[en]==nums[en-1]) en--;
+                        st++; en--;
+                    }
+                    else if(( nums[st] + nums[en]) > target2){
+                        en--;
+                    }
+                    else{
+                        st++;
+                    }     
+                }
+                while(j+1<nums.size()-2 && nums[j+1]==nums[j]) j++;
+                while(i+1<nums.size()-3 && nums[i+1]==nums[i]) i++;
+            }
+        }
+        return ans;
+    }
+};
+```
