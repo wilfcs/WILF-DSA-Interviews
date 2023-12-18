@@ -702,3 +702,46 @@ sort(arr.begin(), arr.end());
     return "NO";
 ```
 
+# [15. 3Sum](https://leetcode.com/problems/3sum/description/)
+
+## Approaches->
+- Brute force.
+- Best approach is the combination of the best approach of 2 sum problem combined with the for loop for one extra element -> 
+    - Sort the array to simplify traversal and avoid duplicate answers.
+    - Use a for-loop to iterate over unique elements (nums[i]).
+    - Maintain two pointers (low and high) to find triplet sums equal to the negative of the current element.
+    - Skip duplicate elements in the for-loop to avoid duplicate triplets.
+    - Output the distinct triplets that satisfy the condition nums[i] + nums[low] + nums[high] == 0.
+
+---
+## Code->
+```cpp
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector <vector <int>> ans;
+        if(nums.size()<3) return ans;     
+        sort(nums.begin(), nums.end()); 
+       
+        for(int i=0; i<nums.size()-2; i++){
+            if(i && nums[i]==nums[i-1]) continue;// we want to ignore duplicate answers, that's why we will move for duplicate nums[i]. eg-> -1 -1 -1 2 3.. we will check for the first -1 and then jump i to 2.
+           
+            int lo = i+1, hi = nums.size()-1;   
+            while(lo < hi){
+                if(nums[i]+nums[hi]+nums[lo]==0){
+                    ans.push_back({nums[i], nums[hi], nums[lo]});
+                   
+                    // we will also move the low and the high pointer if the elements on them is equal to avoid duplicate answers. eg-> ...-1 2(low) 2 3 4 5 5(hi).. then we move like -> ..-1 2 2 3(low) 4(hi) 5 5.
+                    while(lo<hi && nums[lo] == nums[lo+1]) lo++;
+                    while(lo<hi && nums[hi] == nums[hi-1]) hi--;
+                    lo++;
+                    hi--;
+                }
+                else if(nums[i]+nums[hi]+nums[lo]>0) hi--;
+                else lo++;     
+            }
+        }
+        return ans;
+    }
+};
+```
