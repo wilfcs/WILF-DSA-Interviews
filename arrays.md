@@ -263,8 +263,9 @@ You assume the 2d matrix to be 1d matrix and use binary search.
 ```
 # [240. Search a 2D Matrix II](https://leetcode.com/problems/search-a-2d-matrix-ii/)
 ## Approach ->
-A simple search with TC O(n*m). Apply binary search in each row with TC O(n*log m). Most optimal solution is->
-Now this might be a little tricky buy I want you to look at the first picture and try to observe something here. On index 0,0 the elements in the row as well as columns is in increasing order. So this won't help us into solving this problem. Same is the case with the index 4,4.. The row is decreasing and the columns is decreasing too. But if you go to index 0,4 or 4,0 the case is different and we can take advantage of that. So for instance let's choose 0,4 and the idea is to see if the target is greater or smaller than the element at that position. If the target is greater simply go to the left, if the target is smaller simply go down. Do this while we are inside the bounds. This is basically a binary search problem as well because although here we are not applying any typical binary search but we are reducing the size of the search using logic and hence it is a binary search problem.
+- A simple search with TC O(n*m). 
+- Apply binary search in each row with TC O(n*log m). 
+- Most optimal solution is-> Now this might be a little tricky buy I want you to look at the first picture and try to observe something here. On index 0,0 the elements in the row as well as columns is in increasing order. So this won't help us into solving this problem. Same is the case with the index 4,4.. The row is decreasing and the columns is decreasing too. But if you go to index 0,4 or 4,0 the case is different and we can take advantage of that. So for instance let's choose 0,4 and the idea is to see if the target is greater or smaller than the element at that position. If the target is greater simply go to the left, if the target is smaller simply go down. Do this while we are inside the bounds. This is basically a binary search problem as well because although here we are not applying any typical binary search but we are reducing the size of the search using logic and hence it is a binary search problem. TC-> O(n) or O(m)
 
 ## Code->
 ```cpp
@@ -677,3 +678,27 @@ public:
     }
 };
 ```
+
+# [1. Two Sum](https://leetcode.com/problems/two-sum/description/)
+
+## Approaches ->
+- Brute Force TC->O(n^2)
+- Keep a hashmap where you store all the elements in the array. Traverse the array and do `toFind = target-arr[i]`. If you find `toFind` in the hashmap then you return their indices. TC-> O(n) SC-> O(n)
+- Two pointer -> Sort the array. We will keep a left pointer at the first index and a right pointer at the last index. Now until left < right, we will check the sum of arr[left] and arr[right]. Now if the sum < target, we need bigger numbers and so we will increment the left pointer. But if sum > target, we need to consider lesser numbers and so we will decrement the right pointer. 
+If sum == target we will return the indices.
+
+## Code -> 
+```cpp
+sort(arr.begin(), arr.end());
+    int left = 0, right = n - 1;
+    while (left < right) {
+        int sum = arr[left] + arr[right];
+        if (sum == target) {
+            return "YES";
+        }
+        else if (sum < target) left++;
+        else right--;
+    }
+    return "NO";
+```
+
