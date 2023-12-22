@@ -2,8 +2,10 @@
 
 ## Question->
 Given a number N and a bit number K, check if the Kth bit of N is set or not. A bit is called set if it is 1.
-Example
+
+Example:
 Input: n = 5, k = 1
+
 Output: SET
 Explanation: 5 is represented as 101 in binary and has its first bit set.
 
@@ -21,5 +23,41 @@ void isKthBitSet(int n, int k)
         cout << "SET";
     else
         cout << "NOT SET";
+}
+```
+
+# 2. Least Significant Bit which is set
+
+## Question ->
+Find the position of the first 1 from right to left, in the binary representation of an Integer.
+
+Examples:
+Input: n = 18
+Output: 2
+
+Explanation: Binary Representation of 18 is 010010, hence the position of the first set bit from the right is 2.
+
+---
+## Approach ->
+Start from 0 positions and iterate till the 32nd-bit position if any bit is 1 break the loop and print the index else 
+
+## Code ->
+```cpp
+int PositionRightmostSetbit(int n)
+{
+     if (n == 0) 
+    {
+        return 0;
+    }
+    else {
+        int pos = 1;
+        for (int i = 0; i < 32; i++) {
+            if (!(n & (1 << i)))
+                pos++;
+            else
+                break;
+        }
+        return pos;
+    }
 }
 ```
