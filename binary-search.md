@@ -4,6 +4,10 @@ The lower bound algorithm finds the first or the smallest index in a sorted arra
 
 The lower bound is the smallest index, ind, where arr[ind] >= x. But if any such index is not found, the lower bound algorithm returns n i.e. size of the given array.
 
+Example-> arr[] = {1, 2, 4, 4, 4, 5, 9, 9}, x=4.
+
+Output: 2 (as lower bound of 4 is at index 2. whereas upper bound of 4 is at index 5 as till index 4 there was 4 but at index 5 there is something greater than 4 (this will depend according to the question, don't worry about it so much))
+
 ---
 ## Approaches ->
 - Naive approach (Using linear search)
@@ -37,6 +41,33 @@ int lowerBound(vector<int> arr, int n, int x) {
 }
 ```
 - There's another way of doing this and that is using STL in cpp. 
-- lb = lower_bound(arr.begin(), arr.end(), x) - arr.begin();
+- `lb = lower_bound(arr.begin(), arr.end(), x) - arr.begin();`
 - This will return the index where there is lb.
-- Here, x is the element we are searching the lb for. lower_bound(arr.begin(), arr.end(), x) will return an iterator hence we are subtracting it with arr.begin() to get the index value.
+- Here, x is the element we are searching the lb for. lower_bound(arr.begin(), arr.end(), x) will return an iterator hence we are subtracting it with arr.begin() to get the index value. So while solving problems you will most likely be using stl so remember it.
+
+# Upper bound
+Example -> arr[] = {1, 2, 4, 4, 4, 5, 9, 9}, x=4.
+
+Output -> 5 (as at index 5 there is something greater than 4)
+
+## Code ->
+```cpp
+int lowerBound(vector<int> arr, int n, int x) {
+    int low = 0, high = n - 1;
+    int ans = n;
+
+    while (low <= high) {
+        int mid = (low + high) / 2;
+        // maybe an answer
+        if (arr[mid] > x) { // Only this changed, rest everything is same as the code of lower bound
+            ans = mid;
+            //look for smaller index on the left
+            high = mid - 1;
+        }
+        else {
+            low = mid + 1; // look on the right
+        }
+    }
+    return ans;
+}
+```
