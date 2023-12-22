@@ -76,7 +76,7 @@ int lowerBound(vector<int> arr, int n, int x) {
 
 # [34. Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/description/)
 
-## Approaches ->
+## Approach ->
 - This is a slight variation of the lower bound and upper bound problem. Here the approach is fairly simple, if we need to find the first positon of an element then use normal binary search but when you find the element we acutally need to update the answer but also check on the left side of the found position. So we will find the left side and in case of the last position when we find the element at any position we will only check on its right.
 
 ## Code ->
@@ -117,9 +117,28 @@ public:
     vector<int> searchRange(vector<int>& nums, int target) {
         vector<int> ans;
         ans.push_back(lowerBound(nums, target));
-        ans.push_back(upperBound(nums, target));
+        ans.push_back(upperBound(nums, targt));
 
         return ans;
     }
 };
 ```
+
+# [33. Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/description/)
+
+## Approach ->
+The approach is fairly simple once you actually understand it. To utilize the binary search algorithm effectively, it is crucial to ensure that the input array is sorted. By having a sorted array, we guarantee that each index divides the array into two sorted halves. In the search process, we compare the target value with the middle element, i.e. arr[mid], and then eliminate either the left or right half accordingly. This elimination becomes feasible due to the inherent property of the sorted halves(i.e. Both halves always remain sorted).
+
+However, in this case, the array is both rotated and sorted. As a result, the property of having sorted halves no longer holds. This disruption in the sorting order affects the elimination process, making it unreliable to determine the target’s location by solely comparing it with arr[mid]. 
+
+Key Observation: Though the array is rotated, we can clearly notice that for every index, one of the 2 halves will always be sorted.
+
+So, to efficiently search for a target value using this observation, we will follow a simple two-step process:
+
+- First, we identify the sorted half of the array. 
+- Once found, we determine if the target is located within the bounds of this sorted half. 
+-  If not, we eliminate that half from further consideration. 
+-  Conversely, if the target does exist in the sorted half, we eliminate the other half.
+
+It is necessary to first check which half is sorted so we can be completely sure that whether an element is falling within that half or not to make an informative decision whether to element that half or not.
+
