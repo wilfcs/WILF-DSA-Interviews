@@ -71,3 +71,55 @@ int lowerBound(vector<int> arr, int n, int x) {
     return ans;
 }
 ```
+
+- STL: `ub = upper_bound(arr.begin(), arr.end(), x) - arr.begin();`
+
+# [34. Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/description/)
+
+## Approaches ->
+- This is a slight variation of the lower bound and upper bound problem. Here the approach is fairly simple, if we need to find the first positon of an element then use normal binary search but when you find the element we acutally need to update the answer but also check on the left side of the found position. So we will find the left side and in case of the last position when we find the element at any position we will only check on its right.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int lowerBound(vector<int> nums, int target){
+        int lb = -1, lo=0, hi=nums.size()-1, mid; // Initilize lb with -1 because if there is no ans then -1 will be returned.
+         while(lo<=hi){
+            mid = (lo+hi)/2;
+            if(nums[mid]==target){ // if target is found
+                lb = mid; // update the lb to be returned 
+                hi = mid-1; // search on the left
+            }
+            else if(nums[mid]>target)
+                hi = mid-1;
+            else 
+                lo = mid+1;
+        }
+        return lb;
+    }
+    int upperBound(vector<int> nums, int target){
+        int ub = -1, lo=0, hi=nums.size()-1, mid; // Initilize ub with -1 because if there is no ans then -1 will be returned.
+         while(lo<=hi){
+            mid = (lo+hi)/2;
+            if(nums[mid]==target){ // if target is found
+                ub = mid; // update the lb to be returned 
+                lo = mid+1; // search on the right
+            }
+            else if(nums[mid]>target)
+                hi = mid-1;
+            else 
+                lo = mid+1;
+        }
+        return ub;
+    }
+
+    vector<int> searchRange(vector<int>& nums, int target) {
+        vector<int> ans;
+        ans.push_back(lowerBound(nums, target));
+        ans.push_back(upperBound(nums, target));
+
+        return ans;
+    }
+};
+```
