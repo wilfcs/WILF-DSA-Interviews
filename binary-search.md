@@ -142,3 +142,31 @@ So, to efficiently search for a target value using this observation, we will fol
 
 It is necessary to first check which half is sorted so we can be completely sure that whether an element is falling within that half or not to make an informative decision whether to element that half or not.
 
+## Code ->
+```cpp
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int lo = 0, hi = nums.size()-1, mid;
+
+        while(lo <= hi){
+            mid = (lo+hi)/2;
+            if(nums[mid]==target) return mid; // if target found, return index
+
+            if(nums[mid]>=nums[lo]){ // identified that left side is sorted
+                if(nums[mid]>target && nums[lo]<=target) // if the target is between the sorted side
+                    hi = mid-1;
+                else lo = mid+1; // not between the sorted side
+            }
+            else{   // identifed that right side is sorted
+                if(nums[mid]<target && nums[hi]>=target) // if the target is between the sorted side
+                    lo = mid+1;
+                else hi = mid-1; // not between the sorted side
+            }
+        }
+
+        return -1;
+    }
+};
+```
+
