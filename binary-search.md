@@ -169,4 +169,37 @@ public:
     }
 };
 ```
+# [162. Find Peak Element](https://leetcode.com/problems/find-peak-element/description/)
 
+## Approach ->
+First let us understand the question. What is a peak element?
+
+A peak element in an array refers to the element that is greater than both of its neighbors. Basically, if arr[i] is the peak element, arr[i] > arr[i-1] and arr[i] > arr[i+1].
+
+The element outside the bounds is minus infinity so it will always be smaller than the 0th index and last index element.
+
+The approach is fairly simple, since we want to find the element that is greater than its neighbour element so we will be on a persuit of a greater element always. Hence always eliminate the half that has the smaller neighbour element. Look at the code and you would understand. Remember to handle the edge cases in the beginning and not inside the while loop to avoid long code.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int findPeakElement(vector<int>& nums) {
+        int low=1, hi=nums.size()-2, mid, n=nums.size();
+        if(n==1) return 0; // if size of nums is 1 return 0
+        if(nums[0]>nums[1]) return 0; //if first element is peak return 0
+        if(nums[n-1]>nums[n-2]) return n-1; // if last element is peak 
+
+        while(low<=hi){
+            mid = (low+hi)/2;
+
+            if(nums[mid]>nums[mid-1] && nums[mid]>nums[mid+1])
+                return mid; // if you find peak, return index
+            if(nums[mid+1]>nums[mid-1])
+                low = mid+1; // if the element to the right of index is greater than the element to the left of index then eliminate the left side completely 
+            else hi = mid-1; // else eliminate the right side
+        }
+        return -1;
+    }
+};
+```
