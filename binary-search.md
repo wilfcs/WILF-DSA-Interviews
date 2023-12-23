@@ -203,3 +203,45 @@ public:
     }
 };
 ```
+
+# [540. Single Element in a Sorted Array](https://leetcode.com/problems/single-element-in-a-sorted-array/description/)
+
+## Approach->
+You already know the linear search approaches like hashing and bitwise xor but we have to do it in log n time complexity.
+
+Binary search approach:
+Let us observe something here and then the code will be a breeze to write. If you observe the indexing here then its something like this -> if an element appears twice in a sequence then its first occurence should be even and second should be odd (normal occurence). For example in `nums = [1,1,2,3,3,4,4,8,8]` -> first 1 has 0 index but second has index as 1 (even, odd). But if the occurences are in reverse i.e. first occurence odd and second even then that means that a single element before the appearance of the two elements has disrupted the index position. For example in above example -> first 3 has index 3 and second 3 has index 4 (odd, even).
+
+Thus we can conclude that if the occurence case is normal (even, odd) for element at mid then we have to eliminate the left half because our single element appears somewhere on the right side. But if the occurence case is (odd, even) then we will have to eliminate the right half.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int singleNonDuplicate(vector<int>& nums) {
+         int low = 1, hi = nums.size()-2, mid, n=nums.size();
+         if(n==1) return nums[0];
+         if(nums[0]!=nums[1]) return nums[0];
+         if(nums[n-1]!=nums[n-2]) return nums[n-1]; // check both base conditions at first to avoid long code inside while loop and it gets confusing too if you check base cases with so many if else inside while loop.
+
+         while(low<=hi){
+             mid = (low+hi)/2;
+
+             if(nums[mid]!=nums[mid-1] && nums[mid]!=nums[mid+1]) return nums[mid];
+             
+             // by observation we know that if an element appears twice in a sequence then its first occurence should be even and second should be odd (normal occurence). For example in example 1 -> first 1 has 0 index but second has index as 1. But if the occurences are in reverse i.e. first occurence odd and second even then that means that a single element before the appearance of the two elements has disrupted the index position.
+
+             if(nums[mid]==nums[mid-1]){ // finding if the element before mid is equal to element at mid
+                 if(mid%2==1) low = mid+1; // if normal occurence then eliminate left side
+                 else hi = mid-1; // eliminate right side
+             }
+             else{
+                 if(mid%2==1) hi = mid-1;
+                 else low = mid+1;
+             }
+         }    
+
+         return -1; 
+    }
+};
+```
