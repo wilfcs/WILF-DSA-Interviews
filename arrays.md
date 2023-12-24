@@ -797,7 +797,39 @@ public:
 };
 ```
 
-Largest subarray with 0 sum
-560. Subarray Sum Equals K
-10. *Subarray Sums Divisible by K
+# [Largest subarray with 0 sum](https://practice.geeksforgeeks.org/problems/largest-subarray-with-0-sum/1)
+
+## Approaches ->
+- Brute force: Check all subarrays and if their sum is 0 return the biggest one.
+- Using prefix sum: Take an example: 
+
+array->   15 -2  2 -8 1 7 -15 10 23. ans is 5 i.e from -2 to 7.
+
+prefSum-> 15 13 15  7 8 15  0 10 23
+
+As you can clearly observe that to find the max size of subarray with 0 sum we will simply subtract the position of two same elements in the prefix sum, i.e. 15 is in at index 0 and 15 is at index 5. 5-0 = 5. This approach works because as we traverse the array and calculate the prefix sum at each position, encountering the same prefix sum value at different indices implies that the subarray between those indices has a sum of 0. This is due to the fact that the sum of elements between two equal prefix sum values cancels out, leading to a sum of 0. Also if at any position the prefix sum comes out to be 0 then you know that the element at 0 index and the element at ith index have their subarray sum as 0. To tackle this we will use map and have 0 in it as index -1.
+
+## Code ->
+```cpp
+class Solution{
+    public:
+    int maxLen(vector<int>&A, int n)
+    {   
+        unordered_map<int, int> mp; //unordered map cause TC to find an elem is O(1)
+        mp[0] = -1; // initialize 0 as -1 index
+        int ans = 0;
+        int sum = 0;
+
+        for (int i = 0; i < A.size(); i++) {
+            sum += A[i];
+            if (mp.find(sum) != mp.end()) {
+                ans = max(ans, i - mp[sum]);
+                continue;
+            }
+            mp[sum] = i;
+        }
+        return ans;
+    }
+};
+```
 
