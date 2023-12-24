@@ -245,3 +245,72 @@ public:
     }
 };
 ```
+
+# [1011. Capacity To Ship Packages Within D Days](https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/)
+
+## Approaches ->
+- Brute Force: 
+
+On observation we can conclude that the possible capacity of the ship must lie between the range of maximum element in the weights array to the summation of all elements in weights array. 
+
+For example -> Input: weights = [1,2,3,4,5,6,7,8,9,10], days = 5
+Output: 15
+
+Here the range of possible capacities will lie between 10 to 55.
+
+Algorithm:
+
+-  We will use a loop(say cap) to check all possible capacities.
+-  Next, inside the loop, we will send each capacity to the findDays() function to get the number of days required for that particular capacity.
+-  The minimum number, for which the number of days <= d, will be the answer.
+
+Time complexity -> O(N * (sum(weights[]) – max(weights[]) + 1)),
+
+- Optimal Approach using binary search:
+
+Algorithm:
+-  First, we will find the maximum element i.e. max(weights[]), and the summation i.e. sum(weights[]) of the given array.
+-  Place the 2 pointers i.e. low and high: Initially, we will place the pointers. The pointer low will point to max(weights[]) and the high will point to sum(weights[]).
+-  Calculate the ‘mid’: Now, inside the loop, we will calculate the value of ‘mid’ using the following formula:
+mid = (low+high) // 2 ( ‘//’ refers to integer division)
+-  Eliminate the halves based on the number of days required for the capacity ‘mid’:
+We will pass the potential capacity, represented by the variable ‘mid’, to the ‘findDays()‘ function. This function will return the number of days required to ship all the weights for the particular capacity, ‘mid’.
+-  1. If munerOfDays <= d: On satisfying this condition, we can conclude that the number ‘mid’ is one of our possible answers. But we want the minimum number. So, we will eliminate the right half and consider the left half(i.e. high = mid-1).
+-  2. Otherwise, the value mid is smaller than the number we want. This means the numbers greater than ‘mid’ should be considered and the right half of ‘mid’ consists of such numbers. So, we will eliminate the left half and consider the right half(i.e. low = mid+1).
+-  Finally, outside the loop, we will return the value of low as the pointer will be pointing to the answer.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int findDays(vector<int> weights, int capacity){
+        int days = 0, sum = 0;
+
+        for(int i=0; i<weights.size(); i++){
+            sum+=weights[i];
+            if(sum<=capacity) continue;
+            days++;
+            sum=weights[i];
+        }
+        return ++days;
+    }
+
+    int shipWithinDays(vector<int>& weights, int days) {
+        // using stl to find high and low.
+        int hi = accumulate(weights.begin(), weights.end(), 0);
+        int lo = *max_element(weights.begin(), weights.end());
+        int mid;
+
+        while(lo<=hi){
+            mid = (lo+hi)/2;
+
+            int daysWithMid = findDays(weights, mid);
+
+            // if for mid the amount of days are less than the days given then that probably means that mid is way more than it should be, that's why it was able to accomodate all weights in less number of days, hence eliminate the right half and keep searching on the left.
+            if(daysWithMid<=days) hi = mid-1; 
+            else lo = mid+1;
+        }
+        return lo; // lo will keep pointing on the most optimal mid always
+    }
+};
+```
