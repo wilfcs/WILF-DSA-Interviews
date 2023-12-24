@@ -249,7 +249,7 @@ public:
 # [1011. Capacity To Ship Packages Within D Days](https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/)
 
 ## Approaches ->
-### Brute Force: 
+### _Brute Force:_ 
 
 On observation we can conclude that the possible capacity of the ship must lie between the range of maximum element in the weights array to the summation of all elements in weights array. 
 
@@ -266,7 +266,7 @@ Algorithm:
 
 Time complexity -> O(N * (sum(weights[]) – max(weights[]) + 1)),
 
-### Optimal Approach using binary search:
+### _Optimal Approach using binary search:_
 
 Algorithm:
 -  First, we will find the maximum element i.e. max(weights[]), and the summation i.e. sum(weights[]) of the given array.
