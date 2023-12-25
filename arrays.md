@@ -833,3 +833,38 @@ class Solution{
 };
 ```
 
+# [Subarray with given XOR](https://www.interviewbit.com/problems/subarray-with-given-xor/)
+
+## Approach ->
+You already know the brute force approach so let's jump to the most optimized one. We will find the prefix xor. It is similar to the concept of the previous question. Basically we maintain prefix xor and we xor it with our target value. This will kill all the elements that are our answer since a xor a is 0. And then we find that remaining element in our map. For better understanding look at the code.
+
+## Code ->
+```cpp
+int Solution::solve(vector<int> &A, int B) {
+    int xr = 0;  
+    int ans = 0; 
+    
+    unordered_map<int, int> mp;
+    
+    // Initialize the XOR of an empty subarray
+    mp[xr]++;
+    
+    // Iterate through the array A
+    for(int i=0; i<A.size(); i++){
+        // Update the XOR value by XORing the current element
+        xr = xr ^ A[i];
+        
+        // Calculate the desired XOR value by XORing the current XOR value with target B
+        int x = xr ^ B;
+        
+        // Update the answer by adding the count of subarrays with the desired XOR value x. If x does not exist then 0 is added. 
+        ans += mp[x];
+        
+        // Update the count of the current XOR value in the hash map
+        mp[xr]++;
+    }
+    
+    // Return the final count of subarrays with XOR equal to B
+    return ans;
+}
+```
