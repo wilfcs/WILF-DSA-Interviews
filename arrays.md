@@ -930,3 +930,30 @@ public:
     }
 };
 ```
+# [560. Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/)
+
+## Approaches ->
+- Brute Force
+- Maintain the prefix sum of the elements of the array (don't make a separate vector for it, keep it in an integer). Make a hashmap. If the prefix sum is equal to k then increase the answer with 1 as because you were directly able to find the sum of subarray equal to k. Now find if the value of prefix sum - k exist in the map. If it does then add the frequency of sum - k to answer. Now update the map (insert the subarray sum in the map).
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int subarraySum(vector<int>& nums, int k) {
+        map <int, int> mp;
+        int ans = 0;
+        int sum = 0;
+
+        for(int i=0; i<nums.size(); i++){
+            sum+=nums[i];
+            if(sum==k) ans++;
+            if(mp.count(sum-k))
+                ans += mp[sum-k];
+
+            mp[sum]++; 
+        }   
+        return ans;
+    }
+};
+```
