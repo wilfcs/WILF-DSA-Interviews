@@ -1117,3 +1117,84 @@ public:
     }
 };
 ```
+
+# [79. Word Search](https://leetcode.com/problems/word-search/description/)
+
+## Approaches ->
+- Make a visited vector to track the visited elements of board. Then visit every element of board and call a recursive function for it. The idea is to check for left, right, up and down in the board and also keep a visited vector so that we don't  check the same elements twice. Pass idx as 0 to the recursive function initially to keep track of the word's index. Don't worry if you don't understand this line, dry run the code later. Now inside the recursive function check if the value of idx is word.size-1, if it is then return true because we increase the value of idx every time we find the next letter of word. Mark visited of element we are checking on as true at the start and at the end mark it as false because after backtracking we might need the current element for some other element's recursion call. Now in the middle check for left, right, up and down. [SC -> O(N)]
+- Same as the first approach but we reduce the space complexity by removing visited vector to track the visited elements. The idea is to remove visited and instead we can change the value of every visited element as something which can not exist like '@' in the code below. And after backtracking replace the value of present element from '@' to its original value because we might need it again for other recursion calls.
+
+---
+## Codes ->
+Code 1 ->
+```cpp
+class Solution {
+public:
+   
+    bool findWord(vector<vector<char>>& board, string word, int i, int j, int idx, vector<vector<int>>& visited){
+        // if size of word - 1 is equal to idx then return true. This is because the value of idx increases only if we find the letters in string word.
+        if(idx == word.size()-1) return true;
+       
+        // marking visited as true
+        visited[i][j] = true;
+       
+       
+        //checking for left, right, up and down if the conditions are true and the recursion calls return true then return true finally.
+        if(i>0 && !visited[i-1][j] && board[i-1][j] == word[idx+1] && findWord(board, word, i-1, j, idx+1, visited)) return true;
+        if(j>0 && !visited[i][j-1] && board[i][j-1] == word[idx+1] && findWord(board, word, i, j-1, idx+1, visited)) return true;
+        if(i<board.size()-1 && !visited[i+1][j] && board[i+1][j] == word[idx+1] && findWord(board, word, i+1, j, idx+1, visited)) return true;
+        if(j<board[0].size()-1 && !visited[i][j+1] && board[i][j+1] == word[idx+1] && findWord(board, word, i, j+1, idx+1, visited)) return true;
+       
+        //marking visited as false after we are done with this recursion because we might need this element later on for other recursion calls
+        visited[i][j] = false;
+        return false;
+    }
+   
+    bool exist(vector<vector<char>>& board, string word) {
+        // making a temp vector to assign initial value of visited vector
+        vector<int> temp (board[0].size(),0);
+        vector <vector<int>> visited(board.size(), temp);
+
+        // checking for every element in board if it is equal to the first letter in word and then calling recursive function for it.
+        for(int i=0; i<board.size(); i++){
+            for(int j=0; j<board[0].size(); j++){
+                if(board[i][j] == word[0])
+                    if(findWord(board, word, i, j, 0, visited)) return true;
+            }
+        }
+        return false;
+    }
+};
+```
+Code 2 ->
+```cpp
+class Solution {
+public:
+   
+    bool findWord(vector<vector<char>>& board, string word, int i, int j, int idx){
+        if(idx == word.size()-1) return true;
+        char t = board[i][j];
+        board[i][j] = '@'; // instead of using visited vector to keep track wheter the element is visited or not we simply change the value of element to '@'
+       
+        if(i>0 &&  board[i-1][j] == word[idx+1] && findWord(board, word, i-1, j, idx+1)) return true;
+        if(j>0  && board[i][j-1] == word[idx+1] && findWord(board, word, i, j-1, idx+1)) return true;
+        if(i<board.size()-1  && board[i+1][j] == word[idx+1] && findWord(board, word, i+1, j, idx+1)) return true;
+        if(j<board[0].size()-1  && board[i][j+1] == word[idx+1] && findWord(board, word, i, j+1, idx+1)) return true;
+       
+       
+        board[i][j] = t; // changing back the value of element to its original value
+        return false;
+    }
+   
+    bool exist(vector<vector<char>>& board, string word) {
+
+        for(int i=0; i<board.size(); i++){
+            for(int j=0; j<board[0].size(); j++){
+                if(board[i][j] == word[0])
+                    if(findWord(board, word, i, j, 0)) return true;
+            }
+        }
+        return false;
+    }
+};
+```
