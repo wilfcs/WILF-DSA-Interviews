@@ -1055,3 +1055,32 @@ public:
     }
 };
 ```
+
+# [11. Container With Most Water](https://leetcode.com/problems/container-with-most-water/description/)
+
+## Approaches ->
+- Brute Force
+- Take two pointers. One on the start and another at the end. Check if the element (line) on the start is greater than the element at the end. If yes then move end pointer else move the pointer at the start. We do this because it is pretty intuitive that we have to move if we find a smaller height container for better chances of finding a larger height container, because distance is always decreasing, the only thing that can maximize the area is the height of the container itself. Now we find the area on every step by multiplying minimum height of the line with distance bw the two lines.
+
+---
+## Code ->
+```cpp
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int ans = 0;
+        int st = 0;
+        int en = height.size()-1;
+       
+        while(st<=en){
+             // area is the minimum height bw start and end multiplied by the distance between start and end.
+            int area = min(height[st], height[en]) * (en-st); 
+            ans = max(ans, area); // updating answer with area
+            if(height[st]>height[en]) en--; // move the pointer at the height that has lower height value.
+            else st++;
+        }
+        return ans;
+    }
+};
+```
+
