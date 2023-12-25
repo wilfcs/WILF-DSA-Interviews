@@ -298,9 +298,7 @@ public:
         return ans;
     }
 };
-```
-# [768. Max Chunks To Make Sorted II](https://leetcode.com/problems/max-chunks-to-make-sorted-ii/)
-could not solve. 
+``` 
 
 # [204. Count Primes](https://leetcode.com/problems/count-primes/)
 ## Approach -> 
@@ -867,4 +865,29 @@ int Solution::solve(vector<int> &A, int B) {
     // Return the final count of subarrays with XOR equal to B
     return ans;
 }
+```
+# [3. Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/description/)
+
+## Approaches ->
+You know the brute force, let's look at the optimized sol. We will have two pointers left and right. Pointer ‘left’ is used for maintaining the starting point of the substring while ‘right’ will maintain the endpoint of the substring.’ right’ pointer will move forward and check for the duplicate occurrence of the current element if found then the ‘left’ pointer will be shifted ahead so as to delete the duplicate elements. We will make a map that will take care of counting the elements and maintaining the frequency of each and every element as a unity by taking the latest index of every element.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        if(s.size()==0) return 0;
+        unordered_map<int, int> mp;
+        int l=0, r=0, ans=0;
+        while(r<s.size()){
+            if(mp.find(s[r])!=mp.end() && mp[s[r]] >= l){
+                l=mp[s[r]]+1;
+            }
+            ans = max(ans, r-l+1);
+            mp[s[r]]=r;
+            r++;
+        }
+        return ans;
+    }
+};
 ```
