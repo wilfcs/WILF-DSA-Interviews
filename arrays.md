@@ -911,3 +911,22 @@ public:
     }f
 };
 ```
+# [283. Move Zeroes](https://leetcode.com/problems/move-zeroes/)
+
+## Approaches ->
+- Brute Force [TC -> O(N^2) SC -> O(1)] -> Traverse the array and for every 0 swap it with its next element, do it till the last index and repeat the process.
+- Better Approach [TC -> O(N) SC -> O(N)] -> Make a variable count and count the number of zeros. Make a vector and insert non zero elements from array to vector and then insert count number of 0s in the vector. But note that you must do this in-place without making a copy of the array so the interviewer will not allow it, but you can still tell him this possible solution.
+- Optimized [TC -> O(N) SC -> O(1)] -> Two Pointer -> Keep two pointers left and right and place it at 0th index initially. The work of right is to find non zero elements and swap it with left and the work of left is to help right with the swap and move when the swap is done.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {     
+        int left = 0, right = 0;
+        while(right<nums.size())
+            if(nums[right] == 0) right++;
+            else swap(nums[left++], nums[right++]);   
+    }
+};
+```
