@@ -1198,3 +1198,27 @@ public:
     }
 };
 ```
+
+# [55. Jump Game](https://leetcode.com/problems/jump-game/)
+
+## Approach ->
+The idea is very simple. Make an integer "reachable" representing the maximum distance we can reach. Run the loop from the start and update reachable. If at any position, the value of reachable is lower than the index we are on then return false. Update Reachable: The code updates the maximum reachable position by taking the maximum of the current reachable and the sum of the value at the current position (nums[i]) and the current position (i). Dry run to understand.
+
+---
+## Code ->
+```cpp
+class Solution {
+public:
+    bool canJump(vector<int>& nums) {
+        int reachable = 0;
+       
+        for(int i=0; i<nums.size(); i++){
+            if(reachable < i)
+                return false;
+            reachable = max(reachable, nums[i]+i);
+        }
+        return true;
+    }
+};
+```
+
