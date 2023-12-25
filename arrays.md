@@ -891,3 +891,23 @@ public:
     }
 };
 ```
+
+# [26. Remove Duplicates from Sorted Array](https://leetcode.com/problems/remove-duplicates-from-sorted-array/)
+
+## Approaches ->
+- Insert elements in from the array inside a set. Assign back the values inside of the set in the array (set stores unique elements). Return size of the set. TC-> O(n) SC-> O(n)
+- Keep a count pointer in at index 1. Run a for loop from i=1 till the end. If the value of nums[i] is not equal to nums[i-1]  then assign the value of nums[i] to nums[count] and move count forward, else don't move the count forward, just keep the loop running. (The loop checks for non dupl. values and then assigns the non dupl. elements to nums[count] which is moving after every non dupl. value is inserted). TC-> O(n) SC-> O(1)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        int count = 1;
+        for(int i=1; i<nums.size(); i++)
+            if(nums[i-1] != nums[i])
+                nums[count++] = nums[i];
+        return count;
+    }f
+};
+```
