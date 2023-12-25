@@ -957,3 +957,43 @@ public:
     }
 };
 ```
+
+# [974. Subarray Sums Divisible by K](https://leetcode.com/problems/subarray-sums-divisible-by-k/)
+
+[_Video explanation_](https://www.youtube.com/watch?v=ufXxc8Vty9A)
+## Approaches ->
+- Brute Force
+- Here we maintain a prefix sum of the array too. And we make a hashmap too. We append 0 in the map and we make its frequency as 1 (why? we will see later). Inside the loop, we find the remainder of the prefix sum and we see if that exists in the map or not. If it exists in the map then we increase the answer by the frequency of occurrence of the remainder. But before that we check if the remainder is -ve or not, if negative we add k to the remainder (this is a property to find the mod of negative numbers -> add the number we divided the negative number with). And at last we update the map by adding remainder and its frequency to it. Why did we find subarray sum div by k between two positions if we find same remainder on these two positions? Because if the remainder at position 1 and  4 is same then it means that the difference bw the numbers between position 1 and 4 is either 0 or k itself, which also means it is a subarray sum div by k. And why did we append 0 in the map at the beginning? This is because if there is nothing in the array, its subarray sum is 0 and 0 % k is 0, which is also divisible by k. Hence we have to have a 0 with frequency 1 in the map.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int subarraysDivByK(std::vector<int>& nums, int k) {
+        // Initialize map with 0 remainder and frequency 1 to handle an empty subarray
+        map<int, int> remainderFrequencyMap;
+        remainderFrequencyMap[0]++;
+        
+        int totalSubarrays = 0; 
+        int currentSum = 0;
+        int currentRemainder = 0;
+        
+        for (int i = 0; i < nums.size(); i++) {
+            currentSum += nums[i];
+            
+            // Calculate the remainder, considering negative numbers
+            currentRemainder = currentSum % k;
+            if (currentRemainder < 0) currentRemainder += k;
+            
+            // If the remainder is present in the map, update the count of subarrays
+            if (remainderFrequencyMap.count(currentRemainder)) 
+                totalSubarrays += remainderFrequencyMap[currentRemainder];
+            
+            remainderFrequencyMap[currentRemainder]++;
+        }
+        
+        return totalSubarrays;
+    }
+};
+```
+
