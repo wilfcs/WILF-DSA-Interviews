@@ -997,3 +997,61 @@ public:
 };
 ```
 
+# [442. Find All Duplicates in an Array](https://leetcode.com/problems/find-all-duplicates-in-an-array/)
+
+## Approaches ->
+- Brute Force
+- Sort
+- Hashtable
+- Make a set. Set has the property of storing only unique elem. But sc is O(N)
+- SwapSort -> In swapsort method we must use a set to contain all the duplicate elements as because if we don't use set then duplicates of the duplicate element will be stored in the ans vector.
+- Go to an element and make the element on the index of the element as negative. But before that, check if the element on the position of that element is negative or not (check if nums[abs(nums[i])-1] < 0) and if it is negative then that means another number same as the element exist that made the number negative. Doesn't make sense? Dry run.
+
+## Codes ->
+swapsort->
+```cpp
+class Solution {
+public:
+    vector<int> findDuplicates(vector<int>& nums) {
+        set <int> temp;
+       
+        int i = 0;
+        while(i<nums.size()){
+            if(nums[i] != i+1){ // if the element (element-1) isn't equal to the index it is on
+                if(nums[i] == nums[nums[i]-1]){ // and if there is a duplicate at the right index
+                    temp.insert(nums[i]);
+                    i++;
+                }                   
+                else // if there is no duplicate at the right index, do the swap
+                    swap(nums[i], nums[nums[i]-1]);
+            }
+            else // if the element (element-1) is equal to index (already at right position) 
+                i++; // then just keep moving
+        }
+       
+        vector <int> ans;
+        for(auto a: temp){
+            ans.push_back(a);
+        }
+       
+        return ans;
+    }
+};
+```
+Last method->
+```cpp
+class Solution {
+public:
+    vector<int> findDuplicates(vector<int>& nums) {
+        vector <int> ans;
+       
+        for(int i=0; i<nums.size(); i++){
+            if(nums[abs(nums[i])-1] < 0)
+                ans.push_back(abs(nums[i]));
+            nums[abs(nums[i])-1] =  nums[abs(nums[i])-1] * (-1);
+        }
+       
+        return ans;
+    }
+};
+```
