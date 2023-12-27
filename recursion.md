@@ -110,3 +110,5 @@ bool subsetSumToK(int n, int k, vector<int> &arr) {
 ```
 
 - The parameterised recursion will keep on executing till the very last recursive call but the functional one will stop making any further recursive calls as soon as the true condition is met.
+
+# 

@@ -106,3 +106,11 @@ public:
     }
 };
 ```
+# [Swap two numbers without using temp variable]
+
+## Snippet ->
+```cpp
+a = a ^ b;
+b = a ^ b;
+a = a ^ b;
+```
