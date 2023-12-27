@@ -19,3 +19,37 @@ public:
     }
 };
 ```
+# [78. Subsets](https://leetcode.com/problems/subsets/description/)
+
+## Approach ->
+- The code generates all possible subsets of a given array by using a recursive approach. For each element in the array, it explores two options: including the element in the current subset or excluding it. The process continues recursively until all elements are considered, and the subsets are stored in the ans vector.
+
+---
+## Code ->
+```cpp
+class Solution {
+public:
+    vector<vector<int>> ans;
+
+    void subsets(vector<int>& nums, vector<int> temp, int n){
+        if(n<0){
+            ans.push_back(temp);
+            return;
+        }
+        temp.push_back(nums[n]);
+        subsets(nums, temp, n-1);
+
+        temp.pop_back();
+        subsets(nums, temp, n-1);
+    }
+
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<int> temp;
+        int n = nums.size();
+
+        subsets(nums, temp, n-1);
+        return ans;
+    }
+};
+```
+
