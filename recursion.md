@@ -64,6 +64,7 @@ public:
 - Same as of last problem, just we need to keep a track of the sum instead of storing the subsets. Although this will throw TLE as this needs more optimization using DP, but we will see that later. 
 
 ## Code ->
+- Parameterised recursion call
 ```cpp
 #include <bits/stdc++.h> 
 bool ans=false;
@@ -86,3 +87,26 @@ bool subsetSumToK(int n, int k, vector<int> &arr) {
 }
 ```
 
+- Functional recursion call
+```cpp
+#include <bits/stdc++.h> 
+bool helper(int n, int k, vector<int> &arr, int sum){
+    if(n<0){
+        if(sum==k) return true;
+        return false;
+    }
+    sum+=arr[n];
+    if(helper(n-1, k, arr, sum)) return true; 
+    // as soon as the helper returns true, the recursion calls stops and it starts to backtrack
+
+    sum-=arr[n];
+    if(helper(n-1, k, arr, sum)) return true;
+    return false;
+}
+bool subsetSumToK(int n, int k, vector<int> &arr) {
+    // Write your code here.
+    return helper(n-1, k, arr, 0);
+}
+```
+
+- The parameterised recursion will keep on executing till the very last recursive call but the functional one will stop making any further recursive calls as soon as the true condition is met.
