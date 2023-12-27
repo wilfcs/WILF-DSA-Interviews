@@ -118,9 +118,12 @@ bool subsetSumToK(int n, int k, vector<int> &arr) {
 - There are 2 main functions :
 -  merge(): This function is used to merge the 2 halves of the array. It assumes that both parts of the array are sorted and merges both of them.
 -  mergeSort(): This function divides the array into 2 parts. low to mid and mid+1 to high where,
+
 `
 low = leftmost index of the array
+
 high = rightmost index of the array
+
 mid = Middle index of the array 
 `
 We recursively split the array, and go from top-down until all sub-arrays size becomes 1.
@@ -196,3 +199,10 @@ int main() {
     return 0 ;
 }
 ```
+Time complexity: O(nlogn) 
+
+Reason: At each step, we divide the whole array into two halves, for that logn and we assume n steps are taken to get sorted array, so overall time complexity will be nlogn
+
+Space complexity: O(n)  
+
+Reason: We are using a temporary array to store elements in sorted order.
