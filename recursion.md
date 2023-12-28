@@ -381,3 +381,33 @@ public:
 };
 ```
 
+# [1922. Count Good Numbers](https://leetcode.com/problems/count-good-numbers/description/)
+
+## Approach -> 
+It is a simple PNC question where we mod everything and make everything long long as much as possible to avoid wrong answers due to overflow. Please remember to make everything long long as much as possible during the interview. We know that the even places will have 5 possible numbers(0,2,4,6,8) and odd places will have 4 possible numbers(1,3,5,7). So we will simply return 5^even * 4^odd as our answer and find the power using recursion because we need to mod everything inside power function.
+
+## Code -> 
+```cpp
+class Solution {
+public:
+    int MOD = 1000000007;
+    int power(long long int n, long long int m){
+        if(n==0) return 0;
+        if(m==0) return 1;
+
+        long long int res = power(n, m/2);
+        res = (res*res)%MOD;
+        if(m%2==0) return (res);
+        else return (res*n)%MOD;
+    }
+    int countGoodNumbers(long long n) {
+        long long int odd = n/2;
+        long long int even = (n+1)/2;
+
+        long long int first = power(5, even);
+        long long int second = power(4, odd);
+
+        return int((first*second)%MOD);
+    }
+};
+```
