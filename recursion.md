@@ -317,3 +317,26 @@ int main() {
 ```
 - Time Complexity: O(N*logN), where N = size of the array.
 - Space Complexity: O(1) + O(N) auxiliary stack space.
+
+# Implement string to integer
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int helper(string s, int n){
+        if (n == 0) 
+            return s[n] - '0';
+
+        // Recursive case: combine previous value with current digit
+        int preNums = helper(s, n - 1);
+        int curNum = s[n] - '0';
+
+        // Combine values by multiplying the previous value by 10 and adding the current value
+        return preNums * 10 + curNum;
+    }
+    int myAtoi(string s) {
+        return helper(s, s.size()-1);
+    }
+};
+```
