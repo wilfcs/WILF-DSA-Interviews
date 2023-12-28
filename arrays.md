@@ -1222,3 +1222,19 @@ public:
 };
 ```
 
+# [268. Missing Number](https://leetcode.com/problems/missing-number/description/)
+
+## Approach ->
+- Sort
+- Actual sum - Given sum
+
+## Code ->
+```cpp
+int missingNumber(vector<int>& nums) {
+        int actualSum = nums.size() * (nums.size() + 1) / 2 ; //n*(n+1)/2
+        int sumOfNums=0;
+        for(auto & a:nums) sumOfNums += a;
+
+        return actualSum - sumOfNums;
+    }
+```
