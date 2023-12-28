@@ -340,3 +340,43 @@ public:
     }
 };
 ```
+
+# [50. Pow(x, n)](https://leetcode.com/problems/powx-n/description/)
+
+## Approach ->
+The recursive approach leverages the observation that exponentiation problems, such as x^n, can be optimized by breaking them down into subproblems. By dividing the exponent (n) into halves, the recursive function efficiently calculates the result, taking advantage of the fact that we can write x^8 as (x^4 * x^4) and we can write x^9 as (x^4 * x^4 * x) This approach reduces the time complexity to logarithmic (log n) by repeatedly halving the exponent.
+
+## Code ->
+```cpp
+#include <cmath>
+
+class Solution {
+public:
+    double helper(double x, int n) {
+        // Base case: if x is 0, result is 0
+        if (x == 0) return 0;
+        // Base case: if n is 0, result is 1
+        if (n == 0) return 1;
+
+        // Recursive calculation for half of the exponent
+        double res = helper(x, n / 2);
+        // Square the result obtained from the recursive call
+        res = res * res;
+
+        // Adjust result for even exponent
+        if (n % 2 == 0) return res;
+        // Multiply the result by x for odd exponent
+        else return res * x;
+    }
+
+    // Main function to calculate power with handling for negative exponent
+    double myPow(double x, int n) {
+        // Call the helper function to calculate power
+        double ans = helper(x, n);
+
+        // Adjust the result for negative exponent
+        if (n < 0) return 1 / ans;
+        else return ans;
+    }
+};
+```
