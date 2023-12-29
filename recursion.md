@@ -457,6 +457,7 @@ Space Complexity: O(k*x), k is the average length and x is the no. of combinatio
 # [40. Combination Sum II](https://leetcode.com/problems/combination-sum-ii/description/)
 
 ## [Approach (look at the recursive tree)](https://takeuforward.org/data-structure/combination-sum-ii-find-all-unique-combinations/)
+Note: In this question we are required to ignore duplicates and return the answer in sorted order.
 
 ## Code ->
 ```cpp
@@ -472,11 +473,18 @@ public:
         }
 
         for(int i=idx; i<candidates.size(); i++){
+            // Skip duplicates to avoid duplicate combinations
             if(i>idx && candidates[i]==candidates[i-1]) continue;
+            // If the current candidate is greater than the target, break the loop. This will optimize the code more
             if(candidates[i]>target) break;
+
+            // Include the current candidate in the temporary combination
             temp.push_back(candidates[i]);
+            // Recursively call the helper function with updated parameters
             helper(candidates, target, temp, sum+candidates[i], i+1);
+            // Remove the last added element to backtrack and explore other combinations
             temp.pop_back();
+
             // helper(candidates, target, temp, sum, idx+1); -> we will not include this line like the previous solution. reason given below.
         }
         
@@ -506,3 +514,26 @@ Space Complexity:O(k*x)
 
 Reason: if we have x combinations then space will be x*k where k is the average length of the combination.
 
+# [Subset Sum](https://www.codingninjas.com/studio/problems/subset-sum_3843086?utm_source=striver&utm_medium=website&utm_campaign=a_zcoursetuf&leftPanelTabValue=PROBLEM)
+
+## Approach -> 
+Easy peasy using recursion
+
+## Code ->
+```cpp
+void helper(vector<int> num, int sum, int idx, vector<int> &ans){
+	if(idx==num.size()){
+		ans.push_back(sum);
+		return;
+	}
+	helper(num, sum+num[idx], idx+1, ans);
+	helper(num, sum, idx+1, ans);
+}
+vector<int> subsetSum(vector<int> &num){
+	// Write your code here.	
+	vector<int> ans;
+	helper(num, 0, 0, ans);
+	sort(ans.begin(), ans.end());
+	return ans;
+}
+```
