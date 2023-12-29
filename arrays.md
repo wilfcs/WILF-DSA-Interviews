@@ -1238,3 +1238,36 @@ int missingNumber(vector<int>& nums) {
         return actualSum - sumOfNums;
     }
 ```
+
+# [39. Combination Sum](https://leetcode.com/problems/combination-sum/)
+
+## [Approach](https://takeuforward.org/data-structure/combination-sum-1/)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    vector<vector<int>> ans;
+
+    void helper(vector<int>& candidates, int target, vector<int> temp, int sum, int idx){
+        if(sum>target) return;
+        if(idx==candidates.size()){
+            if(sum==target) ans.push_back(temp);
+
+            return;
+        }
+
+        temp.push_back(candidates[idx]);
+        helper(candidates, target, temp, sum+candidates[idx], idx);
+
+        temp.pop_back();
+        helper(candidates, target, temp, sum, idx+1);
+    }
+
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        vector<int> temp;
+        helper(candidates, target, temp, 0, 0);
+        return ans;
+    }
+};
+```
