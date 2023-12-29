@@ -454,3 +454,55 @@ Assume that there is 1 and the target you want to reach is 10 so 10 times you ca
 
 Space Complexity: O(k*x), k is the average length and x is the no. of combinations
 
+# [40. Combination Sum II](https://leetcode.com/problems/combination-sum-ii/description/)
+
+## [Approach (look at the recursive tree)](https://takeuforward.org/data-structure/combination-sum-ii-find-all-unique-combinations/)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    vector<vector<int>> ans;
+
+    void helper(vector<int>& candidates, int target, vector<int> temp, int sum, int idx){
+        if(sum>target) return;
+        if(sum==target){
+            ans.push_back(temp);
+            return;
+        }
+
+        for(int i=idx; i<candidates.size(); i++){
+            if(i>idx && candidates[i]==candidates[i-1]) continue;
+            if(candidates[i]>target) break;
+            temp.push_back(candidates[i]);
+            helper(candidates, target, temp, sum+candidates[i], i+1);
+            temp.pop_back();
+            // helper(candidates, target, temp, sum, idx+1); -> we will not include this line like the previous solution. reason given below.
+        }
+        
+
+        
+    }
+
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        sort(candidates.begin(), candidates.end());
+        vector<int> temp;
+        helper(candidates, target, temp, 0, 0);
+        return ans;
+    }
+};
+```
+Why did we not include helper(candidates, target, temp, sum, idx+1);
+
+Reason ->  in the current structure of the code, this line is not required and can lead to incorrect results. The reason is that the recursive call with idx+1 already covers the case of excluding the current element at index i. By making another recursive call with the same idx, you are essentially repeating the same combinations and potentially skipping valid combinations.
+
+The correct structure is to make a single recursive call for each element at index i, and the loop itself takes care of iterating through all possible elements starting from the current index. 
+
+Time Complexity:O(2^n*k)
+
+Reason: Assume if all the elements in the array are unique then the no. of subsequence you will get will be O(2^n). we also add the ds to our ans when we reach the base case that will take “k”//average space for the ds.
+
+Space Complexity:O(k*x)
+
+Reason: if we have x combinations then space will be x*k where k is the average length of the combination.
+
