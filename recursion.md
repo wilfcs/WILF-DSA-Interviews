@@ -584,3 +584,54 @@ Time Complexity: O(2^n) for generating every subset and O(k)  to insert every su
 Space Complexity: O(2^n * k) to store every subset of average length k. Auxiliary space is O(n)  if n is the depth of the recursion tree.
 
 
+# [46. Permutations](https://leetcode.com/problems/permutations/description/)
+
+## Approaches ->
+1. Frequency array approach ->
+- Create a frequency vector freq to keep track of whether an element has been used in the current permutation.
+
+- If the size of the temporary vector temp becomes equal to the size of the input array nums, it means a valid permutation is found. Add it to the result vector ans.
+
+- Iterate through each element in the nums array.
+- If the element has not been used (frequency is 0), add it to the temporary vector temp.
+- Mark the element as used by updating its frequency in the freq vector to 1.
+- Recursively call the helper function with the updated temp and freq.
+- After the recursive call, backtrack by marking the element as unused and removing it from temp.
+
+Time Complexity:
+
+The time complexity of the provided approach is O(N!), where N is the number of distinct integers in the input array nums. This is because, in each recursive call, the algorithm explores all possible choices for the next element, and there are N elements in the array. The recursive function is called N times for the first element, (N-1) times for the second element, (N-2) times for the third element, and so on, resulting in a total of N * (N-1) * (N-2) * ... * 1 = N! recursive calls.
+
+Space Complexity:
+
+The space complexity is O(N) for the recursion stack and O(N) for the temporary vectors used in each recursive call. The recursion stack depth is at most N, as the algorithm explores each element in the array. Additionally, each recursive call creates a temporary vector temp of size N. Therefore, the overall space complexity is O(N + N) = O(N).
+
+## Code ->
+```cpp
+class Solution {
+public:
+    void helper(vector<int> nums, vector<int> temp, vector<vector<int>> &ans, vector<int> freq){
+        if(temp.size()==nums.size()){
+            ans.push_back(temp);
+            return;
+        }
+
+        for(int i=0; i<nums.size(); i++){
+            if(!freq[i]){
+                temp.push_back(nums[i]);
+                freq[i]=1;
+                helper(nums, temp, ans, freq);
+                freq[i]=0;
+                temp.pop_back();
+            }
+        }
+    }
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<int> temp;
+        vector<vector<int>> ans;
+        vector<int> freq(nums.size(),0);
+        helper(nums, temp, ans, freq);
+        return ans;
+    }
+};
+```
