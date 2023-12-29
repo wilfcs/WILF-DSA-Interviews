@@ -635,3 +635,40 @@ public:
     }
 };
 ```
+
+2. Swapping to generate all permutations Approach ->
+
+- If the current index idx reaches the size of the array, it means a valid permutation is found. Add it to the result vector ans.
+
+- Iterate through each element in the array starting from the current index idx.
+- Swap the current element with the element at index idx.
+- Recursively call the helper function with the updated array and the next index (idx+1).
+- After the recursive call, backtrack by swapping the elements back to their original positions.
+
+- After the recursion, the ans vector contains all the valid permutations, and it is returned.
+
+The time complexity is O(N!), where N is the number of distinct integers in the input array nums. The space complexity is O(N) for the recursion stack, as the recursion explores each element in the array. The space complexity is optimized compared to the previous approach as it doesn't use additional temporary vectors in each recursive call.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    void helper(vector<int> nums, vector<vector<int>> &ans, int idx){
+        if(idx==nums.size()){
+            ans.push_back(nums);
+            return;
+        }
+
+        for(int i=idx; i<nums.size(); i++){
+            swap(nums[idx], nums[i]);
+            helper(nums, ans, idx+1);
+            swap(nums[idx], nums[i]);
+        }
+    }
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int>> ans;
+        helper(nums, ans, 0);
+        return ans;
+    }
+};
+```
