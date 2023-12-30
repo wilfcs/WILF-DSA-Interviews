@@ -672,3 +672,37 @@ public:
     }
 };
 ```
+
+# [22. Generate Parentheses](https://leetcode.com/problems/generate-parentheses/description/)
+## Approach ->
+The helper function is called recursively with three parameters: the remaining counts of open parentheses (open), close parentheses (close), and the current combination string (str). The base case is when both open and close counts are zero, at which point the current combination is added to the result vector (ans).
+
+The recursion explores two possibilities at each step:
+
+If there are remaining open parentheses (open > 0), it appends an open parenthesis to the current combination and calls the helper function with reduced open count.
+If there are remaining close parentheses (close > 0 and there are more open parentheses than closed ones), it appends a close parenthesis to the current combination and calls the helper function with reduced close count.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    void helper(int n, int open, int close, vector<string> &ans, string str){
+        if(open==0 && close==0){
+            ans.push_back(str);
+            return;
+        }
+        if(open){
+            helper(n, open-1, close, ans, str+'(');
+        } 
+        
+        if(close && open<close){
+            helper(n, open, close-1, ans, str+')');
+        }
+    }
+    vector<string> generateParenthesis(int n) {
+        vector<string> ans;
+        helper(n, n, n, ans, "");
+        return ans;
+    }
+};
+```
