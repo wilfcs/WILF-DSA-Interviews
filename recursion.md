@@ -706,3 +706,102 @@ public:
     }
 };
 ```
+# [51. N-Queens](https://leetcode.com/problems/n-queens/description/)
+## [Approaches](https://takeuforward.org/data-structure/n-queen-problem-return-all-distinct-solutions-to-the-n-queens-puzzle/)
+
+---
+## Codes ->
+Code 1
+```cpp
+class Solution {
+public:
+    bool isValid(int row, int col, int n, vector<string>board){
+        // checking left
+        int r = row;
+        int c = col;
+        while(c>=0){
+            if(board[r][c]=='Q') return false;
+            c--;
+        }
+
+        // checking down-left diagonal
+        r = row;  
+        c = col;
+        while(r<n && c>=0){
+            if(board[r][c]=='Q') return false;
+            r++;
+            c--;
+        }
+        
+        // checking up-left diagonal
+        r = row;
+        c = col;
+        while(r>=0 && c>=0){
+            if(board[r][c]=='Q') return false;
+            r--;
+            c--;
+        }
+        return true;
+    }
+    void helper(int col, vector<string> &board, vector<vector<string>> &ans, int n){
+        if(col == n){
+            ans.push_back(board);
+            return;
+        }
+
+        for(int row=0; row<n; row++){
+            if(isValid(row, col, n, board)){
+                board[row][col]='Q';
+                helper(col+1, board, ans, n);
+                board[row][col]='.';
+            }
+        }
+    }
+    vector<vector<string>> solveNQueens(int n) {
+        vector<vector<string>> ans;
+        vector<string> board(n);
+        string s (n, '.');
+        for(int i=0; i<n; i++) board[i]=s;
+        helper(0, board, ans, n);
+        return ans;
+    }
+};
+```
+
+Code 2
+```cpp
+class Solution {
+public:
+    void helper(int col, vector<string> &board, vector<vector<string>> &ans, int n, vector<int> &leftrow, vector<int> &upperDiagonal, vector<int> &lowerDiagonal){
+        if(col == n){
+            ans.push_back(board);
+            return;
+        }
+
+        for(int row=0; row<n; row++){
+            if(leftrow[row]==0 && upperDiagonal[n-1+col-row]==0 && lowerDiagonal[row+col]==0){
+                board[row][col]='Q';
+                leftrow[row]=1;
+                upperDiagonal[n-1+col-row]=1;
+                lowerDiagonal[row+col]=1;
+                helper(col+1, board, ans, n, leftrow, upperDiagonal, lowerDiagonal);
+                board[row][col]='.'; // backtract to reset
+                leftrow[row]=0;
+                upperDiagonal[n-1+col-row]=0;
+                lowerDiagonal[row+col]=0;
+            }
+        }
+    }
+    vector<vector<string>> solveNQueens(int n) {
+        vector<vector<string>> ans;
+        vector<string> board(n);
+        string s (n, '.');
+        for(int i=0; i<n; i++) board[i]=s;
+        vector<int>leftrow(n, 0);
+        vector<int> upperDiagonal(2*n-1, 0);
+        vector<int> lowerDiagonal(2*n-1, 0);
+        helper(0, board, ans, n, leftrow, upperDiagonal, lowerDiagonal);
+        return ans;
+    }
+};
+```
