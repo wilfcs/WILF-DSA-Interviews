@@ -805,3 +805,41 @@ public:
     }
 };
 ```
+
+# [131. Palindrome Partitioning](https://leetcode.com/problems/palindrome-partitioning/)
+
+## [Approach](https://takeuforward.org/data-structure/palindrome-partitioning/)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    bool isPalindrome(int idx, int i, string s){
+        while(idx<i){
+            if(s[idx++] != s[i--]) return false;
+        }
+        return true;
+    }
+    void helper(string s, vector<vector<string>> &ans, vector<string> &temp, int idx){
+        if(s.size()==idx){
+            ans.push_back(temp);
+            return;
+        }
+
+        for(int i=idx; i<s.size(); i++){
+            if(isPalindrome(idx, i, s)){ // if the substring from start to end is palindrome
+                temp.push_back(s.substr(idx, i-idx+1)); // push substring start to end in temp
+                helper(s, ans, temp, i+1); // call recursion to find other partitions
+                temp.pop_back(); // reset temp
+            }
+        }
+        
+    }
+    vector<vector<string>> partition(string s) {
+        vector<vector<string>> ans;
+        vector<string> temp;
+        helper(s, ans, temp, 0);
+        return ans;
+    }
+};
+```
