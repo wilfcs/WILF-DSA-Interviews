@@ -882,3 +882,40 @@ public:
     }
 };
 ```
+# [216. Combination Sum III](https://leetcode.com/problems/combination-sum-iii/description/)
+
+## Approach ->
+Generate all combinations of length k from the set {1, 2, ..., 9}, and filter those combinations where the sum equals the target n.
+
+---
+## Code ->
+```cpp
+#include <vector>
+
+class Solution {
+public:
+    // Helper function to find combinations
+    void helper(int k, int n, std::vector<std::vector<int>> &ans, std::vector<int> temp, int sum, std::vector<int> &hash, int idx) {
+        // Base case: if the sum exceeds the target or the size of the combination is reached
+        if (sum > n) return;
+        if (temp.size() == k) {
+            // If the combination size is k and the sum is n, add it to the answer
+            if (sum == n)
+                ans.push_back(temp);
+            return;
+        }
+
+        // Iterate through numbers starting from idx
+        for (int i = idx; i <= 9; i++) {
+            // If the number is not used in the current combination
+            if (hash[i] == 0) {
+                // Add the number to the combination
+                temp.push_back(i);
+                hash[i] = 1; // Mark the number as used
+                // Recursively call the helper function with updated parameters
+                helper(k, n, ans, temp, sum + i, hash, i + 1);
+                temp.pop_back(); // Backtrack: remove the last added number
+                hash[i] = 0;    // Mark the number as unused for the next iteration
+            }
+        }
+    }```
