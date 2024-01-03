@@ -918,4 +918,68 @@ public:
                 hash[i] = 0;    // Mark the number as unused for the next iteration
             }
         }
-    }```
+    }
+}
+```
+
+# [79. Word Search](https://leetcode.com/problems/word-search/description/)
+
+## Approach ->
+Approach:  We are going to solve this by using backtracking, in this approach first we will linearly search the entire matrix to find the first letters matching our given string. If we found those letters then we can start backtracking in all four directions to find the rest of the letters of the given string.
+
+Step 1: Find the first character of the given string.
+
+Step 2: Start Backtracking in all four directions until we find all the letters of sequentially adjacent cells.
+
+Step 3: At the end, If we found our result then return true else return false.
+
+Edge cases: Now think about what will be our stopping condition, we can stop or return false if we reach the end of the boundaries of the matrix or the letter at which we are making recursive calls is not the required letter.
+
+We will also return if we found all the letters of the given word i.e. we found the number of letters equal to the length of the given word.
+
+NOTE: Do not forget that we cannot reuse a cell again.
+
+That is, we have to somehow keep track of our position so that we cannot find the same letter again and again.
+
+In this approach, we are going to mark visited cells with some random character that will prevent us from revisiting them again and again.
+
+---
+## Code ->
+```cpp
+class Solution {
+public:
+    bool helper(vector<vector<char>> &board, string word, int row, int col, int idx){
+        // if index reaches at the end that means we have found the word
+        if(idx == word.size()) return true;
+        // Checking the boundaries if the character at which we are placed is not 
+        // checking if the letter is same as of letter required or no
+        if(row<0 || col<0 || row>=board.size() || col>=board[0].size() || board[row][col]!=word[idx]) return false;
+
+        // this is to prevent reusing of the same character
+        char prevWord = board[row][col];
+        board[row][col] = '#';
+
+        // check all directions
+        bool op1 = helper(board, word, row+1, col, idx+1);
+        bool op2 = helper(board, word, row, col+1, idx+1);
+        bool op3 = helper(board, word, row-1, col, idx+1);
+        bool op4 = helper(board, word, row, col-1, idx+1);
+
+        // undo change
+        board[row][col] = prevWord;
+
+        return (op1 || op2 || op3 || op4);
+    }
+    bool exist(vector<vector<char>>& board, string word) {
+        // First search the first character to start recursion process
+        for(int i=0; i<board.size(); i++){
+            for(int j=0; j<board[0].size(); j++){
+                if (board[i][j] == word[0]){
+                    if(helper(board, word, i, j, 0)) return true;
+                }      
+            }
+        }
+        return false;
+    }
+};
+```
