@@ -983,3 +983,47 @@ public:
     }
 };
 ```
+
+# [Rat in a Maze Problem - I](https://www.geeksforgeeks.org/problems/rat-in-a-maze-problem/1)
+
+## Approach ->
+It is failry simple. ATQ the answer should be in lexicographically sorted order, so we will keep that in mind. We also cannot visit a path that has 0 on it, so we will have to keep that in mind too. Keeping these two things in mind we make our recursive calls.
+
+## Code ->
+```cpp
+class Solution{
+    public:
+    void helper(vector<vector<int>>&m, int n, vector<string> &ans, string s, int row, int col){
+        // If the destination is reached, add the current path to the result
+        if(row==n-1 && col==n-1){
+            ans.push_back(s);
+            return;
+        }
+        
+        // Check for out-of-bounds or obstacles(0 on any index) in the matrix
+        if(row<0 || col<0 || row>=n || col>=n || m[row][col]!=1) return;
+        
+        // Mark the current cell as visited
+        m[row][col]=2;
+        // Recursion call in all four directions in lexicographical order
+        helper(m, n, ans, s+'D', row+1, col);
+        helper(m, n, ans, s+'L', row, col-1);
+        helper(m, n, ans, s+'R', row, col+1);
+        helper(m, n, ans, s+'U', row-1, col);
+        // Backtrack: Mark the current cell as unvisited
+        m[row][col]=1;
+    }
+    vector<string> findPath(vector<vector<int>> &m, int n) {
+        vector<string> ans;
+        // Important base condition
+        if (m[0][0] == 0 || m[n - 1][n - 1] == 0) {
+            // If the source or destination is blocked, return -1
+            ans.push_back("-1");
+            return ans;
+        }
+        
+        helper(m, n, ans, "", 0, 0);
+        return ans; 
+    }
+};
+```
