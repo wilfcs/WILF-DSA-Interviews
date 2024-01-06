@@ -1138,3 +1138,32 @@ public:
     }
 };
 ```
+
+# [77. Combinations](https://leetcode.com/problems/combinations/description/)
+
+## Code ->
+```cpp
+// figure out on yourself first kiddo, you've done these kinds of patterns.
+class Solution {
+public:
+    void helper(int n, int k, vector<vector<int>> &ans, vector<int> temp, int idx){
+        if(temp.size()==k){
+            ans.push_back(temp);
+            return;
+        }
+
+        for(int i=idx; i<=n; i++){
+            temp.push_back(i);
+            helper(n, k, ans, temp, i+1);
+            temp.pop_back();
+        }
+        return;
+    }
+    vector<vector<int>> combine(int n, int k) {
+        vector<vector<int>> ans;
+        vector<int> temp;
+        helper(n, k, ans, temp, 1);
+        return ans;
+    }
+};
+```
