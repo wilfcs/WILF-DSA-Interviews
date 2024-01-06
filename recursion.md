@@ -1087,3 +1087,54 @@ public:
     }
 };
 ```
+
+# [1849. Splitting a String Into Descending Consecutive Values](https://leetcode.com/problems/splitting-a-string-into-descending-consecutive-values/description/)
+
+## Approach ->
+As we are required to split the string in such a way that all the splits should have numbers in a decreasing manner (just by 1) so in the main function we can iterate through the entire string and call a recursive function helper for the first split. Inside the helper function, we check if the current substring, formed by converting a portion of the input string to a numerical value, is one less than the previous value. If this condition is met, the function is recursively called on the remaining portion of the string, exploring all possible valid splits.
+
+---
+## Code ->
+```cpp
+class Solution {
+public:
+    bool splitString(string s) {
+        unsigned long long int val = 0;
+
+        // Iterate through the string (excluding the last character)
+        for(int i = 0; i < s.size() - 1; i++) {
+            // Build val
+            val = 10 * val + (s[i] - '0');
+
+            // Check if splitting is possible using the helper function
+            if(helper(s, val, i + 1)) {
+                return true;  // If possible, return true
+            }
+        }
+
+        return false; // Else return false
+    }
+
+    bool helper(string s, unsigned long long int val, int idx) {
+        if(s.size() == idx) {
+            return true;  // If the entire string has been processed, return true
+        }
+
+        unsigned long long int curVal = 0;
+
+        // Iterate through the remaining characters of the string i.e. from idx
+        for(int i = idx; i < s.size(); i++) {
+            // Build the current numerical value
+            curVal = 10 * curVal + (s[i] - '0');
+
+            // Check if the difference between val and curVal is 1
+            // If true, then and only then recursively check the remaining string else just iterate in the loop (that's why we used && operator so that if val - curVal == 1 then and only then call the recursion to make further splits in the string.)
+            if(val - curVal == 1 && helper(s, curVal, i + 1)) {
+                return true;  // If a valid split is found, return true
+            }
+        } 
+
+        return false; // If no valid split is found, return false
+    }
+};
+```
