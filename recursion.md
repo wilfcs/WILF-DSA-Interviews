@@ -1167,3 +1167,67 @@ public:
     }
 };
 ```
+# [1239. Maximum Length of a Concatenated String with Unique Characters](https://leetcode.com/problems/maximum-length-of-a-concatenated-string-with-unique-characters/description/)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Helper function to check if a string has unique characters
+    bool isValid(string curStr, vector<int> &selected) {
+        // Self-check for unique characters in the string
+        vector<int> selfCheck(26, 0);
+        for (int i = 0; i < curStr.size(); i++) {
+            if (selfCheck[curStr[i] - 'a'] == 1) return false;
+            selfCheck[curStr[i] - 'a'] = 1;
+        }
+
+        // Check if the characters in the string are already selected
+        for (int i = 0; i < curStr.size(); i++) {
+            if (selected[curStr[i] - 'a'] == 1) return false;
+        }
+
+        return true;
+    }
+
+    // Recursive helper function to explore all possible combinations
+    int helper(vector<string> &arr, int &ans, int idx, vector<int> &selected) {
+        // If we reach the end of the array, return the current answer
+        if (idx == arr.size()) {
+            return ans;
+        }
+
+        // Get the current string
+        string curStr = arr[idx];
+
+        // If the current string is not valid, move to the next index
+        if (isValid(curStr, selected) == false) {
+            return helper(arr, ans, idx + 1, selected);
+        } else {
+            // Mark characters in the current string as selected
+            for (int i = 0; i < curStr.size(); i++) selected[curStr[i] - 'a'] = 1;
+            // Update the answer by adding the length of the current string
+            ans += curStr.size();
+            // Recursively explore with the current string selected
+            int op1 = helper(arr, ans, idx + 1, selected);
+
+            // Backtrack: Mark characters in the current string as not selected
+            for (int i = 0; i < curStr.size(); i++) selected[curStr[i] - 'a'] = 0;
+            // Backtrack: Subtract the length of the current string from the answer
+            ans -= curStr.size();
+            // Recursively explore without selecting the current string
+            int op2 = helper(arr, ans, idx + 1, selected);
+
+            // Return the maximum of the two options
+            return max(op1, op2);
+        }
+    }
+
+    // Main function to find the maximum length of a concatenated string with unique characters
+    int maxLength(vector<string>& arr) {
+        int ans = 0;
+        vector<int> selected(26, 0);
+        return helper(arr, ans, 0, selected);
+    }
+};
+```
