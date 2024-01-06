@@ -1027,3 +1027,63 @@ class Solution{
     }
 };
 ```
+
+# [37. Sudoku Solver](https://leetcode.com/problems/sudoku-solver/description/)
+
+## [Approach](https://takeuforward.org/data-structure/sudoku-solver/)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Function to solve Sudoku puzzle
+    void solveSudoku(vector<vector<char>>& board) {
+        // Call helper function to start solving
+        helper(board);
+    }
+
+    // Recursive helper function to solve Sudoku
+    bool helper(vector<vector<char>> & board) {
+        // Loop through each cell in the board
+        for(int i = 0; i < board.size(); i++) {
+            for(int j = 0; j < board[0].size(); j++) {
+                // Check if the cell is empty (indicated by '.')
+                if(board[i][j] == '.') {
+                    // Try filling the empty cell with digits 1 to 9
+                    for(char x = '1'; x <= '9'; x++) {
+                        // Check if placing x in the current cell is valid
+                        if(isValid(i, j, board, x)) {
+                            // Place x in the cell
+                            board[i][j] = x;
+
+                            // Recursively call the helper function
+                            if(helper(board)) return true; // Continue with the next cell
+
+                            // If the placement doesn't lead to a solution, backtrack and try a different digit
+                            else board[i][j] = '.';
+                        }
+                    }
+                    // If no valid digit can be placed, backtrack to the previous cell
+                    return false;
+                }
+            }
+        }
+        // If all cells are filled, the Sudoku is solved
+        return true;
+    }
+
+    // Function to check if placing x in the given cell is valid
+    bool isValid(int row, int col, vector<vector<char>> & board, char x) {
+        // Check if x is not present in the current row and column
+        for(int i = 0; i < 9; i++) {
+            if(board[row][i] == x) return false; // Check row
+            if(board[i][col] == x) return false; // Check column
+
+            // Check the 3x3 sub-box
+            if(board[3 * (row / 3) + i / 3][3 * (col / 3) + i % 3] == x) return false;
+        }
+        // If x can be placed in the cell without violating Sudoku rules, it is valid
+        return true;
+    }
+};
+```
