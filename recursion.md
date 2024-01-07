@@ -1231,3 +1231,44 @@ public:
     }
 };
 ```
+
+# [93. Restore IP Addresses](https://leetcode.com/problems/restore-ip-addresses/description/)
+
+## Code ->
+```cpp
+class Solution {
+public:
+void helper(string& s, int i, int dots, string res, vector<string>& ans) {
+        // Base case: If four parts are formed, and the entire string is processed
+        if (dots == 4 && i == s.length()) {
+            // Add the valid IP address to the result
+            ans.push_back(res.substr(0, res.length() - 1)); // Remove the trailing dot
+            return;
+        }
+
+        // If more than 4 parts are formed, or if the string is not fully processed, return
+        if (dots > 4) {
+            return;
+        }
+
+        // Explore all possible parts by considering substrings of length 1 to 3
+        for (int j = i; j < min(i + 3, static_cast<int>(s.length())); ++j) {
+            // Convert the substring to an integer
+            int currnum = stoi(s.substr(i, j - i + 1));
+
+            // Check if the part is less than or equal to 255 and does not have leading zeros
+            if (currnum <= 255 && (i == j || s[i] != '0')) {
+                // Recursively call the helper function with the updated parameters
+                helper(s, j + 1, dots + 1, res + s.substr(i, j - i + 1) + ".", ans);
+            }
+        }
+    }
+
+    vector<string> restoreIpAddresses(string s) {
+        vector<string> ans;
+        helper(s, 0, 0, "", ans);
+        return ans;
+    }
+
+};
+```
