@@ -1272,3 +1272,83 @@ void helper(string& s, int i, int dots, string res, vector<string>& ans) {
 
 };
 ```
+
+## Approaches ->
+1. The code uses a recursive approach to check if it's possible to form a square using matchsticks, ensuring each matchstick is used exactly once. The helper function explores different combinations by distributing matchsticks among four sides, and the main function checks if the total sum is divisible by 4 before calling the helper function. If successful, it returns true; otherwise, it returns false. Look at code 1 for better understanding. Although this approach will throw a TLE, so we will be optimizing the further. Also keep note of the optimization 1 done in the code below.
+
+2. Now to solve the TLE we need to further optimize the code. Second optimization that we can do is that we will take a target variable that will suggest the value that should be in each matchSides array. In optimization 2 we will simply not call the recursive function if the value in the matchSides (after summing the already existing value in matchSides with matchsticks[i]) comes greater than target value. Third optimization we can do is that we will sort matchsticks array in decreasing order before passing it, that way if there is an element that is way larger than target will be encountered at the beginning itself and there will be no further recursion calls. Fourth and last optimization can be that for a given number in matchsticks array, if adding that number to a position of matchSides(let's say 0th having integer 5) gave us a false result, then if we encounter the same number (5 again) on matchSides on some other position then there is no point in calling the recursion. So we will simply continue our loop without calling the recursion. Now have a look at the code for better understanding.
+
+## Codes ->
+
+### 1. 
+```cpp
+class Solution {
+public:
+    bool helper(vector<int> &matchsticks, vector<int> matchSides, int idx){
+        // When all matchsticks are used, check if sides are equal
+        if(idx==matchsticks.size()){
+            if(matchSides[0]==matchSides[1] && matchSides[1]==matchSides[2] && matchSides[2]==matchSides[3]) return true;
+            else return false;
+        }
+
+        // Try distributing the current matchstick among the four sides and recursively explore
+        for(int i=0; i<4; i++){
+            matchSides[i]+=matchsticks[idx];
+            if(helper(matchsticks, matchSides, idx+1)) return true;
+            matchSides[i]-=matchsticks[idx];
+        }
+        return false;
+    }
+    bool makesquare(vector<int>& matchsticks) {
+        // Calculate the sum of matchstick lengths
+        int sum = accumulate(matchsticks.begin(), matchsticks.end(), 0);
+        // Check if the number of matchsticks is not zero and the sum is divisible by 4 (Optimization 1)
+        if(matchsticks.size()==0 || sum%4!=0) return false;
+
+        vector<int> matchSides(4, 0);
+        return helper(matchsticks, matchSides, 0);
+    }
+};
+```
+### 2. 
+```cpp
+// Same code with a 4 optimizations->
+class Solution {
+public:
+    bool helper(vector<int> &matchsticks, vector<int> matchSides, int idx, int target){
+        if(idx==matchsticks.size()){
+            if(matchSides[0]==matchSides[1] && matchSides[1]==matchSides[2] && matchSides[2]==matchSides[3]) return true;
+            else return false;
+        }
+
+        for(int i=0; i<4; i++){
+            if(matchSides[i] + matchsticks[idx] > target) continue; // Optimization 2
+
+            // Optimization 4 starts here
+            int j = i-1;
+            while(j>=0){
+                if(matchSides[j] == matchSides[i]) break;
+                j--;
+            }
+            if(j!=-1) continue;
+            // Optimization 4 ends here
+
+            matchSides[i]+=matchsticks[idx];
+            if(helper(matchsticks, matchSides, idx+1, target)) return true;
+            matchSides[i]-=matchsticks[idx];
+        }
+        return false;
+    }
+    bool makesquare(vector<int>& matchsticks) {
+        int sum = accumulate(matchsticks.begin(), matchsticks.end(), 0);
+        if(matchsticks.size()==0 || sum%4!=0) return false; // Optimization 1
+
+        int target = sum/4;
+
+        vector<int> matchSides(4, 0);
+
+        sort(matchsticks.begin(), matchsticks.end(), greater<int>()); // Optimization 3
+        return helper(matchsticks, matchSides, 0, target);
+    }
+};
+```
