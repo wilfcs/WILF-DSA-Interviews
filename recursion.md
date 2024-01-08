@@ -1352,3 +1352,48 @@ public:
     }
 };
 ```
+
+# [241. Different Ways to Add Parentheses](https://leetcode.com/problems/different-ways-to-add-parentheses/description/)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    vector<int> diffWaysToCompute(string expression) {
+        vector<int> ans;
+        int n = expression.size();
+
+        // Iterate through each character in the expression
+        for(int i = 0; i < n; i++) {
+            char ch = expression[i];
+
+            // If the current character is an operator
+            if(ch == '+' || ch == '-' || ch == '*') {
+                // Recursively compute the left and right parts of the expression
+                vector<int> left = diffWaysToCompute(expression.substr(0, i));
+                vector<int> right = diffWaysToCompute(expression.substr(i + 1, n));
+
+                // Combine the results of left and right using the current operator
+                for(int x : left) {
+                    for(int y : right) {
+                        if(ch == '-') ans.push_back(x - y);
+                        else if(ch == '+') ans.push_back(x + y);
+                        else ans.push_back(x * y);
+                    }
+                }
+            }
+        }
+
+        // If the expression contains only a number (no operator)
+        if(ans.empty()) ans.push_back(stoi(expression));
+
+        return ans;
+    }
+};
+```
+
+to do ->
+inversion count
+reverse pairs
+Count of Smaller Numbers After Self
+
