@@ -1391,6 +1391,56 @@ public:
     }
 };
 ```
+## Approach->
+The basic idea and the crux of this game is this->
+
+1. When it is your turn, do your best
+2. When it is your opponent's turn, expect the worst from result because your opponent is also playing optimally.
+
+So for example you have {1,5,2} and if you pick 1 then your opponent will have {5,2} as option so they will pick 5 for sure and you'll be left with minimum (hence the expect the worst from result is true). And if you picked 2 from {1,5,2} then also your opponent would have chose 5.
+
+So in this approach we are just going to find the most optimal total price of player 1 using recursion. Then we will subtract that total optimal price of player 1 with the total price available in the nums array to find the total price of player 2. And then we can return true if player 1 has more or equal than player 2.
+
+So it is very clear that we will only find the optimal price of player 1. So player 1 has two options-> to pick the first element i.e. from st or to pick from the end i.e. en. If player 1 picks from st, player 2 can pick from either st or en. So player 1 in the next turn will have to pick from st+2,en or st+1,en-1. If player 1 picks from en, in the next turn player 1 will have to pick from st+1,en-1 or st+2,en.
+
+So everytime we will choose both st and en prices and call recursion for the minimum value of recursion because the opponent is not letting us choose the maximum value (opponent's optimal moves that's why we are expecting the least (crux 2)). And at the end we will return the maximum value among the two (our optimal move because it's our chance to pick (crux 1))
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Helper function to find the optimal total price for Player 1
+    int helper(vector<int>& nums, int st, int en){
+        // If st is greater than en, there are no elements left
+        if(st > en) return 0;
+        // If st is equal to en, there is only one element left
+        if(st == en) return nums[st];
+
+        // Option 1 for Player 1: Pick from the start and consider opponent's optimal moves i.e. anticipate minimum result from the future
+        int op1ForPlayer = nums[st] + min(helper(nums, st + 2, en), helper(nums, st + 1, en - 1));
+        // Option 2 for Player 1: Pick from the end and consider opponent's optimal moves i.e. anticipate minimum result from the future
+        int op2ForPlayer = nums[en] + min(helper(nums, st, en - 2), helper(nums, st + 1, en - 1));
+
+        // Return the maximum value among the two options for Player 1 because it's your turn and you will obviously do your best
+        return max(op1ForPlayer, op2ForPlayer);
+    }
+
+    // Main function
+    bool predictTheWinner(vector<int>& nums) {
+        // Calculate the total sum of all elements in the nums array
+        int total = accumulate(nums.begin(), nums.end(), 0);
+
+        // Find the optimal total price for Player 1 using the helper function
+        int p1 = helper(nums, 0, nums.size() - 1);
+
+        // Calculate the total price for Player 2
+        int p2 = total - p1;
+
+        // Return true if Player 1's total price is greater than or equal to Player 2's total price
+        return (p1 >= p2);
+    }
+};
+```
 
 to do ->
 inversion count
