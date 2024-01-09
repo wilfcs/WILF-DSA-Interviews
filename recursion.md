@@ -1490,7 +1490,68 @@ long long getInversions(long long *arr, int n){
 }
 ```
 
-to do ->
-reverse pairs
-Count of Smaller Numbers After Self
+TC ->  O(N*logN), SC-> O(N), as in the merge sort We use a temporary array to store elements in sorted order.
+
+# [493. Reverse Pairs](https://leetcode.com/problems/reverse-pairs/description/)
+
+## Approach -> Exactly same as the approach in the question above. Just make another function to calculate the answer and call the function before merging the two arrays(sorted). [link](https://takeuforward.org/data-structure/count-reverse-pairs/)
+```cpp
+class Solution {
+public:
+    void merge(vector<long long int> &ar, int low, int mid, int high, long long int &ans){
+        int left = low;
+        int right = mid+1;
+
+        vector<int> vec;
+
+        while(left <= mid && right<= high){
+            if(ar[left]>ar[right]){
+                vec.push_back(ar[right++]);
+            } 
+            else vec.push_back(ar[left++]);
+        }
+        while(left<= mid) vec.push_back(ar[left++]);
+        while(right<=high) vec.push_back(ar[right++]);
+
+        int x = 0;
+        for(int i=low; i<=high; i++) ar[i] = vec[x++];
+    }
+
+    // Function to calculate the answer
+    void calculate(vector<long long int> &ar, int low, int mid, int high, long long int &ans){
+        int left = low, right = mid+1;
+        while(left<=mid && right<=high){
+            if( ar[left] <= (ar[right])*2 ) left++;
+            else{
+                ans+=(mid-left+1);
+                right++;
+            }
+        }
+    }
+
+    void mergeSort(vector<long long int> &ar, int low, int high, long long int &ans){
+        if(low >= high){
+            return;
+        }
+
+        int mid = (high + low) / 2;
+
+        mergeSort(ar, low, mid, ans);
+        mergeSort(ar, mid+1, high, ans);
+        calculate(ar, low, mid, high, ans); // calculate function call
+        merge(ar, low, mid, high, ans);
+    }
+
+    int reversePairs(vector<int>& nums) {
+        long long int ans = 0;
+        vector<long long int> ar;
+        for(int i=0; i<nums.size(); i++) ar.push_back(nums[i]);
+        mergeSort(ar, 0, nums.size()-1, ans);
+        return ans;
+    }
+};
+```
+TC-> O(2N*logN). SC-> O(N)
+
+
 
