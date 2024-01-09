@@ -1442,8 +1442,55 @@ public:
 };
 ```
 
+# [Count Inversion](https://www.codingninjas.com/studio/problems/count-inversions_615?leftPanelTabValue=PROBLEM)
+
+## [Approaches](https://takeuforward.org/data-structure/count-inversions-in-an-array/)
+
+## Code->
+```cpp
+// The code from top to bottom is a merge sort code, just added one additional line to count answer.
+#include <bits/stdc++.h> 
+void merge(vector<long long> &ar, long long low, long long mid, long long high, long long &ans){
+    long long left = low;
+    long long right = mid+1;
+
+    vector<int> vec;
+
+    while(left <= mid && right<= high){
+        if(ar[left]>ar[right]){
+            ans += (mid - left + 1); // only additional line to count answer
+            vec.push_back(ar[right++]);
+        } 
+        else vec.push_back(ar[left++]);
+    }
+    while(left<= mid) vec.push_back(ar[left++]);
+    while(right<=high) vec.push_back(ar[right++]);
+
+    int x = 0;
+    for(int i=low; i<=high; i++) ar[i] = vec[x++];
+}
+void mergeSort(vector<long long> &ar, long long low, long long high, long long &ans){
+    if(low >= high){
+        return;
+    }
+
+    long long mid = (high + low) / 2;
+
+    mergeSort(ar, low, mid, ans);
+    mergeSort(ar, mid+1, high, ans);
+    merge(ar, low, mid, high, ans);
+}
+
+long long getInversions(long long *arr, int n){
+    vector<long long> ar;
+    for(int i=0; i<n; i++) ar.push_back(arr[i]);
+    long long ans = 0;
+    mergeSort(ar, 0, n-1, ans);
+    return ans;
+}
+```
+
 to do ->
-inversion count
 reverse pairs
 Count of Smaller Numbers After Self
 
