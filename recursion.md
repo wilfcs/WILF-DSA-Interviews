@@ -89,22 +89,12 @@ bool subsetSumToK(int n, int k, vector<int> &arr) {
 
 - Functional recursion call
 ```cpp
-#include <bits/stdc++.h> 
 bool helper(int n, int k, vector<int> &arr, int sum){
-    if(n<0){
-        if(sum==k) return true;
-        return false;
-    }
-    sum+=arr[n];
-    if(helper(n-1, k, arr, sum)) return true; 
-    // as soon as the helper returns true, the recursion calls stops and it starts to backtrack
-
-    sum-=arr[n];
-    if(helper(n-1, k, arr, sum)) return true;
-    return false;
+    if(sum==k) return true;
+    if(n<0) return false;
+    return (helper(n-1, k, arr, sum+arr[n]) || helper(n-1, k, arr, sum));   
 }
 bool subsetSumToK(int n, int k, vector<int> &arr) {
-    // Write your code here.
     return helper(n-1, k, arr, 0);
 }
 ```
@@ -1555,3 +1545,4 @@ TC-> O(2N*logN). SC-> O(N)
 
 
 
+Try - Count of Smaller Numbers After Self 
