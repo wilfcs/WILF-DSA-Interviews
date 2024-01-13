@@ -1544,5 +1544,5 @@ public:
 TC-> O(2N*logN). SC-> O(N)
 
 
+# [Count of Smaller Numbers After Self ](https://leetcode.com/problems/count-of-smaller-numbers-after-self/)
 
-Try - Count of Smaller Numbers After Self 
