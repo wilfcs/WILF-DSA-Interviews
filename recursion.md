@@ -448,7 +448,14 @@ Space Complexity: O(k*x), k is the average length and x is the no. of combinatio
 
 ## [Approach (look at the recursive tree)](https://takeuforward.org/data-structure/combination-sum-ii-find-all-unique-combinations/)
 Note: In this question we are required to ignore duplicates and return the answer in sorted order.
+So an approach might come in your head that why not keep the code same as of the last question and just increase the index even when we pick the element. Well that would have worked if there was no condition saying "find all unique combinations in candidates where the candidate numbers sum to target". But since we also have to keep the ans with unique elements only we will have to apply a different method of doing so.
 
+Here's an example of understanding what is the wrong output and what is the right output:
+
+Wrong output: [[1,2,5],[1,7],[1,6,1],[2,6],[2,1,5],[7,1]]
+Right output: [[1,2,5],[1,7],[1,6,1],[2,6]]
+
+---
 ## Code ->
 ```cpp
 class Solution {
