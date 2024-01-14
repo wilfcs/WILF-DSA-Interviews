@@ -447,7 +447,25 @@ Space Complexity: O(k*x), k is the average length and x is the no. of combinatio
 # [40. Combination Sum II](https://leetcode.com/problems/combination-sum-ii/description/)
 
 ## [Approach (look at the recursive tree)](https://takeuforward.org/data-structure/combination-sum-ii-find-all-unique-combinations/)
-Note: In this question we are required to ignore duplicates and return the answer in sorted order.
+# Intuition:
+- The problem involves finding all unique combinations of candidates that sum to the target.
+- The key challenge is to avoid duplicate combinations in the result.
+- A recursive backtracking approach is used to explore and generate combinations.
+# Approach:
+- Sort the Candidates: Before starting the recursive calls, sort the candidates. Sorting is crucial to avoid duplicate combinations and to make the combinations appear in a sorted order.
+
+- Define Recursive Helper Function: The helper function is a recursive function that explores combinations.
+It takes parameters: the current candidates array, the remaining target, the current temporary combination (temp), the current sum, and the current index (idx).
+
+- Base Cases: If the current sum exceeds the target, return. If the current sum equals the target, add the current combination to the result (ans) and return.
+
+- Loop Through Candidates: Use a loop starting from the current index (idx) to the end of the candidates array. Skip consecutive duplicates to avoid duplicate combinations. If the current candidate is greater than the remaining target, break the loop (optimization). Include the current candidate in the temporary combination. Recursively call the helper function with updated parameters. Remove the last added element to backtrack and explore other combinations.
+
+- Recursive Calls: The recursive calls explore combinations with the current element included (temp.push_back) and without it (temp.pop_back).
+
+- Main Function: The combinationSum2 function initializes an empty vector (temp) and calls the helper function with the starting parameters. The sorted candidates array is used, and the result is returned.
+
+Extra Note: In this question we are required to ignore duplicates and return the answer in sorted order.
 So an approach might come in your head that why not keep the code same as of the last question and just increase the index even when we pick the element. Well that would have worked if there was no condition saying "find all unique combinations in candidates where the candidate numbers sum to target". But since we also have to keep the ans with unique elements only we will have to apply a different method of doing so.
 
 Here's an example of understanding what is the wrong output and what is the right output:
@@ -482,7 +500,7 @@ public:
             // Remove the last added element to backtrack and explore other combinations
             temp.pop_back();
 
-            // helper(candidates, target, temp, sum, idx+1); -> we will not include this line like the previous solution. reason given below.
+            // helper(candidates, target, temp, sum, i+1); -> we will not include this line like the previous solution. reason given below.
         }
         
 
@@ -490,24 +508,26 @@ public:
     }
 
     vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
-        sort(candidates.begin(), candidates.end());
+        sort(candidates.begin(), candidates.end()); // sort the array to avoid duplicates in the future
         vector<int> temp;
         helper(candidates, target, temp, 0, 0);
         return ans;
     }
 };
 ```
-Why did we not include helper(candidates, target, temp, sum, idx+1);
+Question -> Why did we not include helper(candidates, target, temp, sum, i+1);
 
-Reason ->  in the current structure of the code, this line is not required and can lead to incorrect results. The reason is that the recursive call with idx+1 already covers the case of excluding the current element at index i. By making another recursive call with the same idx, you are essentially repeating the same combinations and potentially skipping valid combinations.
+Reason ->  The specific line helper(candidates, target, temp, sum, i+1); (which represents the recursive call without including the current candidate) is omitted in this particular implementation because of the nature of the problem and the way duplicates are handled.
 
-The correct structure is to make a single recursive call for each element at index i, and the loop itself takes care of iterating through all possible elements starting from the current index. 
+The condition if(i > idx && candidates[i] == candidates[i-1]) continue; takes care of skipping over duplicate elements at the current level of recursion. In other words, when you encounter a duplicate, you skip the recursive call for that duplicate element, ensuring that you don't generate duplicate combinations.
 
-Time Complexity:O(2^n*k)
+If you were to include the line helper(candidates, target, temp, sum, i+1);, it would mean that you are considering the case where you skip the current element and move to the next one. However, the way duplicates are handled in the current code essentially achieves the same effect without explicitly making that recursive call.
+
+# Time Complexity:O(2^n*k)
 
 Reason: Assume if all the elements in the array are unique then the no. of subsequence you will get will be O(2^n). we also add the ds to our ans when we reach the base case that will take “k”//average space for the ds.
 
-Space Complexity:O(k*x)
+# Space Complexity:O(k*x)
 
 Reason: if we have x combinations then space will be x*k where k is the average length of the combination.
 
