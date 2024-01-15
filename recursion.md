@@ -906,8 +906,8 @@ Generate all combinations of length k from the set {1, 2, ..., 9}, and filter th
 class Solution {
 public:
     // Helper function to find combinations
-    void helper(int k, int n, std::vector<std::vector<int>> &ans, std::vector<int> temp, int sum, std::vector<int> &hash, int idx) {
-        // Base case: if the sum exceeds the target or the size of the combination is reached
+    void helper(int k, int n, vector<vector<int>> &ans, vector<int> temp, int sum, vector<int> &hash, int idx) {
+        // if the sum exceeds the target or the size of the combination is reached
         if (sum > n) return;
         if (temp.size() == k) {
             // If the combination size is k and the sum is n, add it to the answer
@@ -929,6 +929,14 @@ public:
                 hash[i] = 0;    // Mark the number as unused for the next iteration
             }
         }
+    }
+
+    vector<vector<int>> combinationSum3(int k, int n) {
+        vector<vector<int>> ans;
+        vector<int> temp;
+        vector<int> hash(10, 0);
+        helper(k, n, ans, temp, 0, hash, 1);
+        return ans;
     }
 }
 ```
