@@ -867,35 +867,27 @@ public:
 
 ## Approach ->
 Make a mapping for all the numbers. Extract the alphabets from given digit one by one and for every letter for a given digit, call the recursive function.
+[Recursive tree](https://www.youtube.com/watch?v=vgnhZzw-kfU)
 
 ## Code ->
 ```cpp
 class Solution {
 public:
-    void helper(string digits, string digitMapping, string temp, int idx, vector<string> &ans){
+    void helper(string digits, vector<string> digitMapping, string temp, int idx, vector<string> &ans){
         if(idx==digits.size()){
             ans.push_back(temp);
             return;
         }
 
-        string curStr = digitMapping[digits[idx]-'0']; // extract the alphabets from given digit to curStr
+        string curStr = digitMapping[digits[idx]-'0']; // extract the alphabets from given digit to curStr. Also don't forget to subtract digits[idx] with '0' because it is not a number it is a character.
 
         for(int i=0; i<curStr.size(); i++)
-            helper(digits, digitMapping, temp, idx+1; ans);
+            helper(digits, digitMapping, temp+curStr[i], idx+1, ans); // recursive call for next index and temp+curStr[i]
     }
     vector<string> letterCombinations(string digits) {
         vector<string> ans; // declare answer to return
-        string digitMapping[10]; // declaring a string of size 10
-        digitMapping[0]=""; //0th button contains nothing
-        digitMapping[1]="";
-        digitMapping[2]="abc"; //button 2 contains a,b,c
-        digitMapping[3]="def";
-        digitMapping[4]="ghi";
-        digitMapping[5]="jkl";
-        digitMapping[6]="mno";
-        digitMapping[7]="pqrs";
-        digitMapping[8]="tuv";
-        digitMapping[9]="wxyz";
+        if(digits.size()==0) return ans; // important base condition
+        vector<string> digitMapping = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"}; // declaring a string mapping of size 10
         helper(digits, digitMapping, "", 0, ans);
         return ans;
     }
