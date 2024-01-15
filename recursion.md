@@ -827,6 +827,7 @@ public:
 # [131. Palindrome Partitioning](https://leetcode.com/problems/palindrome-partitioning/)
 
 ## [Approach](https://takeuforward.org/data-structure/palindrome-partitioning/)
+Note that here we need to partition the string, so this is how we partition. Remember this pattern for further partitioning questions.
 
 ## Code ->
 ```cpp
