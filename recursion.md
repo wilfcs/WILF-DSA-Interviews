@@ -654,6 +654,7 @@ public:
 ```
 
 2. Swapping to generate all permutations Approach ->
+[Look at the recursive tree without fail](https://www.youtube.com/watch?v=f2ic2Rsc9pU&t=26s)
 
 - If the current index idx reaches the size of the array, it means a valid permutation is found. Add it to the result vector ans.
 
