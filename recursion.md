@@ -970,8 +970,8 @@ public:
     bool helper(vector<vector<char>> &board, string word, int row, int col, int idx){
         // if index reaches at the end that means we have found the word
         if(idx == word.size()) return true;
-        // Checking the boundaries if the character at which we are placed is not 
-        // checking if the letter is same as of letter required or no
+        // Checking the boundaries if the position at which we are placed is not out of bounds
+        // checking if the letter is same as of letter required or not
         if(row<0 || col<0 || row>=board.size() || col>=board[0].size() || board[row][col]!=word[idx]) return false;
 
         // this is to prevent reusing of the same character
@@ -1292,6 +1292,7 @@ void helper(string& s, int i, int dots, string res, vector<string>& ans) {
 };
 ```
 
+# [473. Matchsticks to Square](https://leetcode.com/problems/matchsticks-to-square/description/)
 ## Approaches ->
 1. The code uses a recursive approach to check if it's possible to form a square using matchsticks, ensuring each matchstick is used exactly once. The helper function explores different combinations by distributing matchsticks among four sides, and the main function checks if the total sum is divisible by 4 before calling the helper function. If successful, it returns true; otherwise, it returns false. Look at code 1 for better understanding. Although this approach will throw a TLE, so we will be optimizing the further. Also keep note of the optimization 1 done in the code below.
 
