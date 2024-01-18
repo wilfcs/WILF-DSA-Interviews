@@ -1413,6 +1413,7 @@ public:
     }
 };
 ```
+# [486. Predict the Winner](https://leetcode.com/problems/predict-the-winner/description/)
 ## Approach->
 The basic idea and the crux of this game is this->
 
