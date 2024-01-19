@@ -82,3 +82,26 @@ Node* reverseLinkedList(Node* head) {
     return newHead;
 }
 ```
+# [141. Linked List Cycle](https://leetcode.com/problems/linked-list-cycle/description/)
+## Approaches ->
+1. Maintain a hashmap. Traverse the ll and find the node in the map. Insert the node in the map.
+2. Take a slow and fast pointer. If cycle exist, fast and slow pointer will meet each other at some point.
+---
+## Code ->
+2. 
+```cpp
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        ListNode *fast = head, *slow = head;
+        while(fast && fast->next)
+        {
+            fast = fast->next->next;
+            slow = slow->next;
+            if(fast == slow)
+                return true;
+        }
+        return false;
+    }
+};
+```
