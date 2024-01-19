@@ -191,3 +191,34 @@ public:
     }
 };
 ```
+
+# [328. Odd Even Linked List](https://leetcode.com/problems/odd-even-linked-list/description/)
+
+## Approaches ->
+1. Brute Force: Separate odd and even index nodes into an array using two iterations. Replace the data in the linked list by traversing it again and using the array.
+Time complexity: O(n), Space complexity: O(n).
+2. Instead of using an external array, rearrange the linked list in-place by changing the links. Traverse the linked list using two pointers, odd and even, starting at the head and head.next. Iterate through the linked list, rearranging the links to connect odd and even nodes alternately. Connect the last odd node to the head of even nodes.
+Time complexity: O(n), Space complexity: O(1)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        if(head==NULL || head->next==NULL || head->next->next==NULL) return head;
+        ListNode* odd = head, *even = head->next, *toPoint = head->next;
+
+        // connecting all odd nodes and even nodes seperately
+        while(odd->next && even->next){
+            odd->next = odd->next->next;
+            odd = odd->next;
+            even->next = even->next->next;
+            even = even->next;
+        }
+
+        // connecting the end of odd linked list with start of even linked list
+        odd->next = toPoint;
+        return head;
+    }
+};
+```
