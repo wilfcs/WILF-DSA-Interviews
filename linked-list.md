@@ -252,3 +252,64 @@ public:
     }
 };
 ```
+
+# [2. Add Two Numbers](https://leetcode.com/problems/add-two-numbers/description/)
+## Approach -> 
+Keep track of the carry using a variable and simulate digits-by-digits sum starting from the head of the list, which contains the least significant digit.
+
+---
+## Code ->
+```cpp
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        // Initialize variables to keep track of carry, sum, and the value to add to the new node
+        int carry = 0, sum = 0, toAdd = 0;
+
+        // Create a dummy node to serve as the head of the result linked list
+        ListNode* head = new ListNode(-1);
+        
+        // Create a pointer to traverse the result linked list
+        ListNode* mover = head;
+
+        // Iterate through the input linked lists until both are exhausted
+        while (l1 || l2) {
+            // Reset sum for each iteration
+            sum = 0;
+
+            // Add values from the current nodes of l1 and l2, if available
+            if (l1) sum += l1->val;
+            if (l2) sum += l2->val;
+
+            // Add the carry from the previous iteration
+            sum += carry;
+
+            // Calculate the value to be added to the new node and update the carry
+            toAdd = sum % 10;
+            carry = sum / 10;
+
+            // Create a new node with the calculated value and append it to the result linked list
+            ListNode* temp = new ListNode(toAdd);
+            mover->next = temp;
+            mover = mover->next;
+
+            // Move to the next nodes in the input linked lists, if available
+            if (l1) l1 = l1->next;
+            if (l2) l2 = l2->next;
+        }
+
+        // If there's a carry remaining after the last iteration, create a new node for it
+        if (carry) {
+            ListNode* temp = new ListNode(carry);
+            mover->next = temp;
+            mover = mover->next;
+        }
+
+        // Set the next pointer of the last node to NULL to terminate the result linked list
+        mover->next = nullptr;
+
+        // Return the actual head of the result linked list (excluding the dummy node)
+        return head->next;
+    }
+};
+```
