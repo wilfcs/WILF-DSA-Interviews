@@ -222,3 +222,33 @@ public:
     }
 };
 ```
+# [19. Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/description/)
+## Approaches -> 
+1. We can traverse through the Linked List while maintaining a count of nodes, let’s say in the variable count, and then traversing for the 2nd time for (n – count) nodes to get to the nth node of the list. TC-> O(2n)
+2. Unlike the above approach, we don’t have to maintain the count value, we can find the nth node just by one traversal by using two pointer approach. So what we will do is take a fast pointer and slow pointer. Then start traversing until the fast pointer reaches the nth node. Now start traversing by one step for both the pointers fast and slow until the fast pointers reach the end. Now your slow pointer will for sure be at the nth position from the last. TC-> O(n)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode * start = new ListNode();
+        start -> next = head;
+        ListNode* fast = start;
+        ListNode* slow = start;     
+
+        for(int i = 1; i <= n; ++i)
+            fast = fast->next;
+    
+        while(fast->next != NULL)
+        {
+            fast = fast->next;
+            slow = slow->next;
+        }
+        
+        slow->next = slow->next->next;
+        
+        return start->next;
+    }
+};
+```
