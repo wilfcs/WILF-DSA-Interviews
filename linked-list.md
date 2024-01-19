@@ -33,3 +33,52 @@ public:
     }      
 };
 ```
+[206. Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/description/)
+## Iterative Approach Code (TC->O(N) SC->O(1)) ->
+```cpp
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode* p = NULL, *c = head, *n = NULL;
+        while(c){
+            n = c->next; // don't forget to assign the value of next here instead at the end to avoid runtime error
+            c->next = p;
+            p=c;
+            c=n;
+        }
+        return p;
+    }
+};
+```
+## [Recursive Approach Code (TC->O(N) SC->O(1)) ->](https://takeuforward.org/data-structure/reverse-a-linked-list/)
+```cpp
+Node* reverseLinkedList(Node* head) {
+    // Base case:
+    // If the linked list is empty or has only one node,
+    // return the head as it is already reversed.
+    if (head == NULL || head->next == NULL) {
+        return head;
+    }
+    
+    // Recursive step:
+    // Reverse the linked list starting 
+    // from the second node (head->next).
+    Node* newHead = reverseLinkedList(head->next);
+    
+    // Save a reference to the node following
+    // the current 'head' node.
+    Node* front = head->next;
+    
+    // Make the 'front' node point to the current
+    // 'head' node in the reversed order.
+    front->next = head;
+    
+    // Break the link from the current 'head' node
+    // to the 'front' node to avoid cycles.
+    head->next = NULL;
+    
+    // Return the 'newHead,' which is the new
+    // head of the reversed linked list.
+    return newHead;
+}
+```
