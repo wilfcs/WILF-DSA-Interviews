@@ -390,3 +390,59 @@ vector<pair<int, int>> findPairs(Node* head, int k)
     return ans;
 }
 ```
+# [61. Rotate List](https://leetcode.com/problems/rotate-list/description/)
+## Approach ->
+- Calculate the length of the list.
+- Connect the last node to the first node, converting it to a circular linked list.
+- Iterate to cut the link of the last node and start a node of k%length of the list rotated list.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        // Check if the linked list is empty or has only one node, no rotation needed.
+        if (head == NULL || head->next == NULL) {
+            return head;
+        }
+
+        // Initialize two pointers, 'temp' and 'ptr', and a variable 'size' to 0.
+        ListNode* temp = head, *ptr = head;
+        int size = 0;
+
+        // Traverse the linked list to find its size.
+        while (temp->next) {
+            size++;
+            temp = temp->next;
+        }
+
+        // Include the last node in the size calculation.
+        size++;
+
+        // If k is a multiple of the size, no rotation is needed.
+        if (k % size == 0) {
+            return head;
+        }
+
+        // Calculate the number of nodes to be rotated from the end.
+        int toChange = size - k % size - 1;
+
+        // Move the 'ptr' pointer to the node before the rotation point.
+        while (toChange--) {
+            ptr = ptr->next;
+        }
+
+        // Connect the last node to the head to create a circular structure.
+        temp->next = head;
+
+        // Update the 'head' to the node after the rotation point.
+        head = ptr->next;
+
+        // Break the circular structure at the rotation point.
+        ptr->next = NULL;
+
+        // Return the new head of the rotated linked list.
+        return head;
+    }
+};
+```
