@@ -446,3 +446,55 @@ public:
     }
 };
 ```
+
+# [21. Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/description/)
+
+## Approach ->
+This is a fairly simple question but questions like these might seem tough to code if you are out of practice. But there is a very simple way to join the links of the nodes without creating any confusion and that is, you make a dummy node temp and keep pointing it to the node that has the smaller value. Move temp and move list1 and list2 as well. So basically temp is for the conncetion purpose and list1 list2 is for comparision purpose.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        // Check if either of the lists is empty.
+        if(list1==NULL) return list2;
+        if(list2==NULL) return list1;
+
+        // Create a dummy node to simplify handling the merged list.
+        ListNode * head = new ListNode(-1);
+        ListNode *temp = head;
+
+        // Traverse both lists while they are not empty.
+        while(list1 && list2){
+            // Compare values of nodes in the two lists.
+            if(list1->val < list2->val){
+                // Connect the link of smaller value to temp.
+                temp->next = list1;
+                temp = temp->next;
+                list1 = list1->next; 
+            }
+            else{
+                temp->next = list2;
+                temp = temp->next;
+                list2 = list2->next; 
+            }
+        }
+
+        // If list1 is not empty, append the remaining nodes.
+        while(list1){
+            temp->next = list1;
+            temp = temp->next;
+            list1 = list1->next;
+        }
+        // If list2 is not empty, append the remaining nodes.
+        while(list2){
+            temp->next = list2;
+            temp = temp->next;
+            list2 = list2->next; 
+        }
+        // Skip the dummy node and return the merged list.
+        return head->next;
+    }
+};
+```
