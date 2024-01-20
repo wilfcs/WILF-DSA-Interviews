@@ -226,7 +226,7 @@ public:
 ## Approaches -> 
 1. We can traverse through the Linked List while maintaining a count of nodes, let’s say in the variable count, and then traversing for the 2nd time for (n – count) nodes to get to the nth node of the list. TC-> O(2n)
 2. Unlike the above approach, we don’t have to maintain the count value, we can find the nth node just by one traversal by using two pointer approach. So what we will do is take a fast pointer and slow pointer. Then start traversing until the fast pointer reaches the nth node. Now start traversing by one step for both the pointers fast and slow until the fast pointers reach the end. Now your slow pointer will for sure be at the n-1th position from the last. TC-> O(n).
-In this approach keep in mind the two things -> first that write the code in such a way that slow pointer is at n-1th position and not nth position because you need to delete nth position. And second that keep in mind the edge case of what if the value of n is equal to the size of the linked list, in that case you have to delete the head node but you don't know if you have to delete the head node or some other node because you are only traversing once. To tackle this see in code how I make a start node and pointed it to the head node and started the slow and fast pointer from there. If possible please solve this question instead of looking at the approach and moving forward to the next question while revising.
+In this approach keep in mind the two things -> first that write the code in such a way that slow pointer is at n-1th position and not nth position because you need to delete nth position. And second that keep in mind the edge case of what if the value of n is equal to the size of the linked list, in that case you have to delete the head node but you don't know if you have to delete the head node or some other node because you are only traversing once. To tackle this see in code how I make a start node and pointed it to the head node and started the slow and fast pointer from there. Dry run for the edge case and if possible please solve this question instead of looking at the approach and moving forward to the next question while revising.
 
 ## Code ->
 ```cpp
@@ -311,6 +311,45 @@ public:
 
         // Return the actual head of the result linked list (excluding the dummy node)
         return head->next;
+    }
+};
+```
+
+# [160. Intersection of Two Linked Lists](https://leetcode.com/problems/intersection-of-two-linked-lists/description/)
+
+## Approaches ->
+1. Brute-Force: Keep any one of the list to check its node present in the other list. Here, we are choosing the second list for this task.
+Iterate through the other list. Here, it is the first one. 
+Check if the both nodes are the same. If yes, we got our first intersection node.
+If not, continue iteration.
+If we did not find an intersection node and completed the entire iteration of the second list, then there is no intersection between the provided lists. Hence, return null.
+2. Hashing
+3. Better Approach: Find the length of both lists.
+Find the positive difference between these lengths.
+Move the dummy pointer of the larger list by the difference achieved. This makes our search length reduced to a smaller list length.
+Move both pointers, each pointing two lists, ahead simultaneously till they collide.
+4. Best Approach: The difference of length method requires various steps to work on it. Using the same concept of difference of length, a different approach can be implemented. The process is as follows:-
+
+Take two dummy nodes for each list. Point each to the head of the lists.
+Iterate over them. If anyone becomes null, point them to the head of the opposite lists and continue iterating until they collide.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        ListNode *p1 = headA;
+        ListNode *p2 = headB;
+
+        while(p1 || p2){
+            if(p1==NULL) p1 = headB;
+            if(p2==NULL) p2 = headA;
+            if(p1==p2) return p1;
+            // make sure to check those conditions at first else the sol. would be wrong.
+            p1 = p1->next;
+            p2 = p2->next;
+        }
+        return p1;
     }
 };
 ```
