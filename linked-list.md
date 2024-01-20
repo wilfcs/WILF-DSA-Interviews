@@ -353,3 +353,40 @@ public:
     }
 };
 ```
+
+# [Find pairs with given sum in doubly linked list](https://www.codingninjas.com/studio/problems/find-pairs-with-given-sum-in-doubly-linked-list_1164172?utm_source=striver&utm_medium=website&utm_campaign=a_zcoursetuf&leftPanelTabValue=PROBLEM)
+
+## Approaches ->
+1. Brute Force: O(n^2) Time complexity nested loops.
+2. Two Pointer: Keep one pointer at start and one at end and move accordingly
+
+## Code ->
+```cpp
+vector<pair<int, int>> findPairs(Node* head, int k)
+{
+    // Write your code here.
+    Node *st=head;
+    Node *en=head;
+    while(en->next) en = en->next;
+    vector<pair<int, int>> ans;
+
+    while(st && en && st!=en){
+        int res = st->data + en->data;
+        if(res==k){
+            ans.push_back(make_pair(st->data, en->data));
+            st = st->next;
+            //Check if 'st' and 'en' pointers have converged, if yes, break out of the loop.
+            if(st==en) break; // important to check
+            en = en->prev;
+        }
+        else if(res>k){
+            en = en->prev;
+        }
+        else{
+            st = st->next;
+        }
+    }
+
+    return ans;
+}
+```
