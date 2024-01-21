@@ -557,3 +557,60 @@ public:
     }
 };
 ```
+# [ Flatten A Linked List](https://www.codingninjas.com/studio/problems/flatten-a-linked-list_1112655?utm_source=striver&utm_medium=website&utm_campaign=a_zcoursetuf)
+
+## [Approach](https://takeuforward.org/data-structure/flattening-a-linked-list/)
+
+## Code ->
+```cpp
+// Definition for linked list node
+class Node {
+public:
+    int data;
+    Node* next;
+    Node* bottom;
+    Node() : data(0), next(nullptr), bottom(nullptr) {}
+    Node(int x) : data(x), next(nullptr), bottom(nullptr) {}
+};
+
+// Helper function to merge two sorted linked lists
+Node* mergeTwoLists(Node* a, Node* b) {
+    Node* temp = new Node(0);
+    Node* res = temp; 
+    
+    // Merge the two linked lists in sorted order
+    while (a != NULL && b != NULL) {
+        if (a->data < b->data) {
+            temp->bottom = a; 
+            temp = temp->bottom; 
+            a = a->bottom; 
+        } else {
+            temp->bottom = b;
+            temp = temp->bottom; 
+            b = b->bottom; 
+        }
+    }
+    
+    // If one of the lists is not empty, append it to the result
+    if (a) temp->bottom = a; 
+    else temp->bottom = b; 
+    
+    return res->bottom; 
+}
+
+// Main function to flatten a linked list
+Node* flatten(Node* root) {
+    // Check if the root is NULL or has only one node
+    if (root == NULL || root->next == NULL) 
+        return root; 
+  
+    // Recur for the list on the right
+    root->next = flatten(root->next); 
+  
+    // Merge the current list with the flattened list on the right
+    root = mergeTwoLists(root, root->next); 
+  
+    // Return the root, which will be in turn merged with its left
+    return root; 
+}
+```
