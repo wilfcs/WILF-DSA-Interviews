@@ -498,3 +498,62 @@ public:
     }
 };
 ```
+
+# [25. Reverse Nodes in k-Group](https://leetcode.com/problems/reverse-nodes-in-k-group/description/)
+
+## [Approach](https://takeuforward.org/data-structure/reverse-linked-list-in-groups-of-size-k/)
+
+## Code ->
+```cpp
+class Solution {\
+public:
+
+    // Helper function to calculate the length of the linked list
+    int lengthOfLinkedList(ListNode* head) {
+        int length = 0;
+        while (head != NULL) {
+            ++length;
+            head = head->next;
+        }
+        return length;
+    }
+
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        // Check if the list is empty or has only one node
+        if (head == NULL || head->next == NULL) 
+            return head;
+        
+        // Calculate the length of the linked list
+        int length = lengthOfLinkedList(head);
+        
+        // Create a dummy head to simplify the code
+        ListNode* dummyHead = new ListNode(0);
+        dummyHead->next = head;
+        
+        // Pointers for reversing the k-group
+        ListNode* pre = dummyHead;
+        ListNode* cur;
+        ListNode* nex;
+        
+        // Reverse k nodes at a time
+        while (length >= k) {
+            cur = pre->next;
+            nex = cur->next;
+            
+            // Reverse the k nodes
+            for (int i = 1; i < k; i++) {
+                cur->next = nex->next;
+                nex->next = pre->next;
+                pre->next = nex;
+                nex = cur->next;
+            }
+            
+            // Move the pointers to the next k-group
+            pre = cur;
+            length -= k;
+        }
+        
+        return dummyHead->next;
+    }
+};
+```
