@@ -614,3 +614,70 @@ Node* flatten(Node* root) {
     return root; 
 }
 ```
+
+# [148. Sort List](https://leetcode.com/problems/sort-list/description/)
+
+## Approach ->
+Proper merge sort approach. Read the comments to understand the code, I wrote it beautifully :)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    ListNode* merge(ListNode* l1, ListNode* l2){
+        // Function to merge two sorted LL
+
+        // Create a temp node that will be your dummy node and a mover that points to temp
+        ListNode* temp = new ListNode(-1);
+        ListNode* mover = temp;
+
+        // Use l1 and l2 to move forward and compare them and keep adding the lower value nodes to mover's next
+        while(l1 && l2){
+            if(l1->val < l2->val){
+                mover->next = l1;
+                l1 = l1->next;
+            }
+            else{
+                mover->next = l2;
+                l2 = l2->next;
+            }
+            // don't forget to move l1, l2 and then mover as well
+            mover = mover->next;
+        }
+
+        // if either of the remaining l1 or l2 has some nodes left then connect that to mover as well
+        if(l1) mover->next = l1;
+        if(l2) mover->next = l2;
+
+        // return the sorted array i.e. temp->next
+        return temp->next;
+    }
+
+    // main function
+    ListNode* sortList(ListNode* head) {
+        // Let's try solving it like a normal merge sort question
+
+        // Step 0: Base Condition
+        if(head==NULL || head->next==NULL) return head;
+
+        // Step 1: Dividing the linked list into two halves.
+        ListNode *slow = head, *fast = head, *prev = NULL;
+        while(fast && fast->next){
+            prev = slow;
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+
+        // Step 2: To properly divide the LL into two seperate LL we have to point the last node of the first LL to null. The second part is already pointing to null.
+        prev->next = NULL;
+
+        // Step 3: Sorting the two linked lists by dividing them into further parts
+        ListNode* l1 = sortList(head);
+        ListNode* l2 = sortList(slow);
+
+        // Step 4: Merge two sorted linked lists
+        return merge(l1, l2);
+    }
+
+};
+```
