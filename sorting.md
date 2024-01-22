@@ -29,3 +29,32 @@ for (int i = 0; i < n - 1; i++) {
     swap(arr[i], arr[mini]);
 }
 ```
+
+# Bubble Sort:
+## Approach->
+In Bubble Sort algorithm, 
+traverse from left and compare adjacent elements and the higher one is placed at right side. 
+In this way, the largest element is moved to the rightmost end at first. 
+This process is then continued to find the second largest and place it and so on until the data is sorted.
+
+## Code->
+```cpp
+void bubbleSort(int arr[], int n)
+{
+    int i, j;
+    bool swapped;
+    for (i = 0; i < n - 1; i++) {
+        swapped = false;
+        for (j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                swap(arr[j], arr[j + 1]);
+                swapped = true;
+            }
+        }
+ 
+        // If no two elements were swapped by inner loop, that means the array is already completely sorted
+        if (swapped == false)
+            break;
+    }
+}
+```
