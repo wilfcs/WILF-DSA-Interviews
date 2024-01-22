@@ -1265,3 +1265,26 @@ public:
     }
 };
 ```
+
+# [Superior Elements](https://www.codingninjas.com/studio/problems/superior-elements_6783446?utm_source=striver&utm_medium=website&utm_campaign=a_zcoursetuf&leftPanelTabValue=PROBLEM)
+
+## Approaches->
+1. Brute force
+2. Make a postfix array with maximum number from right and compare in the original array from the left
+3. You don't actually need to make the postfix array, instead you can maintain just a maxium element integer, traverse the given array from the back and compare the elements with the maximum element integer. 
+
+## Code ->
+```cpp
+vector<int> superiorElements(vector<int>&a) {
+    // Write your code here.
+    int maxi = INT_MIN;
+    vector<int> ans;
+    for(int i=a.size()-1; i>=0; i--){
+        if(a[i]>maxi){
+            ans.push_back(a[i]);
+            maxi = a[i];
+        }
+    }
+    return ans;
+}
+```
