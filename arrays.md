@@ -1238,3 +1238,30 @@ int missingNumber(vector<int>& nums) {
         return actualSum - sumOfNums;
     }
 ```
+# [189. Rotate Array](https://leetcode.com/problems/rotate-array/description/)
+
+## Approaches->
+1. Make a temp array, place items in it accordingly, copy the temp array's elements to original array. SC-> O(N).
+2. Reverse the array from start to end. Now reverse from start to k-1th index. Now reverse from kth index to end. Dry run.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
+        int n = nums.size();
+        if(nums.size()<k) k = k%nums.size();
+
+        // reverse the entire array
+        reverse(nums.begin(), nums.end()); 
+
+        // now reverse from start to index k-1
+        // note: we used nums.begin()+k and not nums.begin()+k-1 because for reverse, the ending index is exclusive
+        reverse(nums.begin(), nums.begin()+k);
+        
+        // reverse from kth index to the end
+        // note: we still used nums.begin()+k because the starting index is inclusive
+        reverse(nums.begin()+k, nums.end());
+    }
+};
+```
