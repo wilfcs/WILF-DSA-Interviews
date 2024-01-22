@@ -796,3 +796,64 @@ public:
     }
 };
 ```
+
+# [1472. Design Browser History](https://leetcode.com/problems/design-browser-history/)
+
+## Code ->
+```cpp
+// Define a structure for nodes to represent pages in the browser history. You have to do this yourself in the question, there is no template already made for it. 
+struct Node {
+    string val;   // URL value
+    Node* back = NULL;  // Pointer to the previous page in history
+    Node* next = NULL;  // Pointer to the next page in history
+};
+
+// Implement the BrowserHistory class
+class BrowserHistory {
+public:
+    Node * currentPage;  // Pointer to the current page in the browser history
+
+    // Constructor to initialize the object with the homepage of the browser
+    BrowserHistory(string homepage) {
+        // Create a new node for the homepage and set it as the current page
+        currentPage = new Node();
+        currentPage->val = homepage;
+    }
+    
+    // Function to visit a new URL, creating a new page and updating the history
+    void visit(string url) {
+        // Create a new node for the visited URL
+        Node *newPage = new Node();
+        newPage->val = url;
+
+        // Update pointers to link the new page to the current page
+        currentPage->next = newPage;
+        newPage->back = currentPage;
+
+        // Update the current page to the newly visited page
+        currentPage = newPage;
+    }
+    
+    // Function to move back in history by a given number of steps
+    string back(int steps) {
+        // Move back in history until the specified number of steps or until the beginning of history
+        while (steps-- && currentPage->back) {
+            currentPage = currentPage->back;
+        }
+
+        // Return the URL of the current page after moving back
+        return currentPage->val;
+    }
+    
+    // Function to move forward in history by a given number of steps
+    string forward(int steps) {
+        // Move forward in history until the specified number of steps or until the end of history
+        while (steps-- && currentPage->next) {
+            currentPage = currentPage->next;
+        }
+
+        // Return the URL of the current page after moving forward
+        return currentPage->val;
+    }
+};
+```
