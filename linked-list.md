@@ -681,3 +681,118 @@ public:
 
 };
 ```
+
+# [138. Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer/description/)
+
+## Approaches ->
+1. Hashmap with extra space
+2. Optimal: The optimisation will be in removing the extra spaces, i.e, the hashmap used in brute force. We are going to create dummy nodes and place the dummy nodes in between of two actual nodes. Here the dummy node placed after the actual node represents the copy of that actual node. This way, the new nodes carry both the value and connections. To understand this imagine placing dummy node in between of actual nodes like this..
+
+A -> D -> A -> D -> NULL
+
+Using a smart pointer (let's call it 'temp'), we link the random pointers in the dummy nodes based on the original node.
+
+To separate the original and copied lists, we use two pointers: one for the dummy node, and one for the original list
+
+By iterating through this process, we efficiently create a deep copy of the linked list without the need for extra storage. The result is the copied list, and we return it. Read the code to understand properly
+
+
+## Codes ->
+1. 
+```cpp
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        // Create a hash map to store the mapping between original nodes and their corresponding new nodes
+        unordered_map<Node*, Node*> mp;
+
+        // First iteration: Create new nodes with the same values as the original nodes and store them in the hash map
+        Node* temp = head;
+        while (temp) {
+            // Key: Original node, Value: New node with the same value
+            mp[temp] = new Node(temp->val);
+            temp = temp->next;
+        }
+
+        // Reset temp to the head of the original list for the second iteration
+        temp = head;
+
+        // Second iteration: Link next and random pointers of new nodes based on the mapping in the hash map
+        while (temp) {
+            // Link the next and random pointers of the new nodes using the hash map
+            mp[temp]->next = mp[temp->next];
+            mp[temp]->random = mp[temp->random];
+            temp = temp->next;
+        }
+
+        // Return the head of the new linked list (value node of the original head node)
+        return mp[head];
+    }
+};
+```
+
+2. 
+```cpp
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        // Check if the original list is empty
+        if (head == NULL) return NULL;
+
+        // Step 1: Create deep nodes next to the original nodes
+        Node* temp = head;
+        while (temp) {
+            // Create a new node with the same value as the current node
+            Node* dummy = new Node(temp->val);
+
+            // Insert the new node next to the original node
+            dummy->next = temp->next;
+            temp->next = dummy;
+
+            // Move to the next pair of original nodes
+            temp = temp->next->next;
+        }
+
+        // Initialize pointers for the second pass
+        temp = head->next; // Points to the first deep copy node
+        Node* prev = head;  // Points to the original list
+        Node* toReturn = head->next; // Points to the head of the copied list
+
+        // Step 2: Set random pointers for the deep copy nodes
+        while (temp) {
+            // Set random pointers based on the original list
+            if (prev->random == NULL) temp->random = NULL;
+            else temp->random = prev->random->next;
+
+            // Break if there are no more nodes to process
+            if (temp->next == NULL) break;
+
+            // Move to the next pair of nodes
+            temp = temp->next->next;
+            prev = prev->next->next;
+        }
+
+        // Reset pointers for the third pass
+        temp = head->next; // Reset to the first deep copy node
+        prev = head; // Reset to the original list
+
+        // Step 3: Separate the original and copied lists
+        while (temp->next) {
+            // Adjust next pointers to separate the lists
+            prev->next = prev->next->next;
+            temp->next = temp->next->next;
+
+            // Move to the next pair of nodes
+            prev = prev->next;
+            temp = temp->next;
+        }
+
+        // Handle the last node in the original and copied list here to avoid runtime error
+        prev->next = prev->next->next;
+        temp->next = NULL;
+
+        // Return the head of the copied list
+        return toReturn;
+    }
+};
+```
