@@ -58,3 +58,20 @@ void bubbleSort(int arr[], int n)
     }
 }
 ```
+# Insertion sort
+## Approach ->
+The idea is to insert the selected element at its right position. 
+- Select an element in each iteration from the unsorted array(using a loop).
+- Place it in its corresponding position in the sorted part and shift the remaining elements accordingly (using an inner loop and swapping).
+- The “inner while loop” basically shifts the elements using swapping.
+
+## Code->
+```cpp
+for (int i = 0; i <= n - 1; i++) {
+    int j = i;
+    while (j > 0 && arr[j - 1] > arr[j]) {
+        swap(arr[j-1], arr[j]);
+        j--;
+    }
+}
+```
