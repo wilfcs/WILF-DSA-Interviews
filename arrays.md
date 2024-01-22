@@ -1288,3 +1288,33 @@ vector<int> superiorElements(vector<int>&a) {
     return ans;
 }
 ```
+
+# [152. Maximum Product Subarray](https://leetcode.com/problems/maximum-product-subarray/description/)
+
+## Approaches->
+1. Brute Force
+2. Prefix-Suffix method: Just maintain two integers prefix and suffix of multiplication and keep a maxi variable to store maximum. TC-> O(n) SC-> O(1)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        int maxi = INT_MIN, prefix = 1, suffix = 1, n=nums.size();
+
+        for(int i=0; i<nums.size(); i++){
+            // make prefix and suffix 1 if it came out to be 0 beacuse if it remains 0 it will give 0 for anything afterwards
+            if(prefix==0) prefix=1;
+            if(suffix==0) suffix=1;
+
+            // find prefix and suffix
+            prefix = nums[i]*prefix;
+            suffix = nums[n-i-1]*suffix;
+
+            // update maxi
+            maxi = max(maxi, max(prefix, suffix));
+        }
+        return maxi;
+    }
+};
+```
