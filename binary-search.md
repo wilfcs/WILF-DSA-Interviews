@@ -211,6 +211,44 @@ public:
     }
 };
 ```
+# [153. Find Minimum in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/)
+
+## Approach ->
+The approach is simple. First identify the sorted half. Pick the smallest element from the sorted half and then update it with answer if it is smaller than answer. Now you can prune the half that you identified as sorted because its job here is done. I named this algorithm the use-and-throw algorithm.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        int low=0, high=nums.size()-1, mid, ans=INT_MAX;
+
+        while(low<=high){
+            mid = low + (high-low)/2;
+
+            // Optimization
+            if(nums[low]<=nums[high]){
+                ans = min(ans, nums[low]);
+                break;
+            }
+
+            if(nums[mid]>=nums[low]){ // left half is sorted
+                // compare and update the ans with nums[low] and prune the left side
+                ans = min(ans, nums[low]); 
+                low = mid+1;
+            }
+            else{
+                // compare and update the ans with nums[mid] and prune the right side
+                ans = min(ans, nums[mid]);
+                high = mid-1;
+            }
+        }
+
+        return ans;
+    }
+};
+```
+
 
 # [162. Find Peak Element](https://leetcode.com/problems/find-peak-element/description/)
 
