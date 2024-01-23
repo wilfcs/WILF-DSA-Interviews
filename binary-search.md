@@ -169,6 +169,49 @@ public:
     }
 };
 ```
+
+# [81. Search in Rotated Sorted Array II](https://leetcode.com/problems/search-in-rotated-sorted-array-ii/description/)
+
+## Approach->
+The approach to this question will remain the same as of the question above but there is just one problem. The elements in the array can repeat. So imagine if our arry is [3, 0, 2, 3, 3, 3, 3] and target is 2. Mid will point to 3 but the algo will get confued that which part to prune because there is 3 at the starting position and also at the end position. Rest everything remains the same as that of the approach on the question above but we just need to tackle the above edge case.
+To tackle it just move the lo and hi by 1 in the forward and backward direction respectively whenever you encounter such condition.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    bool search(vector<int>& nums, int target) {
+        int lo = 0, hi = nums.size()-1, mid;
+
+        while(lo <= hi){
+            mid = (lo+hi)/2;
+            if(nums[mid]==target) return true; // if target found, return true
+
+            // the major edge case: if repetation of elements is allowed, our algo will get confused which side to prune
+            // eg: [3, 0, 2, 3, 3, 3, 3] here mid elem is 3 and even the hi and lo is 3 so move one step from front and back
+            if(nums[mid] == nums[lo] && nums[mid] == nums[hi]){ 
+                lo = lo+1;
+                hi = hi-1;
+                continue; // after the adjustment just continue the logic
+            }
+
+            if(nums[mid]>=nums[lo]){ // identified that left side is sorted
+                if(nums[mid]>target && nums[lo]<=target) // if the target is between the sorted side
+                    hi = mid-1;
+                else lo = mid+1; // not between the sorted side
+            }
+            else{   // identifed that right side is sorted
+                if(nums[mid]<target && nums[hi]>=target) // if the target is between the sorted side
+                    lo = mid+1;
+                else hi = mid-1; // not between the sorted side
+            }
+        }
+
+        return false;
+    }
+};
+```
+
 # [162. Find Peak Element](https://leetcode.com/problems/find-peak-element/description/)
 
 ## Approach ->
