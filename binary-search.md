@@ -327,6 +327,8 @@ public:
 };
 ```
 
+
+
 # [1011. Capacity To Ship Packages Within D Days](https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/)
 
 ## Approaches ->
@@ -352,8 +354,7 @@ Time complexity -> O(N * (sum(weights[]) – max(weights[]) + 1)),
 Algorithm:
 -  First, we will find the maximum element i.e. max(weights[]), and the summation i.e. sum(weights[]) of the given array.
 -  Place the 2 pointers i.e. low and high: Initially, we will place the pointers. The pointer low will point to max(weights[]) and the high will point to sum(weights[]).
--  Calculate the ‘mid’: Now, inside the loop, we will calculate the value of ‘mid’ using the following formula:
-mid = (low+high) // 2 ( ‘//’ refers to integer division)
+-  Calculate the ‘mid’
 -  Eliminate the halves based on the number of days required for the capacity ‘mid’:
 We will pass the potential capacity, represented by the variable ‘mid’, to the ‘findDays()‘ function. This function will return the number of days required to ship all the weights for the particular capacity, ‘mid’.
 -  1. If munerOfDays <= d: On satisfying this condition, we can conclude that the number ‘mid’ is one of our possible answers. But we want the minimum number. So, we will eliminate the right half and consider the left half(i.e. high = mid-1).
@@ -454,4 +455,35 @@ int count(vector<int>& arr, int n, int x) {
 	if(f==-1) return 0; // if no occurence return 0
 	return l-f+1;
 }
+```
+
+# [69. Sqrt(x)](https://leetcode.com/problems/sqrtx/description/)
+
+## Approach ->
+The sqrt of a number will always lie in the range of 1 to the number itself. So we will check for mid*mid and if it is smaller than or equal to n then it might be the answer, so eleminate the left half. You can store the ans in ans variable or simply return high at end because if you think about it high will always point to the answer.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int mySqrt(int x) {
+        // using binary search
+        int low = 1, high = x;
+        //Binary search on the answers:
+        while (low <= high) {
+            // always calculate mid using this formula to avoid overflow
+            long long mid = low + (high-low)/2;
+            long long val = mid * mid;
+            if (val <= (long long)(x)) {
+                //eliminate the left half:
+                low = mid + 1;
+            }
+            else {
+                //eliminate the right half:
+                high = mid - 1;
+            }
+        }
+        return high;
+    }
+};
 ```
