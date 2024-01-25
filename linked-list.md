@@ -1,6 +1,6 @@
-[876. Middle of the Linked List](https://leetcode.com/problems/middle-of-the-linked-list/description/)
+# [876. Middle of the Linked List](https://leetcode.com/problems/middle-of-the-linked-list/description/)
 ---
-Approaches ->
+## Approaches ->
 1. Find the size of the ll and return the size/2 node.
 2. Fast-Slow pointer
 ---
@@ -33,7 +33,7 @@ public:
     }      
 };
 ```
-[206. Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/description/)
+# [206. Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/description/)
 ## Iterative Approach Code (TC->O(N) SC->O(1)) ->
 ```cpp
 class Solution {
