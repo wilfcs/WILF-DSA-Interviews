@@ -527,3 +527,57 @@ public:
     }
 };
 ```
+
+# [1482. Minimum Number of Days to Make m Bouquets](https://leetcode.com/problems/minimum-number-of-days-to-make-m-bouquets/description/)
+
+## Approach->
+The solution is very simple when you understand the question properly. 
+
+Input Format: N = 8, arr[] = {7, 7, 7, 7, 13, 11, 12, 7}, m = 2, k = 3
+Result: 12
+
+Let's grasp the question better with the help of an example. Consider an array: {7, 7, 7, 7, 13, 11, 12, 7}. We aim to create bouquets with k, which is 3 adjacent flowers, and we need to make m, which is 2 such bouquets. Now, if we try to make bouquets on the 11th day, the first 4 flowers and the 6th and the last flowers would have bloomed. So, we will be having 6 flowers in total on the 11th day. However, we require two groups of 3 adjacent flowers each. Although we can form one group with the first 3 adjacent flowers, we cannot create a second group. Therefore, 11 is not the answer in this case.
+
+So basically what we need to do is, for a given day we will keep counting the number of adjacent blooming flower and when that number is equal to k then that means that one bouqet can be made. By doing this we can find the total number of bouquets made for a given day and compare it with m to find our answer. Use binary search to do it in the most optimal way
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // returns the number of booq that can be made for mid's value (day) 
+    int numberOfBouq(vector<int> bloomDay, int k, int days){
+        int numBook = 0, numAdj=0;
+        for(int i=0; i<bloomDay.size(); i++){
+            // if the flower is blooming, increase the value of numAdj else make numAdj 0
+            if(days>=bloomDay[i]) numAdj++;
+            else numAdj = 0;
+
+
+            // if numAdj is equal to k then that means one bouquet can be made. Reset numAdj.
+            if(numAdj==k){
+                numBook++;
+                numAdj=0;
+            }
+        }
+
+        return numBook;
+    }
+    int minDays(vector<int>& bloomDay, int m, int k) {
+        int maxNum = *max_element(bloomDay.begin(), bloomDay.end());
+        int low = 0, high = maxNum, mid, ans=-1;
+
+        while(low<=high){
+            mid = low + (high-low)/2;
+            int numBouq = numberOfBouq(bloomDay, k, mid);
+
+            // if number of bouq for a given day is greater than equal to required bouq then that day can be the potential answer.
+            if(numBouq>=m){
+                high = mid-1;
+                ans = mid;
+            }
+            else low = mid+1;
+        }
+        return ans;
+    }
+};
+```
