@@ -617,3 +617,60 @@ public:
     }
 };
 ```
+
+# [1539. Kth Missing Positive Number](https://leetcode.com/problems/kth-missing-positive-number/description/)
+
+## [Approaches](https://takeuforward.org/arrays/kth-missing-positive-number/)
+
+## Codes
+1. Brute Force:
+```cpp
+class Solution {
+public:
+    int findKthPositive(vector<int>& arr, int k) {
+        for(int i=0; i<arr.size(); i++){
+            if(k<arr[i]) return k;
+            k++;
+        }
+        return k;
+    }
+};
+```
+
+2. Binary Search
+```cpp
+class Solution {
+public:
+    // Function to find the kth missing positive integer in a strictly increasing array
+    int findKthPositive(vector<int>& arr, int k) {
+        // Get the size of the input array
+        int n = arr.size();
+
+        // Initialize low and high pointers for binary search
+        int low = 0, high = n - 1;
+
+        // Binary search to find the position where the kth missing positive integer lies
+        while (low <= high) {
+            // Calculate the middle index
+            int mid = (low + high) / 2;
+
+            // Calculate the number of missing positive integers before the middle element
+            int missing = arr[mid] - (mid + 1);
+
+            // If the number of missing positive integers before mid is less than k
+            if (missing < k) {
+                // Update low to search in the right half of the array
+                low = mid + 1;
+            }
+            else {
+                // Update high to search in the left half of the array
+                high = mid - 1;
+            }
+        }
+
+        // Return the kth missing positive integer
+        // k + high + 1 gives the actual missing positive integer in the array
+        return k + high + 1;
+    }
+};
+```
