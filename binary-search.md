@@ -929,3 +929,51 @@ int rowWithMax1s(vector<vector<int>> &matrix, int n, int m) {
     return index;
 }
 ```
+
+# [74. Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/description/)
+
+## Approaches ->
+1. Brute Force - Traverse in O(n*m) TC and find the target.
+2. Better Approach: Place yourself on either the top right or bottom left cornor, that way when you go to your left the elements decrease and when you go down the elements increase. Using this you can find the target in O(n+m) TC.
+3. Most Optimal: Treat 2D array as 1D array and perform Binary Search. TC -> O(log(n*m))
+
+## Codes->
+2.
+```cpp
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        int row = 0, col = matrix[0].size()-1;
+
+        while(row<matrix.size() && col>=0){
+            if(matrix[row][col]==target) return true;
+            else if(matrix[row][col]>target) col--;
+            else row++;
+        }
+        return false;
+    }
+};
+```
+3. 
+```cpp
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        int m = matrix[0].size(); int n = matrix.size();
+
+        int low = 0, high = (m*n)-1, mid;
+
+        while(low<=high){
+            mid = (low+high)/2;
+
+            // Treat 2d as 1d using this formula
+            int val = matrix[mid/m][mid%m];
+            
+            if(val==target) return true;
+            if(val>target) high = mid-1;
+            else low = mid+1;
+        }
+        return false;
+    }
+};
+```
