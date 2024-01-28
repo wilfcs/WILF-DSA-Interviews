@@ -718,9 +718,48 @@ int aggressiveCows(vector<int> &stalls, int k)
 ```
 
 # [ Allocate Books](https://www.codingninjas.com/studio/problems/allocate-books_1090540?utm_source=youtube&utm_medium=affiliate&utm_campaign=codestudio_Striver_BinarySeries&leftPanelTabValue=PROBLEM)
-### Max-min problem
+### Max-min problem. See the brute force becausea its way easier.
 
 ## [Approaches](https://takeuforward.org/data-structure/allocate-minimum-number-of-pages/)
+
+## Code ->
+```cpp
+// Function to count the number of students needed for a given maximum number of pages
+int countStudents(vector<int> &arr, int pages) {
+    int n = arr.size(); // size of array.
+    int students = 1;
+    long long pagesStudent = 0;
+
+    // Iterate through the array of pages
+    for (int i = 0; i < n; i++) {
+        if (pagesStudent + arr[i] <= pages) {
+            // Add pages to the current student
+            pagesStudent += arr[i];
+        }
+        else {
+            // Add pages to the next student
+            students++;
+            pagesStudent = arr[i];
+        }
+    }
+    return students;
+}
+
+int findPages(vector<int>& arr, int n, int m) {
+    //book allocation impossible:
+    if (m > n) return -1;
+
+    int low = *max_element(arr.begin(), arr.end()); // low will always be the max element because we can't make a book with anything less
+    int high = accumulate(arr.begin(), arr.end(), 0);
+
+    for (int pages = low; pages <= high; pages++) {
+        if (countStudents(arr, pages) == m) {
+            return pages;
+        }
+    }
+    return low;
+}
+```
 
 ## Code ->
 ```cpp
@@ -770,3 +809,80 @@ int findPages(vector<int>& arr, int n, int m) {
 ```
 
 ### watch vid if you still don't understand
+
+# [410. Split Array Largest Sum](https://leetcode.com/problems/split-array-largest-sum/description/)
+
+## [Approaches](https://takeuforward.org/arrays/split-array-largest-sum/)
+
+## Codes ->
+1. Brute Force
+```cpp
+class Solution {
+public:
+    int numOfSubarrays(vector<int> &nums, int check){
+        int sub = 1, sum = 0;
+
+        for(int i=0; i<nums.size(); i++){
+            if(sum + nums[i] > check){
+                sub++;
+                sum = nums[i];
+            }
+            else{
+                sum += nums[i];
+            }
+        }
+        return sub;
+    }
+
+    int splitArray(vector<int>& nums, int k) {
+        int low = *max_element(nums.begin(), nums.end());
+        int high = accumulate(nums.begin(), nums.end(), 0);
+        int mid;
+
+        for(int i=low; i<=high; i++){
+            int sub = numOfSubarrays(nums, i);
+            cout << sub << " " << i << endl;
+            if(sub == k) return i;
+        }
+        return low; 
+    }
+};
+```
+2. BS
+```cpp
+class Solution {
+public:
+    int numOfSubarrays(vector<int> &nums, int check){
+        int sub = 1, sum = 0;
+
+        for(int i=0; i<nums.size(); i++){
+            if(sum + nums[i] > check){
+                sub++;
+                sum = nums[i];
+            }
+            else{
+                sum += nums[i];
+            }
+        }
+        return sub;
+    }
+
+    int splitArray(vector<int>& nums, int k) {
+        int low = *max_element(nums.begin(), nums.end());
+        int high = accumulate(nums.begin(), nums.end(), 0);
+        int mid;
+
+        while(low <= high){
+            mid = low + (high-low)/2;
+
+            int sub = numOfSubarrays(nums, mid);
+
+            // note that the condition over here is sub>k and not sub>=k beacuse we are trying to find min
+            if(sub>k) low = mid+1; 
+            else high = mid - 1;
+        }
+        // note that we are returning low and not high. 
+        return low;
+    }
+};
+```
