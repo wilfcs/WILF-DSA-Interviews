@@ -259,7 +259,8 @@ A peak element in an array refers to the element that is greater than both of it
 
 The element outside the bounds is minus infinity so it will always be smaller than the 0th index and last index element.
 
-The approach is fairly simple, since we want to find the element that is greater than its neighbour element so we will be on a persuit of a greater element always. Hence always eliminate the half that has the smaller neighbour element. Look at the code and you would understand. Remember to handle the edge cases in the beginning and not inside the while loop to avoid long code.
+The approach is fairly simple, since we want to find the element that is greater than its neighbour element so we will be on a persuit of a greater element always. Hence always eliminate the half that has the smaller neighbour element. 
+Imagine it to be like a mountain, if we keep climbing to the higher part, we will certainly reach the peak and that peak will be the answer because it will be greater than its left and right elements. And if we are on a persuit of a greater element, it is guaranteed that we fill find a peak (not necessarily the greatest element in the array but a peak means a position which is higher than its left and right positions). We are so sure that we will find a peak because in the question it is clearly stated that outside the bounds of the array there is -1, so no matter what we will find a peak if we keep climbing up the mountain i.e. keep going to the higher element side. Look at the code and you would understand. Remember to handle the edge cases in the beginning and not inside the while loop to avoid long code.
 
 ## Code ->
 ```cpp
@@ -968,7 +969,7 @@ public:
 
             // Treat 2d as 1d using this formula
             int val = matrix[mid/m][mid%m];
-            
+
             if(val==target) return true;
             if(val>target) high = mid-1;
             else low = mid+1;
@@ -977,3 +978,9 @@ public:
     }
 };
 ```
+
+# [240. Search a 2D Matrix II](https://leetcode.com/problems/search-a-2d-matrix-ii/description/)
+
+## Approach ->
+Literally all the approaches of the question above works.
+
