@@ -674,3 +674,43 @@ public:
     }
 };
 ```
+
+# [ Aggressive Cows](https://www.codingninjas.com/studio/problems/aggressive-cows_1082559?utm_source=striver&utm_medium=website&utm_campaign=a_zcoursetuf)
+
+## [Approach](https://takeuforward.org/data-structure/aggressive-cows-detailed-solution/)
+
+## Code ->
+```cpp
+int numCows(vector<int> &stalls, int mid){
+    int cows = 1, last = stalls[0];
+
+    for(int i=1; i<stalls.size(); i++){
+        if(stalls[i] - last >= mid){
+            cows++;
+            last = stalls[i];
+        }
+    }
+    return cows;
+}
+
+int aggressiveCows(vector<int> &stalls, int k)
+{
+    //    Write your code here.
+    int low = 1;
+    int high = accumulate(stalls.begin(), stalls.end(), 0);
+    int mid;
+
+    sort(stalls.begin(), stalls.end());
+
+    while(low<=high){
+        mid = low + (high-low)/2;
+
+        int cows = numCows(stalls, mid);
+
+        if(cows>=k) low = mid+1;
+        else high = mid-1;
+    }
+    return high;
+}
+```
+
