@@ -984,3 +984,55 @@ public:
 ## Approach ->
 Literally all the approaches of the question above works.
 
+# [1901. Find a Peak Element II](https://leetcode.com/problems/find-a-peak-element-ii/description/)
+
+## Approach ->
+A little tweak in find peak element 1, go revise the hill concept of that q and then come here.
+The approach involves mimicking the experience of traversing a mountain range, column by column. For each column, we identify the highest point. Then, we see the immediate left and right from this peak to determine if it's the peak element (no need to check up and down because it is the greatest element we've picked in the column). If a higher point exists to the right, we eliminate the left half of the search space; if it's on the left, we eliminate the right half. This process continues until we find the peak or exhaust the search space. 
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Helper function to find the row with the greatest value in a specific column
+    int findGreatest(vector<vector<int>> &mat, int col) {
+        int maxi = mat[0][col], row = 0;
+        for (int i = 1; i < mat.size(); i++) {
+            if (mat[i][col] > maxi) {
+                maxi = mat[i][col];
+                row = i;
+            }
+        }
+        return row;
+    }
+
+    // Main function to find a peak element in a 2D grid
+    vector<int> findPeakGrid(vector<vector<int>> &mat) {
+        int row = mat.size() - 1, col = mat[0].size() - 1;
+        int low = 0, high = col, mid;
+
+        // Binary search for the peak element
+        while (low <= high) {
+            mid = low + (high - low) / 2;
+
+            // Find the row with the greatest value in the current column
+            row = findGreatest(mat, mid);
+
+            // Determine values to the left and right of the current position
+            int left = (mid - 1 >= 0) ? mat[row][mid - 1] : -1;
+            int right = (mid + 1 <= col) ? mat[row][mid + 1] : -1;
+            int val = mat[row][mid];
+
+            // Check if the current position is a peak element
+            if (val > left && val > right)
+                return {row, mid};
+            else if (val < left)
+                high = mid - 1;
+            else
+                low = mid + 1;
+        }
+        // If no peak element is found, return {-1, -1}
+        return {-1, -1};
+    }
+};
+```
