@@ -675,7 +675,10 @@ public:
 };
 ```
 
+### Max-min/min-max problems start here
+
 # [ Aggressive Cows](https://www.codingninjas.com/studio/problems/aggressive-cows_1082559?utm_source=striver&utm_medium=website&utm_campaign=a_zcoursetuf)
+### Min-max problem
 
 ## [Approach](https://takeuforward.org/data-structure/aggressive-cows-detailed-solution/)
 
@@ -714,3 +717,56 @@ int aggressiveCows(vector<int> &stalls, int k)
 }
 ```
 
+# [ Allocate Books](https://www.codingninjas.com/studio/problems/allocate-books_1090540?utm_source=youtube&utm_medium=affiliate&utm_campaign=codestudio_Striver_BinarySeries&leftPanelTabValue=PROBLEM)
+### Max-min problem
+
+## [Approaches](https://takeuforward.org/data-structure/allocate-minimum-number-of-pages/)
+
+## Code ->
+```cpp
+// Function to count the number of students needed for a given maximum number of pages
+int countStudents(vector<int> &arr, int pages) {
+    int n = arr.size(); // size of array.
+    int students = 1;
+    long long pagesStudent = 0;
+
+    // Iterate through the array of pages
+    for (int i = 0; i < n; i++) {
+        if (pagesStudent + arr[i] <= pages) {
+            // Add pages to the current student
+            pagesStudent += arr[i];
+        }
+        else {
+            // Add pages to the next student
+            students++;
+            pagesStudent = arr[i];
+        }
+    }
+    return students;
+}
+
+// Function to find the minimum number of pages such that the maximum pages assigned to a student is minimum
+int findPages(vector<int>& arr, int n, int m) {
+    // Book allocation is impossible if the number of students is greater than the number of books
+    if (m > n) return -1;
+
+    int low = *max_element(arr.begin(), arr.end()); // Initialize the minimum pages to the maximum pages in a single book
+    int high = accumulate(arr.begin(), arr.end(), 0); // Initialize the maximum pages to the sum of all pages in all books
+
+    // Perform binary search to find the minimum number of pages
+    while (low <= high) {
+        int mid = (low + high) / 2; // Calculate the middle value
+        int students = countStudents(arr, mid); // Get the count of students needed for the current maximum number of pages
+
+        if (students > m) {
+            low = mid + 1; // If more students are needed, increase the minimum pages
+        }
+        else {
+            high = mid - 1; // If the current number of students is sufficient, decrease the maximum pages
+        }
+    }
+    return low; // Return the minimum number of pages
+}
+```
+
+### watch vid if you still don't understand
