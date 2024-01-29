@@ -148,3 +148,29 @@ public:
     }
 };
 ```
+
+# [543. Diameter of Binary Tree](https://leetcode.com/problems/diameter-of-binary-tree/submissions/)
+
+## Approach ->
+In the same code as of finding the height of BT, add left and right node's height and store it in ans if it is greater than ans.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int ans = 0;
+    int helper(TreeNode* root){
+        if(!root) return 0;
+
+        int x = helper(root->left);
+        int y = helper(root->right);
+
+        ans = max(x+y, ans);
+        return 1 + max(x,y);
+    }
+    int diameterOfBinaryTree(TreeNode* root) {
+        helper(root);
+        return ans;
+    }
+};
+```
