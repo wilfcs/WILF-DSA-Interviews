@@ -103,3 +103,48 @@ public:
     }
 };
 ```
+
+# [110. Balanced Binary Tree](https://leetcode.com/problems/balanced-binary-tree/description/)
+
+## Approaches ->
+1. Naive approach: For a Balanced Binary Tree, Check left subtree height and right subtree height for every node present in the tree. Hence, traverse the tree recursively and calculate the height of left and right subtree from every node, and whenever the condition of Balanced tree violates, simply return false. Time Complexity: O(N*N) 
+
+2. Can we optimize the above brute force solution? Which operation do you think can be skipped to optimize the time complexity?
+
+Ain’t we traversing the subtrees again and again in the above example?
+
+Yes, so can we skip the repeated traversals?
+
+What if we can make use of post-order traversal?
+
+So, the idea is to use post-order traversal. Since, in postorder traversal, we first traverse the left and right subtrees and then visit the parent node, similarly instead of calculating the height of the left subtree and right subtree every time at the root node, use post-order traversal, and keep calculating the heights of the left and right subtrees and perform the validation.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int findHeight(TreeNode* root){
+        if(root==NULL) return 0;
+        
+        // find left subtree height and check if it is equal to -1 return -1
+        int lh = findHeight(root->left);
+        if(lh==-1) return -1;
+
+        // similarly check for right subtree and return -1 if its giving -1
+        int rh = findHeight(root->right);
+        if(rh==-1) return -1;
+
+        // the -1 originally comes from here. when the absolute difference bw left and right subtree is greater than 1 then that means it is not a balanced binary tree, hence return -1
+        if(abs(lh-rh)>1) return -1;
+
+        // return 1 + max of lh and rh to find the actual height of the tree
+        return 1 + max(lh, rh);
+    }
+    bool isBalanced(TreeNode* root) {
+        int height = findHeight(root);
+        // if the returned value is -1 then return false else return true
+        if(height==-1) return false;
+        return true;
+    }
+};
+```
