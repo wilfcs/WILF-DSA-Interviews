@@ -89,3 +89,17 @@ public:
     }
 };
 ```
+# [104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/description/)
+## Approach ->
+To calculate the Maximum Depth, we can simply take the maximum of the depths of the left and right subtree and add 1 to it. And when there is no element left (i.e. we are on null) then return 0, that way for the NULL node we will return 0, and the leaf node will be 1 + 0 == 1 so that will return 1 and the node above will be 1 + 1 == 2 and that will return 2 and so on.. look at the code to understand.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        if(root==NULL) return 0;
+        return 1 + max(maxDepth(root->left), maxDepth(root->right));
+    }
+};
+```
