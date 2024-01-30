@@ -343,3 +343,70 @@ vector<int> traverseBoundary(TreeNode<int> *root) {
   return res;
 }
 ```
+
+Pending -> vertical order traversal, top view, bottom view of bt
+
+# [199. Binary Tree Right Side View](https://leetcode.com/problems/binary-tree-right-side-view/description/)
+
+## Approaches ->
+1. You can do the level order traversal and put the last node of each level in your answer vector.
+2. Better approach would be to use recursion to do so to avoid the extra space (auxiliary space would be O(log n) or O(Height) in avg case due to recursive stack and O(n) in worst case if the tree is skewed). In this approach simply maintain a variable to determine the level of the BT. Maintian a DS to store the visited levels. Call the recursion for the right side of the tree and then the left side. When a level is visited for the first time, it signifies the discovery of a node from the right side at that level, so push that node's value in our answer.  Also push that level in the DS to ensure that it has been visited the first time.
+
+## Codes ->
+1.
+```cpp
+class Solution {
+public:
+    vector <int> ans;
+    void helper(TreeNode* root){
+        if(root == NULL) return;
+        queue <TreeNode*> q;
+        q.push(root);
+        while(q.size()){
+            int size = q.size();
+            // vector <int> temp;
+            for(int i=0; i<size; i++){
+                TreeNode* nnode = q.front();
+                q.pop();
+                if(nnode->left) q.push(nnode->left);
+                if(nnode->right) q.push(nnode->right);
+
+                // if it is the last node of the current level then push it in ans
+                if(i==size-1) ans.push_back(nnode->val);
+            }
+            // ans.push_back(temp[temp.size()-1]);
+        }  
+    }
+    vector<int> rightSideView(TreeNode* root) {
+        helper(root);
+        return ans;
+    }
+};
+```
+
+2.
+```cpp
+class Solution {
+public:
+    void helper(TreeNode* root, vector<int> &ans, vector<int> &visitedLevels, int curLevel){
+        if(root==NULL) return;
+
+        // if the level is visited for the first time, enter it into the visitedLevels and push the node's val in ans.
+        if(visitedLevels.size()==curLevel){
+            ans.push_back(root->val);
+            visitedLevels.push_back(curLevel);
+        }
+
+        // call recursion for the right side and then the left side while increasing the size of the curLevel by 1
+        helper(root->right, ans, visitedLevels, curLevel+1);
+        helper(root->left, ans, visitedLevels, curLevel+1);
+    }
+    vector<int> rightSideView(TreeNode* root) {
+        vector<int> ans;
+        vector<int> visitedLevels;
+
+        helper(root, ans, visitedLevels, 0);
+        return ans;
+    }
+};
+```
