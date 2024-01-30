@@ -221,3 +221,50 @@ public:
     }
 };
 ```
+
+# [103. Binary Tree Zigzag Level Order Traversal](https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/description/)
+
+## Approach ->
+Simple level order traversal but on odd levels reverse the level vector. Don't increase the TC of the code by using the reverse stl, instead insert into the level vector in reverse manner by keeping a flag variable. Look at the code properly.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        vector<vector<int>> ans;
+        queue<TreeNode*> q;
+
+        // Boolean flag to track whether the current level is even or odd
+        bool isEven = true;
+
+        // Check if the tree is empty to avoid runtime error 
+        if(root==NULL) return ans;
+
+        q.push(root);
+
+        while(q.size()){
+            int size = q.size();
+            vector<int> level(size);
+
+            for(int i=0; i<size; i++){
+                TreeNode* node = q.front();
+                q.pop();
+                
+                if(node->left != NULL) q.push(node->left);
+                if(node->right != NULL) q.push(node->right);
+                
+                // Determine the index to insert the node's value based on whether the level is even or odd
+                int index = isEven ? i : size-i-1;
+                // Insert the node's value into the level vector at the calculated index
+                level[index]=node->val;
+            }
+            // Toggle the isEven flag
+            isEven = !isEven;
+            ans.push_back(level); 
+        }
+
+        return ans;
+    }
+};
+```
