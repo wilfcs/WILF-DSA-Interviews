@@ -174,3 +174,31 @@ public:
     }
 };
 ```
+
+# [124. Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/description/)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int ans = INT_MIN;
+
+    int helper(TreeNode* root){
+        if(root==NULL) return 0;
+
+        // Calculate the maximum path sum in the left and right subtrees. If any node is making the sum as negative then it's better to not include that negative number, so we will take 0 instead. That's why we have taken the max bw 0 and sum returned.
+        int l = max(0, helper(root->left));
+        int r = max(0, helper(root->right));
+
+        // Update the global maximum path sum using the current node + left subtree sum + right subtree sum
+        ans = max(ans, l+r+root->val);
+
+        // Return the maximum path sum starting from the current node to its parent
+        return root->val + max(l, r);
+    }
+    int maxPathSum(TreeNode* root) {
+        helper(root);
+        return ans;
+    }
+};
+```
