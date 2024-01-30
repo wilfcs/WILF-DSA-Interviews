@@ -268,3 +268,78 @@ public:
     }
 };
 ```
+
+# [Boundary Traversal of Binary Tree](https://www.codingninjas.com/studio/problems/boundary-traversal-of-binary-tree_790725?utm_source=striver&utm_medium=website&utm_campaign=a_zcoursetuf&leftPanelTabValue=PROBLEM)
+
+## Approach ->
+Traverse the left boundary of the tree and add its elements to the resultant vector except the leaf nodes, then add the leaf nodes to the resultant, then traverse the right boundary and add the reverse of it to the resultant vector other than the leaf nodes. Follow iterative approach to traverse the boundaries to avoid conflict in answer.
+
+## Code ->
+```cpp
+// Check if the given node is a leaf node
+bool isLeaf(TreeNode<int> *root) {
+  return !root->left && !root->right;
+}
+
+// Add the left boundary nodes to the result vector
+void addLeftBoundary(TreeNode<int> *root, vector<int> &res) {
+  TreeNode<int> *cur = root->left;
+  while (cur) {
+    // If the current node is not a leaf, add it to the result
+    if (!isLeaf(cur)) res.push_back(cur->data);
+    // Move to the left child if it exists; otherwise, move to the right child
+    if (cur->left) cur = cur->left;
+    else cur = cur->right;
+  }
+}
+
+// Add the right boundary nodes to the result vector
+void addRightBoundary(TreeNode<int> *root, vector<int> &res) {
+  TreeNode<int> *cur = root->right;
+  vector<int> tmp;
+  while (cur) {
+    // If the current node is not a leaf, add it to a temporary vector
+    if (!isLeaf(cur)) tmp.push_back(cur->data);
+    // Move to the right child if it exists; otherwise, move to the left child
+    if (cur->right) cur = cur->right;
+    else cur = cur->left;
+  }
+  // Add the nodes from the temporary vector in reverse order to maintain anti-clockwise order
+  for (int i = tmp.size() - 1; i >= 0; --i) {
+    res.push_back(tmp[i]);
+  }
+}
+
+// Recursively add leaf nodes to the result vector
+void addLeaves(TreeNode<int> *root, vector<int> &res) {
+  // If the current node is a leaf, add it to the result
+  if (isLeaf(root)) {
+    res.push_back(root->data);
+    return;
+  }
+  // Recursively process left and right children
+  if (root->left) addLeaves(root->left, res);
+  if (root->right) addLeaves(root->right, res);
+}
+
+// Main function to traverse the boundary nodes in anti-clockwise order
+vector<int> traverseBoundary(TreeNode<int> *root) {
+  vector<int> res;
+  // Return an empty vector if the tree is empty
+  if (!root) return res;
+
+  // Add the root node to the result if it is not a leaf
+  if (!isLeaf(root)) res.push_back(root->data);
+
+  // Add the left boundary nodes
+  addLeftBoundary(root, res);
+
+  // Add leaf nodes
+  addLeaves(root, res);
+
+  // Add the right boundary nodes
+  addRightBoundary(root, res);
+
+  return res;
+}
+```
