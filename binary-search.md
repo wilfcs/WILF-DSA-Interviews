@@ -982,7 +982,7 @@ public:
 # [240. Search a 2D Matrix II](https://leetcode.com/problems/search-a-2d-matrix-ii/description/)
 
 ## Approach ->
-Literally all the approaches of the question above works.
+The approach 2 of the above question works here.
 
 # [1901. Find a Peak Element II](https://leetcode.com/problems/find-a-peak-element-ii/description/)
 

@@ -293,48 +293,58 @@ public:
     }
 };
 ```
-# [74. Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/)
-## Approach->
-You assume the 2d matrix to be 1d matrix and use binary search.
+# [74. Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/description/)
 
-## Code->
+## Approaches ->
+1. Brute Force - Traverse in O(n*m) TC and find the target.
+2. Better Approach: Place yourself on either the top right or bottom left cornor, that way when you go to your left the elements decrease and when you go down the elements increase. Using this you can find the target in O(n+m) TC.
+3. Most Optimal: Treat 2D array as 1D array and perform Binary Search. TC -> O(log(n*m))
+
+## Codes->
+2.
+```cpp
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        int row = 0, col = matrix[0].size()-1;
+
+        while(row<matrix.size() && col>=0){
+            if(matrix[row][col]==target) return true;
+            else if(matrix[row][col]>target) col--;
+            else row++;
+        }
+        return false;
+    }
+};
 ```
- bool searchMatrix(vector<vector<int>>& matrix, int target) {
+3. 
+```cpp
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
         int m = matrix[0].size(); int n = matrix.size();
-        int low = 0;
-        int high = (m*n)-1;
-        int mid;
+
+        int low = 0, high = (m*n)-1, mid;
+
         while(low<=high){
             mid = (low+high)/2;
-            int val = matrix[mid/m][mid%m]; // note this part 
+
+            // Treat 2d as 1d using this formula
+            int val = matrix[mid/m][mid%m];
+
             if(val==target) return true;
             if(val>target) high = mid-1;
             else low = mid+1;
         }
         return false;
     }
-```
-# [240. Search a 2D Matrix II](https://leetcode.com/problems/search-a-2d-matrix-ii/)
-## Approach ->
-- A simple search with TC O(n*m). 
-- Apply binary search in each row with TC O(n*log m). 
-- Most optimal solution is-> Now this might be a little tricky buy I want you to look at the first picture and try to observe something here. On index 0,0 the elements in the row as well as columns is in increasing order. So this won't help us into solving this problem. Same is the case with the index 4,4.. The row is decreasing and the columns is decreasing too. But if you go to index 0,4 or 4,0 the case is different and we can take advantage of that. So for instance let's choose 0,4 and the idea is to see if the target is greater or smaller than the element at that position. If the target is greater simply go to the left, if the target is smaller simply go down. Do this while we are inside the bounds. This is basically a binary search problem as well because although here we are not applying any typical binary search but we are reducing the size of the search using logic and hence it is a binary search problem. TC-> O(n) or O(m)
-
-## Code->
-```cpp
-class Solution {
-public:
-    bool searchMatrix(vector<vector<int>>& matrix, int target) {
-        int row = 0, col = matrix[0].size()-1; // This is the row and col we are going to use to compare it with target.
-        while(row<matrix.size() && col>=0){ // While we are still inside the legal boundaries
-            if(matrix[row][col]==target) return true;
-            else if(matrix[row][col]>target) col--; // go down
-            else row++;    // go left
-        }
-        return false;
-    }
 };
 ```
+
+# [240. Search a 2D Matrix II](https://leetcode.com/problems/search-a-2d-matrix-ii/description/)
+## Approach ->
+The approach 2 of the above question works here.
+
 # [769. Max Chunks To Make Sorted](https://leetcode.com/problems/max-chunks-to-make-sorted/)
 ## Approach-> 
 In the question the condition says that there will be elements from 0 to n-1. Approach is very simple yet multiple wrong approaches might come to your head while solving this problem. The correct approach is that you maintain a maximum element while traversing in the array. If the maximum element found till time is equal to i then that is one chunk. The intuition is that each chunk must have one condition that the last element of the chunk must be equal to i. And at the same time there should not be any element in that chunk that is greater than the last element because if that's the case then even if we sort that chunk the elements will not be arranged in the right order because there is one element that is greater than everything else and we must have the greatest element found till time equal to i.
