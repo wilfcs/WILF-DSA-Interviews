@@ -9,7 +9,7 @@ int diagonalSum(vector<vector<int>>& mat) {
         int size = mat.size();
         int ans = 0;
         for(int i=0; i<size; i++){
-            ans+=mat[i][I]; // calculating sum for diagonal left to right
+            ans+=mat[i][i]; // calculating sum for diagonal left to right
             ans+=mat[i][size-i-1]; // for diagonal right to left
         }
         if(size%2){
@@ -23,7 +23,7 @@ int diagonalSum(vector<vector<int>>& mat) {
 ## Approach->
 - If you notice closely then at any position the amount of water that can be stored is the [min( greatest height at the left, greatest height at the right) - height at the current position]. So brute force would be to traverse at the left and right from  a position and find the greatest at the left and right. TC -> O(n^2).
 - You can maintain a prefix and suffix sum using hashing. That way you can easily find the greatest on the left and right. TC-> O(n). SC->O(n).
-```
+```cpp
 int trap(vector<int>& height) {
         vector <int> prefix(height.size(), 0);
         vector <int> suffix(height.size(), 0);
@@ -52,7 +52,7 @@ int trap(vector<int>& height) {
     }
 ```
 - The most optimal solution would be the two-pointer solution. So we will first discuss the solution and then discuss the intuition behind it. We will keep two pointers l and r on the left and right end of the array. Take two variables leftMax and rightMax and initialize them to 0. If height[l] is less than or equal to height[r] then if leftMax is less than height[l] update leftMax to height[l] else add leftMax-height[l] to your final answer and move the l pointer to the right i.e l++. If height[r] is less than height[l], then now we are dealing with the right block. If height[r] is greater than rightMax, then update rightMax to height[r] else add rightMax-height[r] to the final answer. Now move r to the left. Repeat these steps till l and r crosses each other. Now the intuition behind this approach is that we should subtract the current height with he min bw leftmax and rightmax height. So when we are selecting the position in the first if statement that we are dealing with we are making sure that it is the smaller height bw the left and the right pointer. This always makes sure that we are taking the smaller height bw the two heights. Look at the solution and think about it to understand properly
-```
+```cpp
 int trap(vector<int>& height) {
         int l = 0;
         int r = height.size()-1;
@@ -204,6 +204,59 @@ int maxSubArray(vector<int>& nums) {
 2. Ask the interviewer if the values in the matrix are non-negative or not. If the values are non-negative, you can tell the following approach -> Visit every element of the array. If an element is 0 then make its row and column elements as -1 but don't make the row and column elements -1 if its 0 too (because this 0 might change the values of other elements). After this is done, visit every element of the array again and make all the -1s as 0. [TC -> (N*M) * (N+M)] i.e. N*M for traversal in N*M vector and N+M for traversing the rows and columns of each 0 element. [SC -> O(1)].
 3. Hashing -> Create two vectors of size N and M respectively. Mark the row and column as 0 if there is a 0 in the main array. Accordingly convert the main array to 0s by looking at the two vectors. [TC -> O(N*M + N*M)] [SC -> O(N + M) for taking two dummy vectors]. Note-> Tried this approach after a year but the mistake I did is assume that the size of row and col will be the same and took just one hash table. Don't repeat that in the interview
 4. Optimisation of 2nd approach ->  Consider the 0th row and 0th col to be the hashes for the given array. Make two variables row and col and set them to false. Check if the 0th row or the 0th col has any 0s in it. If yes then mark row or col as true. Now consider the 0th row and 0th column as the hash for the remaining array and apply the 3th approach for the remaining array. At the end check if row is true then make the entire 0th row as 0 and do the same for col. Note-> When I solved using this approach after 1 year I applied too much brain. Just simply run all the loops like in example, don't reverse the positions of i and j like don't make matrix[i][0] as matrix[0][I]
+
+## Code ->
+```cpp
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+        bool isrow = false;
+        bool iscol = false;
+        
+        for(int i=0; i<matrix[0].size(); i++){
+            if(matrix[0][i]==0) isrow=true;
+        }
+        for(int i=0; i<matrix.size(); i++){
+            if(matrix[i][0]==0) iscol=true;         
+        }
+        
+       for(int i=1; i<matrix.size(); i++){
+           for(int j=1; j<matrix[0].size(); j++){
+               if(matrix[i][j]==0)
+               {
+                   matrix[0][j]=0;
+                   matrix[i][0]=0;
+               }
+           }
+       }
+        
+        for(int i=1; i<matrix[0].size(); i++){
+            if(matrix[0][i]==0){
+                for(int j=0; j<matrix.size(); j++){
+                    matrix[j][i]=0;
+                }
+            }
+        }
+        for(int i=1; i<matrix.size(); i++){
+            if(matrix[i][0]==0){
+                for(int j=0; j<matrix[0].size(); j++){
+                    matrix[i][j]=0;
+                }
+            }
+        }
+        
+        if(isrow){
+            for(int i=0; i<matrix[0].size(); i++)
+                matrix[0][i]=0;
+        }
+        if(iscol){
+            for(int i=0; i<matrix.size(); i++)
+                matrix[i][0]=0;
+        }
+    }
+    
+};
+```
 
 # [31. Next Permutation](https://leetcode.com/problems/next-permutation/)
 ## Code->
