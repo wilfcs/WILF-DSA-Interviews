@@ -178,26 +178,6 @@ public:
 };
 ```
 
-# [53. Maximum Subarray](https://leetcode.com/problems/maximum-subarray/)
-## Approach -> 
-you don't need any approach lol you've solved it like a thousand times
-## Code-> 
-```cpp
-int maxSubArray(vector<int>& nums) {
-        int ans = nums[0];
-        int sum = 0;
-
-        for(int i=0; i<nums.size(); i++){
-            sum+=nums[i];
-            ans = max(sum, ans);
-            if(sum<0) sum = 0;
-            
-        }
-
-        return ans;
-    }
-```
-
 # [73. Set Matrix Zeroes](https://leetcode.com/problems/set-matrix-zeroes/)
 ## Approaches ->
 1. Make a duplicate vector and traverse in the first vector and make rows and columns of duplicate matrix 0.
