@@ -410,3 +410,32 @@ public:
     }
 };
 ```
+# [101. Symmetric Tree](https://leetcode.com/problems/symmetric-tree/description/)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Recursive helper function to check if two subtrees are symmetric
+    bool helper(TreeNode* t1, TreeNode* t2) {
+        // Base case: Both nodes are NULL, indicating symmetry
+        if (t1 == NULL && t2 == NULL) {
+            return true;
+        }
+        // Base case: One of the nodes is NULL, indicating asymmetry
+        if (t1 == NULL || t2 == NULL || t1->val != t2->val) {
+            return false;
+        }
+
+        // Recursive call for comparing left subtree of t1 with right subtree of t2
+        // and right subtree of t1 with left subtree of t2
+        return (helper(t1->left, t2->right) && helper(t1->right, t2->left));
+    }
+
+    // Main function to check if a binary tree is symmetric
+    bool isSymmetric(TreeNode* root) {
+        // Call the helper function to compare the left subtree with the right subtree
+        return helper(root->left, root->right);
+    }
+};
+```
