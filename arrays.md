@@ -724,11 +724,12 @@ public:
 
 ## Approaches ->
 - Brute Force TC->O(n^2)
-- Keep a hashmap where you store all the elements in the array. Traverse the array and do `toFind = target-arr[i]`. If you find `toFind` in the hashmap then you return their indices. TC-> O(n) SC-> O(n)
 - Two pointer -> Sort the array. We will keep a left pointer at the first index and a right pointer at the last index. Now until left < right, we will check the sum of arr[left] and arr[right]. Now if the sum < target, we need bigger numbers and so we will increment the left pointer. But if sum > target, we need to consider lesser numbers and so we will decrement the right pointer. 
-If sum == target we will return the indices.
+If sum == target we will return the indices. TC-> O(n log n)
+- Keep a hashmap where you store all the elements in the array. Traverse the array and do `toFind = target-arr[i]`. If you find `toFind` in the hashmap then you return their indices. But remember to insert in the hashmap in the same loop as you calculate the toFind to avoid duplicacy. TC-> O(n) SC-> O(n)
 
 ## Code -> 
+2. 
 ```cpp
 sort(arr.begin(), arr.end());
     int left = 0, right = n - 1;
@@ -741,6 +742,26 @@ sort(arr.begin(), arr.end());
         else right--;
     }
     return "NO";
+```
+3. 
+```cpp
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& arr, int target) {
+        unordered_map<int, int> mp;
+        vector<int> ans;
+        
+        for(int i=0; i<arr.size(); i++){ 
+            if(mp.count(target-arr[i])){
+                ans.push_back(i);
+                ans.push_back(mp[target-arr[i]]);
+                return ans;
+            }
+            mp[arr[i]] = i;
+        }
+        return ans;
+    }
+};
 ```
 
 # [15. 3Sum](https://leetcode.com/problems/3sum/description/)
