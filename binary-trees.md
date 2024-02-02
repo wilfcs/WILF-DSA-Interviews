@@ -544,3 +544,28 @@ public:
     }
 };
 ```
+2.
+```cpp
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        // If the current node is NULL or either of the nodes is found, return the current node
+        if (root == NULL || root == p || root == q)
+            return root;
+
+        // Recursively search for the nodes in the left and right subtrees
+        TreeNode* left = lowestCommonAncestor(root->left, p, q);
+        TreeNode* right = lowestCommonAncestor(root->right, p, q);
+
+        // If one of the nodes is not found in the left subtree, return the right subtree result even if its null
+        if (left == NULL)
+            return right;
+        // If one of the nodes is not found in the right subtree, return the left subtree result
+        else if (right == NULL)
+            return left;
+        // If both nodes are found in different subtrees, return the current node as the LCA
+        else
+            return root;
+    }
+};
+```
