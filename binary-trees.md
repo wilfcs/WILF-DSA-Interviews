@@ -439,3 +439,43 @@ public:
     }
 };
 ```
+
+# [257. Binary Tree Paths](https://leetcode.com/problems/binary-tree-paths/description/)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Helper function to traverse the binary tree and construct paths
+    void helper(TreeNode* root, vector<string> &ans, string s) {
+        // Base case: If the current node is NULL, return
+        if (root == NULL) {
+            return;
+        }
+        
+        // If the current node is a leaf node (no left or right child),
+        // append its value to the current path and add the path to the answer
+        if (root->left == NULL && root->right == NULL) {
+            s += to_string(root->val); // Convert int to string
+            ans.push_back(s); // Add the current path to the answer
+            return;
+        }
+
+        // If the current node has left or right child, append its value to
+        // the current path and continue traversing left and right subtrees
+        s += to_string(root->val) + "->"; // Append current node value to the path
+
+        helper(root->left, ans, s); // Recursively traverse left subtree
+        helper(root->right, ans, s); // Recursively traverse right subtree
+
+        s.pop_back(); // Backtrack: Remove the last character (->) to backtrack in the path
+    }
+
+    // Main function to get all binary tree paths
+    vector<string> binaryTreePaths(TreeNode* root) {
+        vector<string> ans; // Vector to store the paths
+        helper(root, ans, ""); // Call helper function to populate the answer vector
+        return ans; // Return the vector containing all binary tree paths
+    }
+};
+```

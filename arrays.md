@@ -434,7 +434,7 @@ public:
 ---
 
 ## Code ->
-```
+```cpp
 class Solution {
 public:
     void sortColors(vector<int>& nums) {
@@ -858,6 +858,8 @@ class Solution{
     {   
         unordered_map<int, int> mp; //unordered map cause TC to find an elem is O(1)
         mp[0] = -1; // initialize 0 as -1 index
+        // By setting mp[0] = -1, we essentially mark the index -1 for the prefix sum of 0. This helps in calculating the length of the subarray with a sum of 0 when the same prefix sum value is encountered later in the array.
+        
         int ans = 0;
         int sum = 0;
 
