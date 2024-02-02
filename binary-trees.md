@@ -479,3 +479,68 @@ public:
     }
 };
 ```
+# [236. Lowest Common Ancestor of a Binary Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/description/)
+
+## Approaches ->
+1. Brute Force: 
+Make two vectors and store the path of both the target nodes. Now compare these two path vectors and return the last matching node. For example in example 2: pathOfP = [3,5] and pathOfQ = [3,5,2,4], so return 5. But here the space complexity will be O(2N).
+
+2. Visit every node, if you find NULL return NULL, if you find the target return target, if for any recursion call one side is returning target or null just return target or null and if both sides are returning target then return the root itself. You won't understand this ik for sure. So here is the explanation, watch the dry run carefully and you'd understand [link](https://www.youtube.com/watch?v=_-QHfMDde90&list=PLkjdNRgDmcc0Pom5erUBU4ZayeU9AyRRu&index=27)
+
+## Codes->
+1. 
+```cpp
+class Solution {
+public:
+    // Helper function to find the path from the root to the target node in the tree
+    bool findPath(TreeNode* root, TreeNode* target, vector<TreeNode*>& path) {
+        // Base case: If the current node is NULL, return false
+        if (root == NULL)
+            return false;
+
+        // Add the current node to the path
+        path.push_back(root);
+
+        // If the current node is the target node, return true
+        if (root == target)
+            return true;
+
+        // Recursively search for the target node in the left and right subtrees
+        if (findPath(root->left, target, path) || findPath(root->right, target, path))
+            return true;
+
+        // If the target node is not found in the current subtree, backtrack
+        path.pop_back();
+        return false;
+    }
+
+    // Main function to find the lowest common ancestor of two nodes in the binary tree
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        // Vectors to store the paths from the root to nodes p and q
+        vector<TreeNode*> pathOfP;
+        vector<TreeNode*> pathOfQ;
+
+        // Find the paths from the root to nodes p and q
+        findPath(root, p, pathOfP);
+        findPath(root, q, pathOfQ);
+
+        // Initialize the result node as a placeholder
+        TreeNode* ans = new TreeNode(-1);
+
+        // Compare the paths to find the lowest common ancestor
+        for (int i = 0; i < pathOfP.size(); i++) {
+            // If one of the paths is shorter than the other, break the loop
+            if (i == pathOfQ.size())
+                break;
+
+            // If the nodes in the paths are the same, update the result node
+            if (pathOfP[i] == pathOfQ[i])
+                ans = pathOfP[i];
+            else
+                break;
+        }
+        // Return the lowest common ancestor
+        return ans;
+    }
+};
+```
