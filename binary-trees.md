@@ -596,3 +596,59 @@ bool isParentSum(Node *root) {
     return (isParentSum(root->left) && isParentSum(root->right));
 }
 ```
+
+# [222. Count Complete Tree Nodes](https://leetcode.com/problems/count-complete-tree-nodes/description/)
+
+## Approaches->
+1. Simply cound all nodes. TC-> O(n)
+2. [Approach 2](https://takeuforward.org/binary-tree/count-number-of-nodes-in-a-binary-tree/)
+
+## Codes ->
+1. 
+```cpp
+class Solution {
+public:
+    int countNodes(TreeNode* root) {
+        if(root==NULL) return 0;
+
+        return 1 + countNodes(root->left) + countNodes(root->right);
+    }
+};
+```
+2. 
+```cpp
+class Solution {
+public:
+    // Function to calculate the height of the left subtree
+    int leftHeight(TreeNode* root) {
+        if (root == NULL) return 0;
+        return 1 + leftHeight(root->left);
+    }
+
+    // Function to calculate the height of the right subtree
+    int rightHeight(TreeNode* root) {
+        if (root == NULL) return 0;
+        return 1 + rightHeight(root->right);
+    }
+
+    // Function to count the number of nodes in the complete binary tree
+    int countNodes(TreeNode* root) {
+        // Base case: if the root is NULL, there are no nodes
+        if (root == NULL) return 0;
+
+        // Calculate the height of the left and right subtrees
+        int lh = leftHeight(root);
+        int rh = rightHeight(root);
+
+        // If the left and right subtrees have the same height, the tree is complete
+        if (lh == rh) {
+            // Calculate the number of nodes using the formula for a complete binary tree
+            return pow(2, lh) - 1;
+        }
+
+        // If the left and right subtrees have different heights, recursively count nodes
+        // in the left and right subtrees and add 1 for the current node
+        return 1 + countNodes(root->left) + countNodes(root->right);
+    }
+};
+```
