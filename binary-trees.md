@@ -569,3 +569,30 @@ public:
     }
 };
 ```
+
+# [Children Sum Property](https://www.codingninjas.com/studio/problems/children-sum-property_8357239?utm_source=striver&utm_medium=website&utm_campaign=a_zcoursetuf&leftPanelTabValue=PROBLEM)
+
+## Code ->
+```cpp
+bool isParentSum(Node *root) {
+    // Base case: If the root is NULL or it is a leaf node (no children),
+    // then the children sum property is trivially satisfied.
+    if (root == NULL || (root->left == NULL && root->right == NULL))
+        return true;
+
+    int v1 = 0, v2 = 0;
+
+    // If the left child exists, assign its value to v1.
+    if (root->left) v1 = root->left->data;
+
+    // If the right child exists, assign its value to v2.
+    if (root->right) v2 = root->right->data;
+
+    // Check if the children sum property doesn't hold for the current value then return false
+    if (v1 + v2 != root->data) return false;
+
+    // Recursively check the children sum property for the left and right subtrees.
+    // If either subtree violates the property, the entire tree violates it so we are using & operator
+    return (isParentSum(root->left) && isParentSum(root->right));
+}
+```
