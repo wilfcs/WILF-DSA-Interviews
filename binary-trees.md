@@ -763,3 +763,45 @@ public:
     }
 };
 ```
+
+# [Bottom View of Binary Tree](https://www.geeksforgeeks.org/problems/bottom-view-of-binary-tree/1)
+
+## Code ->
+```cpp
+class Solution {
+  public:
+    vector <int> bottomView(Node *root) {
+        map<int, int> mp;
+        queue<pair<Node*, int>> q;
+        
+        q.push({root, 0});
+        
+        // Level order traversal
+        while(q.size()) {
+            auto it = q.front();
+            q.pop();
+            Node* curNode = it.first;
+            int vertical = it.second;
+            
+            // the last occuring vertical node would make the answer
+            mp[vertical] = curNode->data;
+            
+            if (curNode->left) {
+                q.push({curNode->left, vertical - 1});
+            }
+            
+            if (curNode->right) {
+                q.push({curNode->right, vertical + 1});
+            }
+        }
+        
+        vector<int> ans;
+        
+        for (auto x : mp) {
+            ans.push_back(x.second);
+        }
+        
+        return ans;
+    }
+};
+```
