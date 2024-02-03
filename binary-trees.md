@@ -805,3 +805,59 @@ class Solution {
     }
 };
 ```
+
+# [662. Maximum Width of Binary Tree](https://leetcode.com/problems/maximum-width-of-binary-tree/description/)
+
+## Approach ->
+[link](https://takeuforward.org/data-structure/maximum-width-of-a-binary-tree/)
+Everything is same as of this approach in the link provided other than the "Prevention of Integer Overflow" part. I did the Prevention of Integer Overflow by taking unsigned long long integer values all around.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Using unsigned long long for larger range
+    typedef unsigned long long ll;
+
+    int widthOfBinaryTree(TreeNode* root) {
+        // Queue to perform level order traversal
+        queue<pair<TreeNode*, ll>> q;
+        // Pushing the root node with its index (assuming 0-based indexing)
+        q.push({root, 0});
+        // Variable to store the maximum width
+        ll ans = 0;
+
+        while (q.size()) {
+            // Get the number of nodes at the current level
+            int size = q.size();
+            // Get the index of the leftmost and rightmost nodes at the current level
+            ll left =  q.front().second;
+            ll right = q.back().second;
+
+            // Update the maximum width
+            ans = max(ans, right - left + 1);
+
+            // Process nodes at the current level
+            for (int i = 0; i < size; i++) {
+                // Get the current node and its index
+                TreeNode* node = q.front().first;
+                ll idx = q.front().second;
+                q.pop();
+
+                // Enqueue the left child with adjusted index
+                if (node->left) {
+                    q.push({node->left, 2 * idx + 1});
+                }
+
+                // Enqueue the right child with adjusted index
+                if (node->right) {
+                    q.push({node->right, 2 * idx + 2});
+                }
+            }
+        }
+
+        // Convert the result to int before returning
+        return static_cast<int>(ans);
+    }
+};
+```
