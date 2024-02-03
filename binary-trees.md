@@ -652,3 +652,58 @@ public:
     }
 };
 ```
+
+# [987. Vertical Order Traversal of a Binary Tree](https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/description/)
+
+## Approach ->
+Idea is very simple, perform the level order traversal and instead of just storing the node in the queue like you do in a normal level order traversal, store its vertical and level as well.
+Take a map and store the vertical, level and values on that level. Finally formulate your answer. You might not have understood this explanation so check the link below. Solve this question while revising Himanshu, this is a code heavy question and not a concept heavy question.
+[link](https://takeuforward.org/data-structure/vertical-order-traversal-of-binary-tree/)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    vector<vector<int>> verticalTraversal(TreeNode* root) {
+        // Using a map to store the nodes with the same vertical and level position
+        map<int, map<int, multiset<int>>> mp;
+        // Using a queue for BFS traversal
+        queue<pair<TreeNode*, pair<int, int>>> q;
+
+        // Pushing the root node to the queue with initial vertical and level positions (0, 0)
+        q.push({root, {0,0}});
+
+        // BFS traversal
+        while(q.size()){
+            // Extracting the current node and its positions from the front of the queue
+            auto p = q.front();
+            TreeNode* node = p.first;
+            int vertical = p.second.first, level = p.second.second;
+            q.pop();
+
+            // Inserting the node's value into the map at the corresponding positions
+            mp[vertical][level].insert(node->val);
+
+            // Enqueueing the left child with adjusted positions
+            if(node->left) q.push({node->left, {vertical-1, level+1}});
+            // Enqueueing the right child with adjusted positions
+            if(node->right) q.push({node->right, {vertical+1, level+1}});
+        }
+
+        // Constructing the final result from the map
+        vector<vector<int>> ans;
+
+        for(auto x: mp){
+            vector<int> temp;
+            for(auto y: x.second){
+                for(auto z: y.second){
+                    temp.push_back(z);
+                }
+            }
+            ans.push_back(temp);
+        }
+
+        return ans;
+    }
+};
+```
