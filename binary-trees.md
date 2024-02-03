@@ -707,3 +707,59 @@ public:
     }
 };
 ```
+
+# [Top View of Binary Tree](https://www.geeksforgeeks.org/problems/top-view-of-binary-tree/1)
+
+## Approach ->
+Imagine if you do vertical order traversal and just include the first occurence of any vertical node then will that be your answer? yes. So in this question no need to keep track of your level, just keep track of your node and vertical and you're good.
+Code this please while revising.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Function to return a list of nodes visible from the top view 
+    // from left to right in Binary Tree.
+    vector<int> topView(Node *root) {
+        // Map to store the top view nodes with their vertical positions
+        map<int, int> mp;
+        // Queue for level order traversal
+        queue<pair<Node*, int>> q;
+        
+        // Pushing the root node to the queue with its initial vertical position (0)
+        q.push({root, 0});
+        
+        // Level order traversal
+        while(q.size()) {
+            auto it = q.front();
+            q.pop();
+            Node* curNode = it.first;
+            int vertical = it.second;
+            
+            // If the vertical position is not present in the map, add the node's data to the map
+            if (mp.find(vertical) == mp.end()) {
+                mp[vertical] = curNode->data;
+            }
+            
+            // Enqueue the left child with adjusted vertical position
+            if (curNode->left) {
+                q.push({curNode->left, vertical - 1});
+            }
+            
+            // Enqueue the right child with adjusted vertical position
+            if (curNode->right) {
+                q.push({curNode->right, vertical + 1});
+            }
+        }
+        
+        // Constructing the final result from the map
+        vector<int> ans;
+        
+        for (auto x : mp) {
+            ans.push_back(x.second);
+        }
+        
+        return ans;
+    }
+};
+```
