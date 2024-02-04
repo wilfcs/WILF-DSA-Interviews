@@ -861,3 +861,127 @@ public:
     }
 };
 ```
+
+# [863. All Nodes Distance K in Binary Tree](https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/)
+
+## Approach->
+Intuition:
+
+Storing Parent Nodes:
+
+The initial step involves creating a map (parent) to store the parent of each node in the binary tree using DFS.
+This is done to facilitate easy traversal from child nodes to their parent nodes during the search for nodes at distance K.
+Breadth-First Search (BFS) from Target Node:
+
+The primary goal is to find nodes at a distance K from a given target node.
+Utilize BFS to explore nodes level by level, starting from the target node.
+A queue (q) is employed to keep track of nodes to be processed.
+Exploring Neighbors:
+
+Within each level of BFS:
+Check and enqueue the left child if it exists and has not been visited.
+Check and enqueue the right child if it exists and has not been visited.
+Check and enqueue the parent node if it exists and has not been visited.
+This ensures that the traversal explores the immediate neighbors of the current node.
+Tracking Visited Nodes:
+
+Maintain a set (visited) to keep track of nodes that have been visited to avoid redundant processing.
+Distance K Adjustment:
+
+After processing each level, decrement the distance k.
+If k reaches 0, break out of the loop, as further exploration beyond distance K is unnecessary.
+Collecting Result:
+
+During BFS, collect the values of nodes at distance K in a vector (ans).
+The final result vector contains the values of nodes at the desired distance.
+Overall Strategy:
+
+Utilizing DFS to store parent nodes aids in efficient traversal during BFS.
+BFS explores the tree level by level, keeping track of visited nodes.
+The algorithm stops when the desired distance K is reached or when all reachable nodes have been explored.
+
+[Link to explanation vid](https://www.youtube.com/watch?v=1PMjfQl_UVQ)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Function to store the parent of each node in the binary tree using DFS.
+    void storeParent(TreeNode* root, unordered_map<TreeNode*, TreeNode*>& parent) {
+        if (root == NULL) return;
+
+        // Store the parent of the left child.
+        if (root->left) parent[root->left] = root;
+        // Recursively call the function for the left subtree.
+        storeParent(root->left, parent);
+
+        // Store the parent of the right child.
+        if (root->right) parent[root->right] = root;
+        // Recursively call the function for the right subtree.
+        storeParent(root->right, parent);
+    }
+
+    // Main function to find nodes at distance K from the target node in the binary tree.
+    vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
+        // Map to store the parent of each node in the binary tree.
+        unordered_map<TreeNode*, TreeNode*> parent;
+        // Populate the parent map using DFS.
+        storeParent(root, parent);
+
+        // Set to keep track of visited nodes.
+        unordered_set<int> visited;
+        // Queue for BFS traversal.
+        queue<TreeNode*> q;
+        // Start BFS from the target node.
+        q.push(target);
+        // Mark the target node as visited.
+        visited.insert(target->val);
+
+        // BFS traversal to find nodes at distance K.
+        while (q.size()) {
+            // Number of nodes at the current level.
+            int size = q.size();
+
+            // Process nodes at the current level.
+            while (size--) {
+                // Get the front node from the queue.
+                TreeNode* curNode = q.front();
+                q.pop();
+
+                // Check left child and enqueue if not visited.
+                if (curNode->left && !visited.count(curNode->left->val)) {
+                    q.push(curNode->left);
+                    visited.insert(curNode->left->val);
+                }
+
+                // Check right child and enqueue if not visited.
+                if (curNode->right && !visited.count(curNode->right->val)) {
+                    q.push(curNode->right);
+                    visited.insert(curNode->right->val);
+                }
+
+                // Check parent and enqueue if not visited.
+                if (parent.count(curNode) && !visited.count(parent[curNode]->val)) {
+                    q.push(parent[curNode]);
+                    visited.insert(parent[curNode]->val);
+                }
+            }
+
+            // Decrement the distance after processing nodes at the current level.
+            k--;
+            // If distance becomes 0, break out of the loop.
+            if (k == 0) break;
+        }
+
+        // Collect the values of nodes at distance K in a vector.
+        vector<int> ans;
+        while (q.size()) {
+            ans.push_back(q.front()->val);
+            q.pop();
+        }
+
+        // Return the result vector.
+        return ans;
+    }
+};
+```
