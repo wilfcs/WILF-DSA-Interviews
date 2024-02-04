@@ -1088,3 +1088,76 @@ public:
     }
 };
 ```
+
+# [105. Construct Binary Tree from Preorder and Inorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/description/)
+
+## Approach ->
+The algorithm leverages the properties of preorder and inorder traversals to reconstruct a binary tree.
+
+In the preorder traversal, the first element is always the root of the current subtree. The algorithm starts by picking the root from the preorder list and incrementing an index to move to the next element.
+
+Then, it searches for the position of the root value in the inorder traversal. The elements to the left of this position correspond to the left subtree, and the elements to the right correspond to the right subtree.
+
+Recursively, the algorithm constructs the left subtree with the elements from the left side of the inorder position and the right subtree with the elements from the right side. This process is repeated for each subtree until the entire binary tree is reconstructed.
+
+The key idea is that in each recursive call, the algorithm focuses on a specific root, finds its position in the inorder traversal, and uses this information to divide and conquer, constructing the left and right subtrees of the current root.
+
+[Video explanation](https://www.youtube.com/watch?v=G5c1wM3Kpuw)
+
+## Code ->
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+class Solution {
+public:
+    // Helper function to construct the binary tree recursively.
+    TreeNode* solve(vector<int>& preorder, vector<int>& inorder, int start, int end, int &idx) {
+        // Base case: If the start index exceeds the end index, return NULL.
+        // note: start will always be greater than end if there is no element left in inorder vector to add in the root. dry run
+        if (start > end) {
+            return nullptr;
+        }
+
+        // Extract the current root value from the preorder traversal.
+        int rootVal = preorder[idx++];
+        
+        // Find the index of the root value in the inorder traversal.
+        int i = start;
+        for (; i <= end; i++) {
+            if (inorder[i] == rootVal) {
+                break;
+            }
+        }
+
+        // Create a new TreeNode with the current root value.
+        TreeNode* root = new TreeNode(rootVal);
+
+        // Recursively construct the left subtree with the range (start to i-1) in the inorder traversal.
+        root->left = solve(preorder, inorder, start, i - 1, idx);
+        // Recursively construct the right subtree with the range (i+1 to end) in the inorder traversal.
+        root->right = solve(preorder, inorder, i + 1, end, idx);
+
+        // Return the constructed root node.
+        return root;
+    }
+
+    // Main function to build the binary tree using preorder and inorder traversals.
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        int n = preorder.size();
+        int idx = 0; // Index to keep track of the current root value in the preorder traversal.
+        
+        // Call the solve function to construct the entire binary tree.
+        return solve(preorder, inorder, 0, n - 1, idx);
+    }
+};
+```
