@@ -865,6 +865,8 @@ public:
 # [863. All Nodes Distance K in Binary Tree](https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/)
 
 ## Approach->
+While revising just code this out man, otherwise you won't be able to grasp it properly and might forget the approach during the interview.
+
 Intuition:
 
 Storing Parent Nodes:
@@ -982,6 +984,107 @@ public:
 
         // Return the result vector.
         return ans;
+    }
+};
+```
+
+# [Burning Tree](https://www.geeksforgeeks.org/problems/burning-tree/1?itm_source=geeksforgeeks&itm_medium=article&itm_campaign=bottom_sticky_on_article)
+
+## Approach ->
+Very similar to the last q. Read the code and you'd understand. ( tip: don't miss your & operator if you pass your nodes by reference, that wasted half an hour of my time in debugging).
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Helper function to map parent nodes using Depth-First Search (DFS).
+    void mapParent(Node* root, unordered_map<Node*, Node*>& parent) {
+        if (root == NULL) return;
+
+        // Store the parent of the left child.
+        if (root->left) parent[root->left] = root;
+        mapParent(root->left, parent);
+
+        // Store the parent of the right child.
+        if (root->right) parent[root->right] = root;
+        mapParent(root->right, parent);
+    }
+
+    // Helper function to find the target node in the tree.
+    void findTargetNode(Node* root, int start, Node*& target) {
+        if (root == NULL) return;
+
+        // If the current node's data matches the target, set target to the current node.
+        if (root->data == start) {
+            target = root;
+            return;
+        }
+
+        // Recursively search for the target in the left and right subtrees.
+        findTargetNode(root->left, start, target);
+        findTargetNode(root->right, start, target);
+    }
+
+    // Main function to calculate the minimum time to burn the entire tree.
+    int minTime(Node* root, int start) {
+        // Map to store the parent of each node.
+        unordered_map<Node*, Node*> parent;
+        mapParent(root, parent);
+
+        // Variable to store the target node.
+        Node* target = NULL;
+        // Find the target node in the tree.
+        findTargetNode(root, start, target);
+
+        // If the target node is not found, return an appropriate value (here, -1).
+        if (target == NULL) {
+            return -1;
+        }
+
+        // Set to keep track of visited nodes.
+        unordered_set<int> visited;
+        // Queue for Breadth-First Search (BFS).
+        queue<Node*> q;
+        // Start BFS from the target node.
+        q.push(target);
+        // Mark the target node as visited.
+        visited.insert(target->data);
+
+        // Variable to store the minimum time required.
+        int ans = 0;
+
+        // BFS traversal to calculate the minimum time.
+        while (!q.empty()) {
+            int size = q.size();
+
+            // Process nodes at the current level.
+            while (size--) {
+                // Get the front node from the queue.
+                Node* cur = q.front();
+                q.pop();
+
+                // Check left child and enqueue if not visited.
+                if (cur->left && !visited.count(cur->left->data)) {
+                    visited.insert(cur->left->data);
+                    q.push(cur->left);
+                }
+                // Check right child and enqueue if not visited.
+                if (cur->right && !visited.count(cur->right->data)) {
+                    visited.insert(cur->right->data);
+                    q.push(cur->right);
+                }
+                // Check parent and enqueue if not visited.
+                if (parent.count(cur) && !visited.count(parent[cur]->data)) {
+                    visited.insert(parent[cur]->data);
+                    q.push(parent[cur]);
+                }
+            }
+            // Increment the time.
+            ans++;
+        }
+
+        // Return the minimum time (decremented by 1 to exclude the initial level).
+        return --ans;
     }
 };
 ```
