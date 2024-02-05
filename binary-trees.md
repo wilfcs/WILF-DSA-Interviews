@@ -1161,3 +1161,34 @@ public:
     }
 };
 ```
+# [Ceil from BST](https://www.codingninjas.com/studio/problems/ceil-from-bst_920464?utm_source=striver&utm_medium=website&utm_campaign=a_zcoursetuf)
+
+```cpp
+int findCeil(node *root, int input)
+{
+
+    int ceil = -1;
+    
+    while (root)
+    {
+        // If the input is already available in BST, return that.
+        if (root->data == input)
+            return input;
+
+        // If the input is greater than root, then the ceil value must be in the right subtree.
+        else if (root->data < input)
+            root = root->right;
+
+        // Otherwise, we mark ceil to be root and move to 
+        // left subtree where it may be further closer to the input value
+        else
+        {
+            ceil = root->data;
+            root = root->left;
+        }
+    }
+
+    //Return computed ceil value.
+    return ceil;
+}
+```
