@@ -1311,3 +1311,38 @@ public:
     }
 };
 ```
+# [230. Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/description/)
+## Approach->
+The inorder of a bst returns the elements in sorted order because bst follows the property of everything smaller on the left subtree and everything greater on the right subtree
+So we can do the inorder traversal and store all elements in a vector but that will take the sc of O(N). To avoid that we can use a counter and when we visit the node we can increase the counter and find our desired element.
+What if the question asked us to find the kth largest element? In that case we would traverse the tree and find the size of the tree as n, and then our kth largest would be (n-k)th smallest.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // IMPORTANT: pass ans and also k by reference
+    void inorder(TreeNode* root, int &k, int &ans){
+        // NOTE HOW K IS PASSED BY REFERENCE
+        if(root==NULL) return;
+
+        inorder(root->left, k, ans);
+
+        k--;
+        if(k==0){
+            ans = root->val;
+            return;
+        }
+
+        inorder(root->right, k, ans);
+    }
+    int kthSmallest(TreeNode* root, int k) {
+        
+        int ans;
+
+        inorder(root, k, ans);
+
+        return ans;
+
+    }
+```
