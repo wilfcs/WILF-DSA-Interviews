@@ -1233,3 +1233,81 @@ public:
     }
 };
 ```
+
+# [450. Delete Node in a BST](https://leetcode.com/problems/delete-node-in-a-bst/description/)
+
+## Approach ->
+The code aims to delete a node with a given key in a Binary Search Tree (BST) by traversing the tree to locate the target node, and then appropriately adjusting the links based on the number of children the node has, ensuring the resulting tree remains a valid BST. Read the comments in the code to understand.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Helper function to handle the deletion of a node with two children
+    TreeNode* helper(TreeNode* cur){
+        // If the left child is NULL, return the right child
+        if(cur->left==NULL) return cur->right;
+        // If the right child is NULL, return the left child
+        if(cur->right==NULL) return cur->left;
+
+        // Save references to the right and left children
+        TreeNode* rightChild = cur->right;
+        TreeNode* leftChild = cur->left;
+        // The node to be returned after deletion (in this case, the left child)
+        TreeNode* toReturn = cur->left;
+
+        // Find the rightmost node in the left subtree
+        while(leftChild){
+            if(leftChild->right==NULL) break;
+            leftChild = leftChild->right;
+        }
+        // Attach the right subtree to the rightmost node of the left subtree
+        leftChild->right = rightChild;
+
+        // Return the left subtree as the new node to be linked to the parent
+        return toReturn;
+    }
+
+    // Main function to delete a node with the given key in the BST
+    TreeNode* deleteNode(TreeNode* root, int key) {
+        // If the root is NULL, return NULL
+        if(root==NULL) return NULL;
+        // If the key to be deleted is at the root, call the helper function
+        if(root->val==key) return helper(root);
+
+        // Initialize a pointer 'cur' to traverse the tree.
+        TreeNode* cur = root;
+
+        // Traverse the tree to find the node to be deleted
+        while(cur){
+            // If the current node's value is greater than the key, move to the left subtree.
+            if(cur->val > key){
+                // If the left child exists and its value matches the key, delete the node and break.
+                if(cur->left && cur->left->val==key){
+                    cur->left = helper(cur->left);
+                    break;
+                }
+                // Otherwise, move to the left child.
+                else {
+                    cur = cur->left;
+                }
+            }
+            // If the current node's value is less than or equal to the key, move to the right subtree.
+            else{
+                // If the right child exists and its value matches the key, delete the node and break.
+                if(cur->right && cur->right->val==key){
+                    cur->right = helper(cur->right);
+                    break;
+                }
+                // Otherwise, move to the right child.
+                else {
+                    cur = cur->right;
+                }
+            }
+        }
+
+        // Return the root of the modified BST after deletion.
+        return root;
+    }
+};
+```
