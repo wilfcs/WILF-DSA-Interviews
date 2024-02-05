@@ -1192,3 +1192,44 @@ int findCeil(node *root, int input)
     return ceil;
 }
 ```
+
+# [701. Insert into a Binary Search Tree](https://leetcode.com/problems/insert-into-a-binary-search-tree/description/)
+
+## Approach ->
+You know that we must maintin the bst property so instead of inserting the node in the middle somewhere and rearranging the entire tree, just insert the given node on the leaf node. Traverse the tree to determine if it is a leaf node and insert, if its not a leaf node then go either left or right.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    TreeNode* insertIntoBST(TreeNode* root, int val) {
+        // If the BST is initially empty (root is NULL), create a new node with the given value.
+        if(root==NULL) return new TreeNode(val);
+
+        // Initialize a pointer 'cur' to traverse the tree.
+        TreeNode* cur = root;
+
+        while(cur){
+            // If the current node's value is greater than the new value, move to the left subtree if not a leaf
+            if(cur->val > val){
+                 // If the left child is NULL, insert the new value here and break the loop.
+                if(cur->left==NULL){
+                    cur->left = new TreeNode(val);
+                    break;
+                }
+                // Otherwise, move to the left child.
+                else cur = cur->left;
+            }   
+            else{
+                if(cur->right==NULL){
+                    cur->right = new TreeNode(val);
+                    break;
+                }
+                else cur = cur->right;
+            }       
+        } 
+
+        return root;
+    }
+};
+```
