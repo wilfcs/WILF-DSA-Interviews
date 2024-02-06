@@ -231,3 +231,30 @@ public:
     }
 };
 ```
+
+# [235. Lowest Common Ancestor of a Binary Search Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/description/)
+
+## Approach ->
+Go to every node and figure out if both the targets exist on the left then call the recursive function for the left side, and if both the targets exist on the right side then call the recursive fn for the right side but if none of the condition is true and they exist on the opposite sides then return the node itself because that node itself will be the intersection point.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if(!root) return NULL;
+
+        // If both nodes are smaller than the current root, search in the left subtree
+        if(root->val > p->val && root->val > q->val)
+            return lowestCommonAncestor(root->left, p, q);
+
+        // If both nodes are larger than the current root, search in the right subtree
+        if(root->val < p->val && root->val < q->val)
+            return lowestCommonAncestor(root->right, p, q);
+
+        // If the current root is between the values of p and q, or equal to either of them,
+        // then it is the lowest common ancestor
+        return root;
+    }
+};
+```
