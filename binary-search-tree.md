@@ -258,3 +258,40 @@ public:
     }
 };
 ```
+
+# [1008. Construct Binary Search Tree from Preorder Traversal](https://leetcode.com/problems/construct-binary-search-tree-from-preorder-traversal/description/)
+
+## Approach ->
+The code aims to construct a binary search tree (BST) from a preorder traversal. It utilizes a recursive approach, where a helper function constructs nodes by ensuring that each node's value follows the BST property. The upper bound parameter dynamically adjusts during recursion, controlling the valid range of values for each node. This ensures that the left subtree contains values strictly less than the node, and the right subtree contains values strictly greater. The process continues until the entire BST is constructed from the given preorder traversal.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Helper function to construct the BST from preorder traversal
+    TreeNode* helper(vector<int> &preorder, int &i, int upperBound) {
+        // If we have processed all elements in preorder or the current element is greater than the upper bound
+        if (i == preorder.size() || preorder[i] > upperBound) {
+            return NULL; // Return NULL indicating no subtree here
+        }
+
+        // Create a new node with the current element as its value
+        TreeNode* node = new TreeNode(preorder[i++]);
+
+        // Recursively construct the left subtree with values less than the current node's value
+        node->left = helper(preorder, i, node->val);
+
+        // Recursively construct the right subtree with values greater than the upper bound i.e. the range of the parent nodes
+        node->right = helper(preorder, i, upperBound);
+
+        // Return the constructed node
+        return node;
+    }
+
+    // Main function to construct the BST from preorder traversal
+    TreeNode* bstFromPreorder(vector<int>& preorder) {
+        int i = 0; // Start from the first element in preorder
+        return helper(preorder, i, INT_MAX); // Call the helper function with initial upper bound as INT_MAX
+    }
+};
+```
