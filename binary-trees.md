@@ -1301,3 +1301,27 @@ public:
     }
 };
 ```
+
+# [404. Sum of Left Leaves](https://leetcode.com/problems/sum-of-left-leaves/description/)
+
+## Approach ->
+Note that we have to find the sum of left LEAF nodes only. So we see if a given node is leaf as well as left by checking isLeft.
+But for that we will not make a different function of isLeft, we will simply pass 1 if we are calling recursive fn. for the left side and 0 if we are calling recursive fn. for the right side.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int sum = 0;
+    void findSum(TreeNode* root, bool isLeft){
+        if(!root) return;
+        if(!root->left && !root->right && isLeft) sum+=root->val;
+        findSum(root->left, 1);
+        findSum(root->right, 0);
+    }
+    int sumOfLeftLeaves(TreeNode* root) {
+        findSum(root, false);
+        return sum;
+    }
+};
+```
