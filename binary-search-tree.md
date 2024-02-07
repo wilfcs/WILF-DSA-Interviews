@@ -446,3 +446,67 @@ public:
 };
 
 ```
+
+# [Size of Largest BST in Binary Tree](https://www.codingninjas.com/studio/problems/size-of-largest-bst-in-binary-tree_893103?utm_source=striver&utm_medium=website&utm_campaign=a_zcoursetuf&leftPanelTabValue=PROBLEM)
+
+## Code ->
+```cpp
+// Class to store information about a subtree
+class info {
+public:
+    int maxi;   // Maximum value in the subtree
+    int mini;   // Minimum value in the subtree
+    bool isBST; // Whether the subtree is a BST or not
+    int size;   // Size of the subtree
+};
+
+// Recursive function to calculate information about the subtree rooted at 'root'
+info solve(TreeNode* root, int& ans) {
+    // Base case: If the current node is NULL, return default info
+    if (root == NULL) {
+        return {INT_MIN, INT_MAX, true, 0};
+    }
+
+    // Recursively calculate info for left and right subtrees
+    info left = solve(root->left, ans);
+    info right = solve(root->right, ans);
+
+    // Information for the current node
+    info currNode;
+
+    // Size of the current subtree
+    currNode.size = left.size + right.size + 1;
+
+    // Maximum value in the subtree
+    currNode.maxi = max(root->data, max(left.maxi, right.maxi));
+
+    // Minimum value in the subtree
+    currNode.mini = min(root->data, min(left.mini, right.mini));
+
+    // Check if the current subtree is a BST
+    if (left.isBST && right.isBST && root->data > left.maxi && root->data < right.mini) {
+        currNode.isBST = true;
+    } else {
+        currNode.isBST = false;
+    }
+
+    // Update the global maximum size if the current subtree is the largest BST
+    if (currNode.isBST) {
+        ans = max(ans, currNode.size);
+    }
+
+    return currNode;
+}
+
+// Main function to find the size of the largest BST in a binary tree
+int largestBST(TreeNode* root) {
+    // Initialize the global variable to store the result
+    int ans = 0;
+
+    // Call the solve function to calculate information about the subtree and update the result
+    info temp = solve(root, ans);
+
+    // Return the size of the largest BST
+    return ans;
+}
+```
