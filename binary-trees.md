@@ -1425,3 +1425,43 @@ public:
     }
 };
 ```
+
+# [Morris Preorder Traversal of a Binary Tree](https://leetcode.com/problems/binary-tree-preorder-traversal/description/)
+
+## [Approach](https://takeuforward.org/data-structure/morris-preorder-traversal-of-a-binary-tree/)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int> preorder;
+        TreeNode* cur = root;
+
+        while(cur){
+            if(cur->left==NULL){
+                preorder.push_back(cur->val);
+                cur = cur->right;
+            }
+            else{
+                TreeNode* prev = cur->left;
+                while(prev->right && prev->right!=cur){
+                    prev = prev->right;
+                }
+                if(prev->right == NULL){
+                    prev->right = cur;
+                    // only difference from the previous code is that we push the cur value when we reach the leaf node the first time
+                    preorder.push_back(cur->val);
+                    cur = cur->left;
+                }
+                else{
+                    prev->right = NULL;
+                    cur = cur->right;
+                }
+            }
+        }
+
+        return preorder;
+    }
+};
+```
