@@ -348,3 +348,33 @@ pair<int, int> predecessorSuccessor(TreeNode *root, int key)
     return {pred, suc};
 }
 ```
+
+# [653. Two Sum IV - Input is a BST](https://leetcode.com/problems/two-sum-iv-input-is-a-bst/description/)
+
+## Approaches ->
+1. We know that if we store the inorder of bst it will be in sorted order. Once that is done we can simply apply the two pointer to reach our answer in the sorted array that we obtained. TC->O(2n) where O(n) is for tree traversal and O(n) is for array traversal. SC-> O(n)
+2. We can do this in O(n) TC also by simply storing the visited nodes in a hashmap and simply checking if target - node.val exists or not in the hashmap.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    bool helper(TreeNode* root, int k, unordered_set<int> &visited){
+        if(root == NULL) return false;
+
+        // If k - root->val is found in the visited set, return true
+        if(visited.count(k - root->val)) return true;
+
+        // Add the current node's value to the visited set
+        visited.insert(root->val);
+
+        // Recursively check the left and right subtrees
+        return helper(root->left, k, visited) || helper(root->right, k, visited);
+    }
+
+    bool findTarget(TreeNode* root, int k) {
+        unordered_set<int> visited;
+        return helper(root, k, visited);
+    }
+};
+```
