@@ -1207,3 +1207,40 @@ public:
     }
 };
 ```
+
+# [572. Subtree of Another Tree](https://leetcode.com/problems/subtree-of-another-tree/description/)
+
+## Approach ->
+Traverse in the root and find if at some position its value is equal to the first value in subRoot tree. If yes then call a check function to check if both of the trees are of same values or not
+## Code ->
+```cpp
+class Solution {
+public:
+    bool checkEqual(TreeNode* root, TreeNode* subRoot){
+        if(root==NULL && subRoot==NULL) return true;
+        if(root==NULL || subRoot==NULL) return false;
+        if(root->val != subRoot->val) return false;
+
+        return checkEqual(root->left, subRoot->left) && checkEqual(root->right, subRoot->right);
+
+    }
+    void preorder(TreeNode* root, TreeNode* subRoot, bool &ans){
+        if(root==NULL) return;
+        if(root->val == subRoot->val){
+            bool isEqual = checkEqual(root, subRoot);
+            if(isEqual){
+                ans = true;
+                return;
+            }
+        }
+        preorder(root->left, subRoot, ans);
+        preorder(root->right, subRoot, ans);
+    }
+    bool isSubtree(TreeNode* root, TreeNode* subRoot) {
+        bool ans = false;
+        preorder(root, subRoot, ans);
+        return ans;
+    }
+};
+```
+TC -> O(m * n)
