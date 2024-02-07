@@ -1380,3 +1380,48 @@ public:
     }
 };
 ```
+
+# [Morris Inorder Traversal of a Binary Tree](https://leetcode.com/problems/binary-tree-inorder-traversal/description/)
+
+## [Approach](https://takeuforward.org/data-structure/morris-inorder-traversal-of-a-binary-tree/)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    vector<int> morrisInorderTraversal(TreeNode* root) {
+        // Vector to store the inorder traversal result
+        vector<int> inorder;
+        
+        // Current node pointer
+        TreeNode* cur = root;
+
+        while (cur) {
+            // Case 1: No left subtree
+            if (cur->left == nullptr) {
+                inorder.push_back(cur->val);
+                cur = cur->right;
+            } else {
+                // Find the rightmost node of the left subtree
+                TreeNode* prev = cur->left;
+                while (prev->right && prev->right != cur) {
+                    prev = prev->right;
+                }
+
+                // Case 2: Rightmost child of left subtree points to null
+                if (prev->right == nullptr) {
+                    prev->right = cur;
+                    cur = cur->left;
+                } else {
+                    // Case 3: Rightmost child already points to current node
+                    prev->right = nullptr;
+                    inorder.push_back(cur->val);
+                    cur = cur->right;
+                }
+            }
+        }
+
+        return inorder;
+    }
+};
+```
