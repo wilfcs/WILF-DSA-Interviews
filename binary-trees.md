@@ -1244,3 +1244,60 @@ public:
 };
 ```
 TC -> O(m * n)
+
+# [112. Path Sum](https://leetcode.com/problems/path-sum/description/)
+
+## Approaches ->
+1. Make another function and make a global bool ans. 
+2. Subtract targetSum 
+
+## Codes ->
+1. 
+```cpp
+class Solution {
+public:
+    bool ans = false;
+
+    void inorder(TreeNode* root, int targetSum, int sum) {
+        if (!root)
+            return;
+
+        // Add the current node's value to the running sum
+        sum += root->val;
+
+        // Check if the current node is a leaf and if the sum equals the targetSum
+        if (root->left == NULL && root->right == NULL && sum == targetSum)
+            ans = true;
+
+        // Recursively traverse the left and right subtrees
+        inorder(root->left, targetSum, sum);
+        inorder(root->right, targetSum, sum);
+    }
+
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        inorder(root, targetSum, 0);
+        return ans;
+    }
+};
+```
+2.
+```cpp
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        // Base case: If the current node is NULL, return false
+        if (!root)
+            return false;
+
+        // Subtract the current node's value from the targetSum
+        targetSum -= root->val;
+
+        // If the current node is a leaf and targetSum becomes 0, return true
+        if (!root->left && !root->right && targetSum == 0)
+            return true;
+
+        // Recursively check the left and right subtrees
+        return hasPathSum(root->left, targetSum) || hasPathSum(root->right, targetSum);
+    }
+};
+```
