@@ -378,3 +378,71 @@ public:
     }
 };
 ```
+
+# [99. Recover Binary Search Tree](https://leetcode.com/problems/recover-binary-search-tree/description/)
+
+## Approaches ->
+1. Do the inorder traversal on the tree and store the elements, the elements are supposed to be in the sorted order but two elements will not be in the sorted order. Now sort the vector. Now do the inorder traversal again and and keep comparing the elements with the sorted vector, and when you find that the values are different, then just replace the value of the node while doing the inorder traversal. TC-> O(n log n) SC-> O(n)
+2. Let's try to reduce the TC as well as SC. So there are two possible cases when we do the inorder traversal. Case 1 is when the two elements at the wrong position are far from each other and the case 2 is when both the elements are adjacent to each other.. Let's lool at both of them->
+
+Case1: To be swapped nodes are not adjacent -> [3, 25, 7, 8, 10, 15, 20, 5]
+Case2: To be swapped nodes are adjacent -> [3, 5, 8, 7, 10, 15, 20, 25]
+
+To tackle both the cases we will maintian three global variables-> start, mid, and end. And to keep track of the previous element while doing the recursive calls we keep a prev variable also. When there is first violation, i.e. when the first time you encounter that the previous element is greater than the current element then you make the start as prev and mid as current node. Now, in the case 2 there will not be second violation because both faulty nodes are adjacent to each other. But in case 1 there will be a second violation. So in case of second violation make end as current node. And after the recursive calls are over, you can simply swap start and mid if there was just one violation i.e. end is NULL. And you cvan swap start and end if there were two violations i.e. end is no null to finally recover the BST.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Global variables to keep track of nodes that need to be swapped
+    TreeNode* start = NULL;
+    TreeNode* mid = NULL;
+    TreeNode* end = NULL;
+    
+    // Variable to store the previous node during the inorder traversal
+    TreeNode* prev;
+
+    // Inorder traversal to identify nodes violating the BST property
+    void inorder(TreeNode* root){
+        // Base case: If the current node is NULL, return
+        if(root == NULL) return;
+
+        // Traverse left subtree
+        inorder(root->left);
+
+        // Check if there is a violation in the BST property
+        if(prev->val > root->val){
+            // First violation: Set start and mid with prev and root respectively
+            if(start == NULL){
+                start = prev;
+                mid = root;
+            }
+            // Second violation: Set end as root
+            else
+                end = root;
+        }
+
+        // Update prev to the current node
+        prev = root;
+
+        // Traverse right subtree
+        inorder(root->right);
+    }
+
+    // Main function to recover the BST
+    void recoverTree(TreeNode* root) {
+        // Initialize prev with a dummy node having a very small value
+        prev = new TreeNode(INT_MIN);
+
+        // Perform inorder traversal to identify faulty nodes
+        inorder(root);
+
+        // Swap the values of start and end if two violations occurred, else swap start and mid
+        if(end != NULL)
+            swap(start->val, end->val);
+        else
+            swap(start->val, mid->val);
+    }
+};
+
+```
