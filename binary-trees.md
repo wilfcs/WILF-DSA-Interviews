@@ -1161,3 +1161,49 @@ public:
     }
 };
 ```
+# [226. Invert Binary Tree](https://leetcode.com/problems/invert-binary-tree/description/)
+
+## Approach ->
+In this question we have to Invert the binary tree.
+So we use Post Order Treversal in which first we go in Left subtree and then in Right subtree then we return back to Parent node.
+When we come back to the parent node we swap it's Left subtree and Right subtree.
+Don't forget to revise how to construct a tree from scratch because in the real interview you won't be given to just write the function.
+
+## Code ->
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    // Helper function to invert the binary tree recursively
+    void helper(TreeNode* root) {
+        // Base case: If the current node is NULL, return
+        if (!root) return;
+
+        // Recursively invert the left and right subtrees
+        helper(root->left);
+        helper(root->right);
+
+        // Swap the left and right children of the current node
+        swap(root->left, root->right);
+    }
+
+    // Main function to invert the binary tree and return its root
+    TreeNode* invertTree(TreeNode* root) {
+        // Call the helper function to perform the inversion
+        helper(root);
+
+        // Return the root of the inverted binary tree
+        return root;
+    }
+};
+```
