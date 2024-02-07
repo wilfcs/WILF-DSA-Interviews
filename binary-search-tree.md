@@ -533,3 +533,31 @@ public:
     }
 };
 ```
+
+# [530. Minimum Absolute Difference in BST](https://leetcode.com/problems/minimum-absolute-difference-in-bst/description/)
+
+## Approaches->
+1. O(N^2) solution by traversing and storing in an array and finally comparing each element with each other.
+2. Take advantage of BST. Inorder traversal of BST give elements in sorted order. Store sorted elements and then compare them. O(N).
+
+## Code ->
+```cpp
+class Solution {
+public:
+    vector<int> vec;
+    void inorder(TreeNode* root){
+        if(!root) return;
+        
+        inorder(root->left);
+        vec.push_back(root->val);
+        inorder(root->right);
+    }
+    int getMinimumDifference(TreeNode* root) {
+        int ans = INT_MAX;
+        inorder(root);
+        for(int i=0; i<vec.size()-1; i++)    
+            ans = min(ans, vec[i+1]-vec[i]);
+        return ans;
+    }
+};
+```
