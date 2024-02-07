@@ -295,3 +295,56 @@ public:
     }
 };
 ```
+
+# [ Predecessor And Successor In BST](https://www.codingninjas.com/studio/problems/predecessor-and-successor-in-bst_893049?utm_source=striver&utm_medium=website&utm_campaign=a_zcoursetuf)
+
+## Approaches ->
+1. We know that the inorder of a bst is sorted, so store the elements in the sorted order inside a vector and return the elements just before and after key from the vector.
+2. The code aims to find the predecessor and successor of a given key in a Binary Search Tree (BST). It traverses the tree, updating the predecessor when the current node's value is less than the key and updating the successor when the value is greater. The final predecessor is the maximum value in the left subtree, and the successor is the minimum value in the right subtree. This approach ensures that the predecessor is the largest node before the key, and the successor is the smallest node after the key in the BST's inorder traversal.
+
+## Code ->
+```cpp
+// The function takes a binary search tree (BST) represented by the root node and a key as input.
+// It returns a pair of integers representing the predecessor and successor of the given key in the BST.
+pair<int, int> predecessorSuccessor(TreeNode *root, int key)
+{
+    // Initialize variables to store the predecessor and successor values.
+    TreeNode* cur = root;  // Start from the root node.
+    int pred = -1;  // Initialize predecessor to -1.
+    int suc = -1;   // Initialize successor to -1.
+
+    // Traverse the BST to find the node with the given key or determine its predecessor and successor.
+    while(cur){
+        if(cur->data == key) {
+            break;  // If the current node's data matches the key, exit the loop.
+        }
+        else if(cur->data > key){
+            // If the current node's data is greater than the key, update successor and move to the left subtree.
+            suc = cur->data;
+            cur = cur->left;
+        }
+        else{
+            // If the current node's data is less than the key, update predecessor and move to the right subtree.
+            pred = cur->data;
+            cur = cur->right;
+        } 
+    }
+
+    // In a BST, the inorder predecessor will be the maximum element in the left subtree from the target.
+    TreeNode* leftTree = cur->left;
+    while(leftTree){
+        pred = leftTree->data;  // Update predecessor.
+        leftTree = leftTree->right;  // Move to the rightmost node in the left subtree.
+    }
+
+    // The successor will be the minimum element in the right subtree from the target.
+    TreeNode* rightTree = cur->right;
+    while(rightTree){
+        suc = rightTree->data;  // Update successor.
+        rightTree = rightTree->left;  // Move to the leftmost node in the right subtree.
+    }
+
+    // Return the pair of predecessor and successor.
+    return {pred, suc};
+}
+```
