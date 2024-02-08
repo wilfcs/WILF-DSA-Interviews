@@ -153,3 +153,36 @@ public:
     }
 };
 ```
+
+# [20. Valid Parentheses](https://leetcode.com/problems/valid-parentheses/description/)
+
+## Approach-> 
+Use a stack. If we have opening brackets then push it into the stack. If we have a closing bracket then check if the stack is empty. If empty return false because there will be no closing bracket if there is no opening bracket (TO AVOID RUNTIME). Then check if we have an opening bracket in st.top() and closing in s[i] then pop the top of st. else return false;
+
+## Code ->
+```cpp
+class Solution {
+public:
+    bool isValid(string s) {
+        stack <char> st;
+        for(int i=0; i<s.size(); i++){
+            if(s[i] == '(' || s[i] == '{' || s[i] == '[')
+                st.push(s[i]);
+            else
+            {
+                if(st.empty()) return false;
+            
+                if(st.top()=='(' && s[i]==')' || st.top()=='{' && s[i]=='}' || st.top()=='[' && s[i]==']')
+                    st.pop();
+                else
+                    return false;
+            }
+        }
+        
+        if(st.empty())
+            return true;
+        else 
+            return false;
+    }
+};
+```
