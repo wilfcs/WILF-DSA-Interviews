@@ -98,3 +98,58 @@ public:
     }
 };
 ```
+
+# [232. Implement Queue using Stacks](https://leetcode.com/problems/implement-queue-using-stacks/description/)
+
+## Approach ->
+You can dry run and understand very easily. We take two stacks s1 and s2. Move all elements from s1 to s2 to reverse the order, then push new element to s2. Now move the elements from s2 to s1 without swapping it because swapping means putting the elements as it is. But we pop from s2 and push in s1 to maintain the correct order.
+
+## Code ->
+```cpp
+class MyQueue {
+public:
+    stack<int> s1;  // Main stack for enqueueing elements
+    stack<int> s2;  // Auxiliary stack for dequeueing elements
+    
+    MyQueue() {
+        // Constructor: Initialize the queues using two stacks
+    }
+    
+    void push(int x) {
+        // Enqueue operation
+        // Move all elements from s1 to s2 to reverse the order
+        while (s1.size()) {
+            s2.push(s1.top());
+            s1.pop();
+        }
+        
+        // Push the new element onto s2, which will be at the bottom of the reversed order
+        s2.push(x);
+        
+        // Move the elements back from s2 to s1 to maintain the correct order
+        while (s2.size()) {
+            s1.push(s2.top());
+            s2.pop();
+        }
+    }
+    
+    int pop() {
+        // Dequeue operation
+        // Retrieve and remove the front element from s1
+        int elem = s1.top();
+        s1.pop();
+        return elem;
+    }
+    
+    int peek() {
+        // Peek operation
+        // Retrieve the front element from s1 without removing it
+        return s1.top();
+    }
+    
+    bool empty() {
+        // Check if the queue is empty
+        return s1.empty();
+    }
+};
+```
