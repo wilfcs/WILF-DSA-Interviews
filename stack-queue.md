@@ -186,3 +186,39 @@ public:
     }
 };
 ```
+
+# [155. Min Stack](https://leetcode.com/problems/min-stack/description/)
+
+## Approach -> 
+ATQ you have to do every operation in O(1) TC. You can easily do push, pop, top operations in O(1) TC but the only problem is getMin() operation. In order to store the minimum element we can make a stack of pair int. The first position contains the val and the second contains the minimum val till that pertucular element. That way you can always have the minimum element and even if you pop the top, the minimum will be popped and the last minimums will be in action keeping the minimums updated.
+
+## Code ->
+```cpp
+class MinStack {
+public:
+    stack <pair<int, int>> s;
+    MinStack() {
+        
+    }
+    
+    void push(int val) {
+        if(s.empty()) s.push({val, val});
+        else{
+            int mini = min(val, s.top().second);
+            s.push({val, mini});
+        }
+    }
+    
+    void pop() {
+        s.pop();
+    }
+    
+    int top() {
+        return s.top().first;
+    }
+    
+    int getMin() {
+        return s.top().second;
+    }
+};
+```
