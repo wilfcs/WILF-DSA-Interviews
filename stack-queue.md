@@ -325,4 +325,30 @@ public:
     }
 };
 ```
+# [Nearest Smaller Element](https://www.interviewbit.com/problems/nearest-smaller-element/)
 
+## Approach ->
+If you have solved the above two questions, then this should be easy peasy.
+
+## Code ->
+```cpp
+vector<int> Solution::prevSmaller(vector<int> &A) {
+    vector<int> ans;
+    stack<int> st;
+    for(int i=0; i<A.size(); i++){
+        if(st.empty()) ans.push_back(-1);
+        else if(st.top()<A[i]) ans.push_back(st.top());
+        else{
+            while(st.size()){
+                if(st.top()<A[i]) break;
+                else st.pop();
+            }
+            if(st.size()) ans.push_back(st.top());
+            else ans.push_back(-1);
+        }
+        st.push(A[i]);
+    }
+    
+    return ans;
+}
+```
