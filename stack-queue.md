@@ -243,13 +243,11 @@ public:
             // If the stack is empty, set the next greater element to -1
             if(st.empty()){
                 mp[nums2[i]] = -1;
-                st.push(nums2[i]);
             }
             // If the current element is smaller than the top of the stack
             else if(st.top() > nums2[i]){
                 // Set the next greater element to the top of the stack
                 mp[nums2[i]] = st.top();
-                st.push(nums2[i]);
             }
             // If the current element is greater or equal to the top of the stack
             else{
@@ -261,10 +259,9 @@ public:
                 // If the stack is empty, set the next greater element to -1, else set it to the top of the stack
                 if(st.empty()) mp[nums2[i]] = -1;
                 else mp[nums2[i]] = st.top();
-                
-                // Push the current element onto the stack
-                st.push(nums2[i]);
             }
+            // Push the current element onto the stack
+            st.push(nums2[i]);
         }
 
         // Vector to store the results for nums1
@@ -279,3 +276,53 @@ public:
     }
 };
 ```
+
+# [503. Next Greater Element II](https://leetcode.com/problems/next-greater-element-ii/description/)
+
+## Approach ->
+This question is very similar to the previous question but the only difference is that we are given a circular array. The code takes advantage of the circular nature of the array by initially pushing all elements onto the stack.
+This ensures that when the second iteration starts, the stack already contains all possible candidates for the next greater element.
+The rest of the logic remains the same as in the previous explanation, with comparisons and stack operations considering the circular nature of the array.
+The final result vector contains the next greater element for each element in the circular array.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    vector<int> nextGreaterElements(vector<int>& nums) {
+        vector<int> ans;  // Result vector to store the next greater elements
+        stack<int> st;    // Stack to keep track of elements
+
+        // Iterate through the array and push all elements onto the stack at the beginning
+        for (int i = nums.size() - 1; i >= 0; i--)
+            st.push(nums[i]);
+
+        // Iterate through the array again, considering its circular nature
+        for (int i = nums.size() - 1; i >= 0; i--) {
+            if (st.empty()) {
+                // If the stack is empty, push -1 to indicate no greater element
+                ans.push_back(-1);
+            } else if (st.top() > nums[i]) {
+                // If the top of the stack is greater than the current element, push it onto the result vector
+                ans.push_back(st.top());
+            } else {
+                // Pop elements from the stack until a greater element is found or the stack is empty
+                while (!st.empty()) {
+                    if (st.top() <= nums[i]) st.pop();
+                    else break;
+                }
+                // If the stack is empty, push -1, else push the top element of the stack
+                if (st.empty()) ans.push_back(-1);
+                else ans.push_back(st.top());
+            }
+            // Push the current element onto the stack
+            st.push(nums[i]);
+        }
+
+        // Reverse the result vector to maintain the original order of elements
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};
+```
+
