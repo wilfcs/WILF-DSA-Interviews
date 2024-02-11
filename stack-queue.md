@@ -222,3 +222,60 @@ public:
     }
 };
 ```
+
+# [496. Next Greater Element I](https://leetcode.com/problems/next-greater-element-i/description/)
+
+## [Approach](https://takeuforward.org/data-structure/next-greater-element-using-stack/)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
+        // Map to store the next greater element for each element in nums2
+        map<int, int> mp;
+        
+        // Stack to keep track of elements in nums2
+        stack<int> st;
+        
+        // Iterate through nums2 in reverse order
+        for(int i = nums2.size() - 1; i >= 0; i--){
+            // If the stack is empty, set the next greater element to -1
+            if(st.empty()){
+                mp[nums2[i]] = -1;
+                st.push(nums2[i]);
+            }
+            // If the current element is smaller than the top of the stack
+            else if(st.top() > nums2[i]){
+                // Set the next greater element to the top of the stack
+                mp[nums2[i]] = st.top();
+                st.push(nums2[i]);
+            }
+            // If the current element is greater or equal to the top of the stack
+            else{
+                // Pop elements from the stack until a greater element is found or the stack is empty
+                while(!st.empty()){
+                    if(st.top() < nums2[i]) st.pop();
+                    else break;
+                }
+                // If the stack is empty, set the next greater element to -1, else set it to the top of the stack
+                if(st.empty()) mp[nums2[i]] = -1;
+                else mp[nums2[i]] = st.top();
+                
+                // Push the current element onto the stack
+                st.push(nums2[i]);
+            }
+        }
+
+        // Vector to store the results for nums1
+        vector<int> ans;
+        
+        // Iterate through nums1 and push the corresponding next greater element from the map
+        for(int i = 0; i < nums1.size(); i++){
+            ans.push_back(mp[nums1[i]]);
+        }
+        
+        return ans;
+    }
+};
+```
