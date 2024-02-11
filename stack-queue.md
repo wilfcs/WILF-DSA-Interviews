@@ -352,3 +352,56 @@ vector<int> Solution::prevSmaller(vector<int> &A) {
     return ans;
 }
 ```
+
+# [735. Asteroid Collision](https://leetcode.com/problems/asteroid-collision/description/)
+
+## Approach ->
+Use a stack to simulate the collisions of asteroids while traversing the array.
+If the current asteroid is positive (moving right) or the stack is empty, push it onto the stack.
+If the current asteroid is negative (moving left), handle the collision logic:
+Pop asteroids from the stack until a larger or equal-sized positive asteroid is encountered or the stack is empty.
+If there's an equal-sized positive asteroid on top, explode both; otherwise, push the current negative asteroid.
+Finally, construct the result vector from the remaining elements in the stack, reversing it to maintain order.
+
+You could have used vector itself to replicate stacks
+
+Solve this please because thinking about the logic here is easier and the coding part is a bit tricky and you might miss some edge cases.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    vector<int> asteroidCollision(vector<int>& ast) {
+        stack<int> st; // Stack to track asteroids during collisions
+        for(int i = 0; i < ast.size(); i++) {
+            // If asteroid is positive (moving right) or stack is empty, push onto stack
+            if(ast[i] > 0 || st.empty()) {
+                st.push(ast[i]);
+            } 
+            else {
+                // Asteroid is negative (moving left)
+                // Collisions happen when moving left asteroid is bigger than the top of the stack
+                // Very important conditions, if you miss any then there will be edge cases
+                while(!st.empty() && st.top() > 0 && st.top() < abs(ast[i])) {
+                    st.pop(); // Explode the smaller asteroid
+                }
+                // Explode both asteroids if they are equal in size
+                if(!st.empty() && st.top() == abs(ast[i]))
+                    st.pop();
+                // Push the moving left asteroid onto the stack 
+                // if stack is empty or there are only left moving aesteroids left in stack
+                else if(st.empty() || st.top() < 0)
+                    st.push(ast[i]); 
+            }
+        }
+
+        vector<int> ans;
+        while(!st.empty()) {
+            ans.push_back(st.top());
+            st.pop();
+        }
+        reverse(ans.begin(), ans.end()); // Reverse the order of the stack to get the final result
+        return ans;
+    }
+};
+```
