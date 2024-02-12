@@ -471,3 +471,90 @@ public:
     }
 };
 ```
+
+# [907. Sum of Subarray Minimums](https://leetcode.com/problems/sum-of-subarray-minimums/description/)
+
+## Approach ->
+ The intuition behind the solution is to leverage the concept of the Next Smaller Element (NSE) on both the left and right sides for each element in the array. By finding the indices of the next smaller element to the left (NSL) and right (NSR), the algorithm efficiently determines the number of subarrays in which the current element is the minimum. Multiplying the counts of elements on the left and right provides the total ways each element contributes to the sum of minimums across all subarrays. The overall approach optimally handles the problem of finding the sum of minimums for all contiguous subarrays in the given array.
+ [VIDEO SOLUTION](https://www.youtube.com/watch?v=HRQB7-D2bi0&t=1988s)
+
+## Code ->
+```cpp
+class Solution {
+public:
+
+    // Function to find the Next Smaller to Left (NSL) for each element in the array
+    vector<int> findNSL(vector<int>& arr, int n){
+        vector<int> result(n);
+        stack <int> st;
+
+        for(int i=0; i<n; i++){
+            if(st.empty()){
+                result[i] = -1;
+            }
+            else{
+                // Pop elements from the stack until a smaller element is found or the stack is empty
+                while(!st.empty() && arr[st.top()] >= arr[i]) 
+                    st.pop();
+                
+                // If stack is empty, set NSL to -1, else set NSL to the top element of the stack
+                result[i] = st.empty() ? -1 : st.top();
+            }
+            // Push the current index onto the stack
+            st.push(i);
+        }
+        return result;
+    }
+
+    // Function to find the Next Smaller to Right (NSR) for each element in the array
+    vector<int> findNSR(vector<int>& arr, int n){
+        vector<int> result(n);
+        stack <int> st;
+
+        for(int i=n-1; i>=0; i--){
+            if(st.empty()){
+                result[i] = n;
+            }
+            else{
+                // Pop elements from the stack until a smaller element is found or the stack is empty
+                while(!st.empty() && arr[st.top()] > arr[i]) 
+                    st.pop();
+                
+                // If stack is empty, set NSR to n, else set NSR to the top element of the stack
+                result[i] = st.empty() ? n : st.top();
+            }
+            // Push the current index onto the stack
+            st.push(i);
+        }
+        return result;
+    }
+
+    // Main function to calculate the sum of minimums for all subarrays
+    int sumSubarrayMins(vector<int>& arr) {
+        int n = arr.size();
+
+        // Find the Next Smaller to Left (NSL) and Next Smaller to Right (NSR) arrays
+        vector<int> NSL = findNSL(arr, n);
+        vector<int> NSR = findNSR(arr, n);
+
+        long long sum = 0;
+        int MOD = 1e9+7;
+
+        // Iterate through each element in the array
+        for(int i=0; i<arr.size(); i++){
+            // Calculate the number of elements to the left and right of the current element
+            long long ls = i - NSL[i]; // how many elements on left of i
+            long long rs = NSR[i] - i; // how many elements on right of i
+
+            // Calculate the total number of subarrays whose minimum is arr[i]
+            long long totalWays = ls * rs;
+
+            // Calculate the sum for the current element and add it to the overall sum
+            long long totalSum = arr[i] * totalWays;
+            sum = (sum + totalSum) % MOD;
+        }
+
+        return sum;
+    }
+};
+```
