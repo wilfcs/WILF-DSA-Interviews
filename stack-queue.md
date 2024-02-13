@@ -494,6 +494,7 @@ public:
             }
             else{
                 // Pop elements from the stack until a smaller element is found or the stack is empty
+                // note how we used >= here 
                 while(!st.empty() && arr[st.top()] >= arr[i]) 
                     st.pop();
                 
@@ -517,6 +518,7 @@ public:
             }
             else{
                 // Pop elements from the stack until a smaller element is found or the stack is empty
+                // note how we used > here
                 while(!st.empty() && arr[st.top()] > arr[i]) 
                     st.pop();
                 
@@ -555,6 +557,67 @@ public:
         }
 
         return sum;
+    }
+};
+```
+
+# [84. Largest Rectangle in Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram/description/)
+
+## Approach ->
+we consider every bar to be smaller and try to find how many rectangles it can cover. The algorithm considers each bar in the histogram as a potential height for a rectangle and aims to determine the maximum width it can cover. The process involves finding the next smaller bar on the left (NSL) and the next smaller bar on the right (NSR) for each bar. The area of the rectangle is then calculated by multiplying the height with the difference between the NSR and NSL indices. The maximum area across all bars is tracked, resulting in the area of the largest rectangle in the histogram.
+
+```cpp
+class Solution {
+public:
+
+    vector<int> findNSL(vector<int>& heights){
+        stack<int> st;
+        vector<int> res;
+
+        for(int i=0; i<heights.size(); i++){
+            while(st.size() && heights[st.top()]>=heights[i]) st.pop();
+
+            if(st.empty()) res.push_back(-1);
+            else res.push_back(st.top());
+
+            st.push(i);
+        }
+        return res;
+    }
+    vector<int> findNSR(vector<int>& heights){
+        stack<int> st;
+        vector<int> res;
+
+        for(int i=heights.size()-1; i>=0; i--){
+            while(st.size() && heights[st.top()]>=heights[i]) st.pop();
+
+            if(st.empty()) res.push_back(heights.size());
+            else res.push_back(st.top());
+
+            st.push(i);
+        }
+        reverse(res.begin(), res.end()); // don't forget to reverse in the case of NSR
+        return res;
+    }
+
+    int largestRectangleArea(vector<int>& heights) {
+        // Obtain Next Smaller to Left (NSL) and Next Smaller to Right (NSR) arrays
+        vector<int> NSL = findNSL(heights);
+        vector<int> NSR = findNSR(heights);
+
+        int ans = 0;
+
+        // Iterate through each bar in the histogram
+        for(int i = 0; i < heights.size(); i++) {
+            // Calculate the potential area of the rectangle formed by the current bar
+            int currentArea = heights[i] * (NSR[i] - NSL[i] - 1);
+
+            // Update the maximum area if the current area is larger
+            ans = max(ans, currentArea);
+        }
+
+        // Return the area of the largest rectangle in the histogram
+        return ans;
     }
 };
 ```
