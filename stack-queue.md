@@ -700,3 +700,50 @@ public:
     }
 };
 ```
+
+# [239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/description/)
+
+## Approach ->
+These types of questions use a concept called monotonic deque. This is because monotonic deque allows for efficient tracking of the maximum element within the sliding window. The deque (double-ended queue) maintains elements in a way that preserves their monotonicity, ensuring that the front of the deque always holds the maximum element in the current window.
+
+This question can be solved using the following 4 steps:
+
+Step1: When a new element comes make room for it by adjusting your window and popping the old element from the front of deque.
+
+Step 2: We know from the concept of monotonic stack that the greatest number in the stack should always be at the front of deque, so after adjusting the window size we must maintain this propery of monotonic deque. To do this we compare the new element from the back of the deque and if the new element is greater then we keep popping from the back. That way if there were no elements greater than the new element then the queue will get empty and if there was a greater element in the queue already then it will still be on the front of the deque maintaining the deque's propery.
+
+Step 3: Now we add the new element to the back of the deque. If that element is the greatest it would also be the front of the queue and if somone else is greatest then that will be the front of the queue. Hence the propery of monotonic deque that the greatest element should be at the front in maintained.
+
+Step 4: Add to your answer the front of the deque.
+
+Read the code to understand the approach
+
+## Code ->
+```cpp
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        vector<int> ans;
+        deque<int> q;
+
+        for(int i = 0; i < nums.size(); i++){
+            // Step 1: Make room for the new element by adjusting the window
+            while(!q.empty() && q.front() <= (i - k))
+                q.pop_front();
+            
+            // Step 2: Maintain monotonic deque property by popping from the back
+            while(!q.empty() && nums[i] > nums[q.back()])
+                q.pop_back();
+
+            // Step 3: Add the new element to the back of the deque
+            q.push_back(i);
+            
+            // Step 4: Add the front of the deque to the answer
+            if(i >= k - 1) 
+                ans.push_back(nums[q.front()]);
+        }
+
+        return ans;
+    }
+};
+```
