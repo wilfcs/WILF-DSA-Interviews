@@ -716,7 +716,7 @@ Step 3: Now we add the new element to the back of the deque. If that element is 
 
 Step 4: Add to your answer the front of the deque.
 
-Read the code to understand the approach
+Read the code to understand the approach. TC->O(N)
 
 ## Code ->
 ```cpp
@@ -744,6 +744,50 @@ public:
         }
 
         return ans;
+    }
+};
+```
+
+# [901. Online Stock Span](https://leetcode.com/problems/online-stock-span/description/)
+
+## Approach ->
+Using the monotonic stack again. Initialize a stack to store pairs of prices and spans. When we spot a price that is greater than the previous price that is on top of the stack, we add the span of that price in our current price and keep doing it till we not find a smaller price. Then we push the new price with its calculated span in the stack and return its stack. In other words here are the steps we are going to perform..
+
+1. Initialize a stack: Start with an empty stack.
+
+2. Process each price: As we go through each stock price:
+- Check if it's greater than the previous price on the stack.
+- If yes, add the span of that price to our current price.
+- Keep doing this until we find a smaller or equal price.
+- Then, push the new price along with its calculated span onto the stack.
+
+3. Repeat for all prices: Go through all the prices, following the same steps.
+
+4. Return the stack: The stack now holds pairs of prices and their corresponding spans.
+
+## Code ->
+```cpp
+class StockSpanner {
+public:
+    stack<pair<int, int>> st;  // Monotonic stack to store pairs of prices and spans.
+
+    StockSpanner() {
+        // Constructor: Initializes the object of the class.
+    }
+    
+    int next(int price) {
+        int span = 1;  // Currently span of price is 1 i.e. itself
+        
+        // Iterate through the stack to find consecutive days where the stock price is less than or equal to the current price.
+        while (!st.empty() && st.top().first <= price) {
+            span += st.top().second;  // Add the span of the current price on top of the stack to the current span.
+            st.pop();  // Pop the pair from the stack as we've accounted for its span.
+        }
+        
+        // Push the current price and its calculated span onto the stack for future references.
+        st.push({price, span});
+        
+        return span;  // Return the calculated span for the current day.
     }
 };
 ```
