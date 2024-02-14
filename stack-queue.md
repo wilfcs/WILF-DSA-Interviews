@@ -791,3 +791,68 @@ public:
     }
 };
 ```
+
+# [739. Daily Temperatures](https://leetcode.com/problems/daily-temperatures/description/)
+
+## Approach ->
+Using the monotonic stack
+
+## Codes->
+1. SC-> O(2n)
+```cpp
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& temperatures) {
+        stack<pair<int, int>> st;  
+        vector<int> ans(temperatures.size());  
+
+        // Traverse the temperatures array from right to left.
+        for(int i = temperatures.size() - 1; i >= 0; i--){
+            int days_to_wait = 1;  // Initialize the number of days to wait.
+
+            // Main step: Iterate through the stack to find consecutive days with temperatures less than the current day.
+            while(st.size() && temperatures[i] >= st.top().first){
+                days_to_wait += st.top().second;  // Add the days to wait for the current temperature.
+                st.pop();  // Pop the pair from the stack as we've accounted for its days.
+            }
+
+            // If the stack is empty, it means there is no future day with a warmer temperature.
+            if(st.empty()) 
+                days_to_wait = 0;
+
+            ans[i] = days_to_wait;
+
+            // Push the current temperature and its calculated days to wait onto the stack for future references.
+            st.push({temperatures[i], days_to_wait});
+        }
+
+        return ans; 
+    }
+};
+
+2. SC-> O(n)
+```cpp
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& temperatures) {
+        vector<int> ans(temperatures.size(), 0);  // Result vector to store the number of days to wait for a warmer temperature.
+        stack<int> st;  // Monotonic stack to store indices of temperatures.
+
+        // Traverse the temperatures array from right to left.
+        for(int i = temperatures.size() - 1; i >= 0; i--){
+            // Main Step: Iterate through the stack to find indices of temperatures less than or equal to the current day's temperature.
+            while(st.size() && temperatures[st.top()] <= temperatures[i])
+                st.pop();
+
+            // If the stack is not empty, calculate the number of days to wait for a warmer temperature.
+            if(!st.empty()) 
+                ans[i] = st.top() - i;
+
+            // Push the current index onto the stack.
+            st.push(i);
+        }
+
+        return ans; 
+    }
+};
+```
