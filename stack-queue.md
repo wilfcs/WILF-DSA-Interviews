@@ -621,3 +621,82 @@ public:
     }
 };
 ```
+
+# [85. Maximal Rectangle](https://leetcode.com/problems/maximal-rectangle/description/)
+
+## Approach ->
+So basically this question is just an extension of the Largest Rectangle in Histogram i.e. the question above. We will simply traverse the 2d array and for each row try to make the blocks (rectangles) considering the numbers above. Then pass each row to our same old function of previous question to find the largest rectangle.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    vector<int> findNSL(vector<int>& heights){
+        stack<int> st;
+        vector<int> res;
+
+        for(int i=0; i<heights.size(); i++){
+            while(st.size() && heights[st.top()]>=heights[i]) st.pop();
+
+            if(st.empty()) res.push_back(-1);
+            else res.push_back(st.top());
+
+            st.push(i);
+        }
+        return res;
+    }
+    vector<int> findNSR(vector<int>& heights){
+        stack<int> st;
+        vector<int> res;
+
+        for(int i=heights.size()-1; i>=0; i--){
+            while(st.size() && heights[st.top()]>=heights[i]) st.pop();
+
+            if(st.empty()) res.push_back(heights.size());
+            else res.push_back(st.top());
+
+            st.push(i);
+        }
+        reverse(res.begin(), res.end()); // don't forget to reverse in the case of NSR
+        return res;
+    }
+    int largestRectangleArea(vector<int>& heights) {
+        // we consider every bar to be smaller and try to find how many rectangles it can cover
+        vector<int> NSL = findNSL(heights);
+        vector<int> NSR = findNSR(heights);
+
+        int ans; 
+
+        for(int i=0; i<heights.size(); i++){
+            int res = heights[i] * (NSR[i] - NSL[i] - 1);
+            ans = max(ans, res);
+        }
+
+        return ans;
+    }
+    // MAIN function (rest everything on top is same as above question)
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        int ans = 0;
+        // Convert the char matrix to an integer binary matrix for ease of calculation
+        vector<vector<int>> vec(matrix.size(), vector<int>(matrix[0].size()));
+        for(int i=0; i<matrix.size(); i++){
+            for(int j=0; j<matrix[0].size(); j++){
+                vec[i][j]=((matrix[i][j]-'0'));
+            }
+        }
+        // Traverse each row and calculate the maximal rectangle area
+        for(int i=0; i<vec.size(); i++){
+            for(int j=0; j<vec[0].size(); j++){
+                // Update the height for each row based on the elements above
+                if(i && vec[i][j]==1){
+                    vec[i][j] += vec[i-1][j];
+                }
+            }
+            int res = largestRectangleArea(vec[i]);
+            ans = max(res, ans);
+        }
+
+        return ans;
+    }
+};
+```
