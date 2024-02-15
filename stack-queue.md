@@ -1022,3 +1022,36 @@ public:
     }
 };
 ```
+
+# [946. Validate Stack Sequences](https://leetcode.com/problems/validate-stack-sequences/description/)
+
+## Approach ->
+The approach utilizes stack simulation to validate whether a given sequence of push and pop operations on an initially empty stack results in the target sequence. It iterates through the pushed array, simulating push and pop operations while checking for matching elements with the popped array. If the stack is empty at the end, the sequences are valid; otherwise, they are not. The time complexity is O(N), and the space complexity is O(N), where N is the length of the pushed array.
+
+## Code->
+```cpp
+class Solution {
+public:
+    bool validateStackSequences(vector<int>& pushed, vector<int>& popped) {
+        stack<int> st; // Create a stack to simulate the stack operations
+
+        int m = pushed.size(); // Get the size of the pushed array
+
+        int i = 0, j = 0; // Initialize two pointers for pushed and popped arrays
+
+        // Iterate through the pushed array
+        while (i < m && j < m) {
+            st.push(pushed[i]); // Simulate the push operation
+
+            // Check if the stack top matches the current element in the popped array
+            while (!st.empty() && j < m && st.top() == popped[j]) {
+                st.pop(); // Simulate the pop operation
+                j++; // Move to the next element in the popped array
+            }
+            i++; // Move to the next element in the pushed array
+        }
+
+        return st.empty(); // If the stack is empty, it means the sequences are valid
+    }
+};
+```
