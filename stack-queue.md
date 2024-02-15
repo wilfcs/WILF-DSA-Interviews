@@ -886,3 +886,66 @@ public:
     }
 };
 ```
+
+# [The Celebrity Problem](https://www.geeksforgeeks.org/problems/the-celebrity-problem/1?itm_source=geeksforgeeks&itm_medium=article&itm_campaign=bottom_sticky_on_article)
+
+## Approach ->
+1. TC->O(N*N) -> Iterate through each row and check if all elements in that row are 0 i.e. the row's person doesn't know anyone. Then check all the columns for that row if all it's column other than the diagonal column (for example M[1][1] or M[2][2]) are 1. If yes then that confirms that the row we are currently on is our celebrity. Else keep checking for all the other rows.
+2. TC->O(N) -> Take a stack and insert all from 0 to n-1 in the stack i.e. all possible people who can be a celebrity. Now pop two people (a and b) from the stack and check if a knows b. If a knows b then a cannot be the celebrity hence push b in the stack and vice versa. Then when we have just one element left in the stack then that element/person is our potential celeb but we're not sure yet. So we that person/row if that is the real celeb by the method above. If it is the celeb then we return its index else we return -1. 
+
+## Code ->
+```cpp
+class Solution 
+{
+public:
+    // Function to find if there is a celebrity in the party or not.
+    int celebrity(vector<vector<int>>& M, int n) 
+    {
+        stack<int> st;  // Stack to store potential celebrity candidates.
+        
+        // Initializing the stack with all potential celebrity candidates.
+        for(int i = 0; i < M.size(); i++)
+            st.push(i);
+        
+        // Stack-based elimination process to find a potential celebrity.
+        while(st.size() > 1)
+        {
+            int a = st.top();
+            st.pop();
+            
+            int b = st.top();
+            st.pop();
+            
+            // If a knows b, eliminate a; else, eliminate b.
+            if(M[a][b] == 1) 
+                st.push(b);
+            else 
+                st.push(a);
+        }
+        
+        int potential_celeb = st.top();  // Potential celebrity candidate.
+        
+        // Final check to verify if the potential celebrity does not know anyone.
+        for(int i = 0; i < M[0].size(); i++)
+        {
+            if(M[potential_celeb][i] == 1) 
+                return -1;
+        }
+        
+        int cnt = 0;
+        
+        // Final check to count the number of people who know the potential celebrity.
+        for(int i = 0; i < M.size(); i++)
+        {
+            if(M[i][potential_celeb] == 1) 
+                cnt++;
+        }
+        
+        // If the potential celebrity is known by everyone except themselves, return their index; else, return -1.
+        if(cnt == (M.size() - 1)) 
+            return potential_celeb;
+        else 
+            return -1;
+    }
+};
+```
