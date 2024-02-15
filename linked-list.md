@@ -857,3 +857,83 @@ public:
     }
 };
 ```
+
+# [146. LRU Cache](https://leetcode.com/problems/lru-cache/description/)
+
+## Approach ->
+The LRUCache is implemented using a doubly-linked list to track the least recently used items and a map to store key-value pairs with iterators to their positions in the list. The makeRecentlyUsed function ensures efficient updating of the list when a key is accessed. The get function retrieves the value of a key, marking it as recently used. The put function adds or updates a key-value pair, evicts the least recently used item if the capacity is exceeded, and maintains O(1) time complexity for both get and put operations.
+Read the code to understand the full approach and try yourself.
+
+## Code ->
+```cpp
+// Define the LRUCache class
+class LRUCache {
+public:
+    // DLL to keep track of LRU guys and delete them easily in O(1)
+    list<int> dll;
+    
+    // map to keep track of key, {address in dll, value}
+    // note how we defined an iterator of list inside map cause we want to store the address 
+    map<int, pair<list<int>::iterator, int>> mp;
+    
+    int n;
+
+    // Constructor to initialize the LRUCache with a given capacity
+    LRUCache(int capacity) {
+        n = capacity;
+    }
+
+    // Function that I built for further use to make a key recently used
+    void makeRecentlyUsed(int key) {
+        // Erase the key from its current position in the doubly-linked list
+        dll.erase(mp[key].first);
+
+        // Push the key to the front of the doubly-linked list
+        dll.push_front(key);
+
+        // Update the iterator in the map to the new position in the doubly-linked list
+        mp[key].first = dll.begin();
+    }
+    
+    // Function to get the value of a key from the LRUCache
+    int get(int key) {
+        // If the key is not found in the map, return -1
+        if (mp.find(key) == mp.end()) 
+            return -1;
+
+        // Make the key recently used and return its value
+        makeRecentlyUsed(key);
+        return mp[key].second;
+    }
+    
+    // Function to put a key-value pair into the LRUCache
+    void put(int key, int value) {
+        // If the key already exists in the map, update its value and make it recently used
+        if (mp.find(key) != mp.end()) {
+            mp[key].second = value;
+            makeRecentlyUsed(key);
+        } 
+        // If the key is not present in the LRUCache
+        else {
+            // Push the new key to the front of the doubly-linked list
+            dll.push_front(key);
+            
+            // Update the map with the new key and its position in the doubly-linked list
+            mp[key] = {dll.begin(), value};
+
+            // Decrease the remaining capacity
+            n--;
+        }
+        
+        // If the capacity is exceeded, evict the least recently used item
+        if (n < 0) {
+            // Erase the least recently used key from the map and pop it from the doubly-linked list
+            mp.erase(dll.back());
+            dll.pop_back();
+
+            // Increase the remaining capacity
+            n++;
+        }
+    }
+};
+```
