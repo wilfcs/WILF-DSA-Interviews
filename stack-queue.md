@@ -949,3 +949,29 @@ public:
     }
 };
 ```
+
+# [1047. Remove All Adjacent Duplicates In String](https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/description/)
+
+## Approach ->
+Just use stack, simple q.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    string removeDuplicates(string s) {
+        stack<char> st;
+
+        for(int i=s.size()-1; i>=0; i--){
+            if(st.empty() || st.top() != s[i]) st.push(s[i]);
+            else st.pop();
+        }
+        string ans = "";
+        while(st.size()){
+            ans+=st.top();
+            st.pop();
+        }
+        return ans;
+    }
+};
+```
