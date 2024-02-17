@@ -1,3 +1,21 @@
+# [1021. Remove Outermost Parentheses](https://leetcode.com/problems/remove-outermost-parentheses/)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    string removeOuterParentheses(string S) {
+        string res;
+        int opened = 0;
+        for (char c : S) {
+            if (c == '(' && opened++ > 0) res += c;
+            if (c == ')' && opened-- > 1) res += c;
+        }
+        return res;
+    }
+};
+```
+
 # [151. Reverse Words in a String](https://leetcode.com/problems/reverse-words-in-a-string/description/)
 
 ## Approach ->
