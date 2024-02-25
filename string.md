@@ -114,3 +114,27 @@ public:
     }
 };
 ```
+
+# [796. Rotate String](https://leetcode.com/problems/rotate-string/description/)
+
+## Approach ->
+We can use the typical approach of rotating the string and then finding if the two strings match but we will have to rotate the string from every position to avoid edge cases. Instead of that complex approach just use this one liner..
+
+## Code ->
+```cpp
+class Solution {
+public:
+    bool rotateString(string s, string goal) {
+        return s.size() == goal.size() && (s + s).find(goal) != string::npos;
+    }
+};
+```
+
+## Explanation ->
+s.size() == goal.size(): This condition checks if the lengths of the two strings s and goal are equal. If they are not of the same length, it's impossible for s to become goal through rotations.
+
+(s + s).find(goal) != string::npos: This part checks if the concatenated string (s + s) contains the string goal. The find function returns the position of the first occurrence of goal in the concatenated string. If goal is not found, find returns string::npos, which is a special constant representing "no position" or "not found."
+
+If find does not return npos, it means that goal is found in the concatenated string, indicating that s can become goal after some rotations.
+
+If find returns npos, it means that goal is not found in the concatenated string, and therefore, s cannot become goal through rotations.
