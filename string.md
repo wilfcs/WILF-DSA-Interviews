@@ -290,3 +290,55 @@ public:
     }
 };
 ```
+
+# [5. Longest Palindromic Substring](https://leetcode.com/problems/longest-palindromic-substring/description/)
+
+## Approach ->
+Pretty simple using dp. We can do it without dp as well but would be pretty simple then
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int t[1001][1001]; // Memoization table for dynamic programming
+
+    // Function to check if a substring is a palindrome
+    // It was giving me memory limit exc. bc I didn't pass s using reference.
+    bool ifPalindrome(string &s, int st, int en){
+        if(st >= en) return 1; // Base case: single character is a palindrome
+
+        if(t[st][en] != -1) return t[st][en]; // Check if the result is already memoized
+
+        // Check if the current characters match and recurse for the inner substring
+        if(s[st] == s[en])
+            return t[st][en] = ifPalindrome(s, st+1, en-1);
+
+        return t[st][en] = 0; // Mark the result as false if the characters don't match
+    }
+
+    // Function to find the longest palindromic substring in the given string
+    string longestPalindrome(string s) {
+        int n = s.size(); 
+        memset(t, -1, sizeof(t)); // Initialize memoization table with -1
+        int maxLen = INT_MIN; // Variable to store the length of the longest palindromic substring
+        int st = 0; // Variable to store the starting index of the longest palindromic substring
+
+        // Nested loops to iterate through all possible substrings
+        for(int i = 0; i < n; i++){
+            for(int j = i; j < n; j++){
+                // Check if the current substring is a palindrome using dynamic programming
+                if(ifPalindrome(s, i, j)){
+                    // If the length of the current palindrome is greater than the current maxLen
+                    if(maxLen < (j - i + 1)){
+                        maxLen = (j - i + 1); // Update maxLen
+                        st = i; // Update the starting index of the longest palindromic substring
+                    }
+                }
+            }
+        }
+
+        // Return the longest palindromic substring using the starting index and length
+        return s.substr(st, maxLen);
+    }
+};
+```
