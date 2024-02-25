@@ -71,3 +71,46 @@ public:
     }
 };
 ```
+
+# [205. Isomorphic Strings](https://leetcode.com/problems/isomorphic-strings/description/)
+
+## Approach ->
+The provided C++ code determines whether two given strings, s and t, are isomorphic. It uses an unordered_map to store the mapping of characters from s to t and a set to track characters in t that have been used as a mapping. The code iterates through the characters, ensuring that no two characters in s map to the same character in t, and checks for isomorphism conditions. If the lengths of the strings are different or the mapping conditions are violated, the function returns false; otherwise, it returns true.
+
+## Code->
+```cpp
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) {
+        // Using an unordered_map to store the mapping of characters from string s to string t
+        unordered_map<char, char> mp;
+        // Using a set to keep track of characters in string t that have already been mapped
+        set<char> st;
+        
+        // Check if the lengths of both strings are not equal, return false if they are not
+        if(s.size()!=t.size()) return false;
+
+        // Iterate through each character in the strings
+        for(int i=0; i<s.size(); i++){
+            // Check if the current character in string s has already been mapped
+            if(mp.count(s[i])){
+                // If mapped, check if the mapping is the same as the corresponding character in string t
+                if(mp[s[i]]!=t[i]) return false;
+            }
+            else{
+                // If the character in string s is not mapped yet
+                // Check if the corresponding character in string t has already been used as a mapping
+                if(st.find(t[i])!=st.end()) return false;
+                
+                // If not, create a mapping from the character in string s to the character in string t
+                mp[s[i]] = t[i];
+                // Add the character in string t to the set to mark it as used
+                st.insert(t[i]);
+            }
+        }
+        
+        // If all characters in string s can be mapped to string t, return true
+        return true;
+    }
+};
+```
