@@ -187,3 +187,45 @@ public:
     }
 };
 ```
+
+# [451. Sort Characters By Frequency](https://leetcode.com/problems/sort-characters-by-frequency/description/)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    string frequencySort(string s) {
+        // Create a vector of pairs to store the frequency and corresponding ASCII character
+        vector<pair<int, char>> vec(256);
+
+        // Initialize the vector with zeros and ASCII characters
+        for(int i = 0; i < 256; i++){
+            vec[i].first = 0;
+            vec[i].second = i;
+        }
+
+        // Update the frequency of each character in the string
+        for(int i = 0; i < s.size(); i++){
+            int pos = s[i];
+            vec[pos].first++;
+        }
+
+        // Sort the vector in descending order based on frequency
+        sort(vec.begin(), vec.end(), greater<>());
+
+        // Construct the sorted string based on the sorted vector
+        string ans = "";
+        for(int i = 0; i < 256; i++){
+            // Break if the frequency is zero, as the rest of the elements will also be zero
+            if(vec[i].first == 0) break;
+
+            int sz = vec[i].first;
+            char ch = vec[i].second;
+            while(sz--){
+                ans += ch;
+            }
+        }
+        return ans;
+    }
+};
+```
