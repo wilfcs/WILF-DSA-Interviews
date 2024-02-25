@@ -160,3 +160,30 @@ public:
 ```
 
 TC -> Same as above
+
+# [242. Valid Anagram](https://leetcode.com/problems/valid-anagram/description/)
+
+## Approaches ->
+1. Sort the strings and compare. TC-> O(n log n)
+2. Store them in hashmap and compare. TC-> O(n). SC-> O(1) because we only have 26 characters so SC will still be O(1)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        multiset <char> st;
+        multiset <char> st2;
+        if(s.size() != t.size()) return false;
+        for(int i=0; i<s.size(); i++){
+            st.insert(s[i]);
+        }
+        for(int i=0; i<t.size(); i++){
+            st2.insert(t[i]);
+        }
+        
+        if(st == st2) return true;
+        else return false;
+    }
+};
+```
