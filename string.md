@@ -138,3 +138,25 @@ s.size() == goal.size(): This condition checks if the lengths of the two strings
 If find does not return npos, it means that goal is found in the concatenated string, indicating that s can become goal after some rotations.
 
 If find returns npos, it means that goal is not found in the concatenated string, and therefore, s cannot become goal through rotations.
+
+TC -> O(len(s) * len(goal)).
+
+## Alternative Code 
+```cpp
+class Solution {
+public:
+    bool rotateString(string s, string goal) {
+        for(int i=0;i<=s.size();i++){
+            s.push_back(s[0]);
+            string temp=s.erase(0,1);
+            if(s==goal){
+                return true;
+            }
+        }
+        return false;
+        
+    }
+};
+```
+
+TC -> Same as above
