@@ -229,3 +229,33 @@ public:
     }
 };
 ```
+
+# [1614. Maximum Nesting Depth of the Parentheses](https://leetcode.com/problems/maximum-nesting-depth-of-the-parentheses/submissions/1185933324/)
+
+## Approaches ->
+1. Using stack
+2. Using simple cnt variable.
+
+## Code ->
+```cpp
+#include <bits/stdc++.h>
+class Solution {
+public:
+    int maxDepth(string s) {
+        int cnt = 0;
+        int ans = 0;
+
+        for(int i=0; i<s.size(); i++){
+            if(s[i]=='('){
+                cnt++;
+            }
+            else if(s[i]==')'){
+                cnt--;
+            }
+
+            ans = max(ans, cnt);
+        }
+        return ans;
+    }
+};
+```
