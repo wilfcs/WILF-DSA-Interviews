@@ -942,17 +942,35 @@ You know the brute force, let's look at the optimized sol. We will have two poin
 class Solution {
 public:
     int lengthOfLongestSubstring(string s) {
-        if(s.size()==0) return 0;
+        // Check if the string is empty, return 0 if true
+        if(s.size() == 0) 
+            return 0;
+
+        // Create a map to store the latest index of each character in the string
         unordered_map<int, int> mp;
-        int l=0, r=0, ans=0;
-        while(r<s.size()){
-            if(mp.find(s[r])!=mp.end() && mp[s[r]] >= l){
-                l=mp[s[r]]+1;
+
+        // Initialize two pointers 'l' and 'r', and 'ans' to store the final result
+        int l = 0, r = 0, ans = 0;
+
+        // Iterate through the string using the 'r' pointer
+        while(r < s.size()) {
+            // Check if the current character at 'r' is already in the map and its index is greater than or equal to 'l'
+            if(mp.find(s[r]) != mp.end() && mp[s[r]] >= l) {
+                // If true, move 'l' pointer to the next position after the last occurrence of the current character
+                l = mp[s[r]] + 1;
             }
-            ans = max(ans, r-l+1);
-            mp[s[r]]=r;
+
+            // Update the maximum length of substring without repeating characters
+            ans = max(ans, r - l + 1);
+
+            // Update the index of the current character in the map
+            mp[s[r]] = r;
+
+            // Move 'r' pointer to the next character
             r++;
         }
+
+        // Return the final result
         return ans;
     }
 };

@@ -344,8 +344,6 @@ vector<int> traverseBoundary(TreeNode<int> *root) {
 }
 ```
 
-Pending -> vertical order traversal, top view, bottom view of bt
-
 # [199. Binary Tree Right Side View](https://leetcode.com/problems/binary-tree-right-side-view/description/)
 
 ## Approaches ->
