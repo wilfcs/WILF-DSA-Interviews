@@ -41,3 +41,37 @@ public:
     }
 };
 ```
+
+# [1004. Max Consecutive Ones III](https://leetcode.com/problems/max-consecutive-ones-iii/description/)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int longestOnes(vector<int>& nums, int k) {
+        int i = 0, j = 0, ans = 0, temp = 0, zeroCnt = 0;
+
+        // Iterate through the array using two pointers (i and j)
+        while (j < nums.size()) {
+            // Check if the current element at the right pointer (j) is 0, cause if it is 1 you just keep moving j and keep updating answer 
+            if (nums[j] == 0) {
+                zeroCnt++; // Increment the count of zeros
+                // If the count of zeros exceeds the allowed flips (k),
+                // move the left pointer (i) until you eliminate a 0 from the window
+                if (zeroCnt > k) {
+                    while (i <= j) {
+                        if (nums[i] == 0) {
+                            zeroCnt--; // Decrement the count as a zero eliminated from the window
+                            i++; // Move the left pointer to the right
+                            break; // Exit the loop once a zero is flipped back
+                        }
+                        i++; // Move the left pointer to the right
+                    }
+                }
+            }
+            j++; // Move the right pointer to the right
+            ans = max(ans, j - i); // Update the maximum length of subarray with at most k flips
+        }
+        return ans; // Return the final result
+    }
+};
