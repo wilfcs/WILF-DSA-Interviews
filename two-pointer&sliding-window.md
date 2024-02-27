@@ -239,3 +239,46 @@ public:
     }
 };
 ```
+
+# [1358. Number of Substrings Containing All Three Characters](https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/description/)
+
+## Approach ->
+Read the code first and if you don't understand then read the approach. 
+
+The approach involves maintaining a sliding window with pointers 'l' and 'r' to iterate through the string 's'. An unordered map 'mp' is used to track the frequency of characters within the current window. The algorithm increments the frequency of the character at the 'r' pointer.
+
+Within the loop, another while loop checks if all three characters 'a', 'b', and 'c' are present in the current window. If so, it implies that substrings containing at least one occurrence of each character can be formed. The number of such substrings is then added to the result 'ans', where the count is determined by the remaining length of the string 's' from the 'r' pointer.
+
+To maintain the validity of the window, the left boundary 'l' is incrementally moved, and the frequency of the character at the 'l' pointer is decremented until at least one of the characters is no longer present in the window.
+
+This process continues until the 'r' pointer reaches the end of the string 's'. The final result 'ans' represents the total number of substrings containing at least one occurrence of all three characters 'a', 'b', and 'c'.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int numberOfSubstrings(string s) {
+        int l = 0, r = 0, ans = 0, n = s.size();
+        unordered_map<char, int> mp;
+
+        while(r<n){
+            // Update the frequency of the character at the 'r' pointer
+            mp[s[r]]++;
+
+            // Check if all three characters 'a', 'b', and 'c' are present in the current window
+            while(mp['a'] && mp['b'] && mp['c']){
+                // no. of substr that contains a, b, c will not just be the substr that's in the current window but also all the substrings after the current window as well i.e. from last pos to r will also contain a, b, c and they are substrings as well. 
+                // eg-> in "abcabc" if 'r' is at index 2 and 'l' at index 0 then the current window i.e. "abc" is a substring containing a, b and c but the substrings after than like "abca", "abcab", "abcabc" also contain a, b, and c. Hence we add s.size()-r to our answer
+                ans += n-r; 
+
+                // Move the left boundary 'l' to maintain a valid window
+                mp[s[l]]--;
+                l++;
+            }
+            // Move the right boundary 'r' to expand the window
+            r++;
+        }
+        return ans;
+    }
+};
+```
