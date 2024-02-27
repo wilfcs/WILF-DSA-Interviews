@@ -354,3 +354,48 @@ int kDistinctChars(int k, string &str)
     return ans;
 }
 ```
+
+# [992. Subarrays with K Different Integers](https://leetcode.com/problems/subarrays-with-k-different-integers/description/)
+
+## Approach ->
+The intuition behind the code lies in the observation that to find the number of subarrays with exactly k distinct elements, we can utilize the concept of "atmost" distinct elements. 
+
+By subtracting the count of subarrays with at most (k-1) distinct elements from the count of subarrays with at most k distinct elements, we obtain the desired result.
+In other words -> if we take example of k being 3, if we want to find the substrings with exactly 3 distint elements then we can apply the formula -> elements with atmost 3 distinct elements - elements with atmost 2 distinct elements == elements with exactly 3 distinct elements
+
+ This is because the difference represents the number of subarrays that contain exactly k distinct elements. In simpler terms, for a given k, the formula helps calculate the unique subarrays by considering those with at most k distinct elements and excluding those with at most (k-1) distinct elements.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Helper function to count subarrays with at most k distinct elements
+    int atmost(vector<int> &nums, int k){
+        int l = 0, r = 0, count = 0;
+        unordered_map<int, int> mp;
+
+        while(r < nums.size()){
+            mp[nums[r]]++;
+
+            // Shrink the window until there are at most k distinct elements
+            while(mp.size() > k){
+                mp[nums[l]]--;
+                if(mp[nums[l]] == 0) 
+                    mp.erase(nums[l]);
+                l++;
+            }
+            
+            // Count subarrays within the current window and include them in the result
+            count += r - l + 1;
+            r++;
+        }
+        
+        return count;
+    }
+
+    int subarraysWithKDistinct(vector<int>& nums, int k) {
+        // Apply the formula: elements with at most k distinct elements - elements with at most (k-1) distinct elements
+        return atmost(nums, k) - atmost(nums, k-1);
+    }
+};
+```
