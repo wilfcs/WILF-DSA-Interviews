@@ -190,7 +190,7 @@ public:
 ## Approaches ->
 - Brute Force
 - Exactly same as subarray sum equals k -> Maintain the prefix sum of the elements of the array (don't make a separate vector for it, keep it in an integer). Make a hashmap. If the prefix sum is equal to k then increase the answer with 1 as because you were directly able to find the sum of subarray equal to k. Now find if the value of prefix sum - k exist in the map. If it does then add the frequency of sum - k to answer. Now update the map (insert the subarray sum in the map).
-- Most optimal method: Using 2 pointer, will add later
+- Most optimal method: Using 2 pointer + atmost method, you will find these approaches later on in the same .md file, just keep going.
 
 ## Code ->
 2. 
@@ -217,7 +217,7 @@ public:
 # [1248. Count Number of Nice Subarrays](https://leetcode.com/problems/count-number-of-nice-subarrays/description/)
 
 ## Approaches ->
-Same as last approaches
+Same as last approaches and the atmost method you'll find later in the same .md file just keep going.
 
 ## Code ->
 ```cpp
@@ -396,6 +396,38 @@ public:
     int subarraysWithKDistinct(vector<int>& nums, int k) {
         // Apply the formula: elements with at most k distinct elements - elements with at most (k-1) distinct elements
         return atmost(nums, k) - atmost(nums, k-1);
+    }
+};
+```
+
+### Now let us look at some of the questions we did earlier than can be solved using the atmost logic...
+
+# [930. Binary Subarrays With Sum](https://leetcode.com/problems/binary-subarrays-with-sum/description/)
+
+## Approach ->
+Using atmost method we can find out the number of subarrays without using any extra space complexity and with an SC of O(1) unlike the map method of this question. Please solve this question using both methods for proper understanding.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int atmost(vector<int> &nums, int goal){
+        int l = 0, r = 0, numOfSubarr = 0, count = 0;
+        while(r<nums.size()){
+            count += nums[r];
+
+            while(count>goal && l<=r){
+                count -= nums[l];
+                l++;
+            }
+
+            numOfSubarr += r-l+1; 
+            r++;
+        }
+        return numOfSubarr;
+    }
+    int numSubarraysWithSum(vector<int>& nums, int goal) {
+        return atmost(nums, goal) - atmost(nums, goal-1);
     }
 };
 ```
