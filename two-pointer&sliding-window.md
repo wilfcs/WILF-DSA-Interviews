@@ -431,3 +431,33 @@ public:
     }
 };
 ```
+
+# [1248. Count Number of Nice Subarrays](https://leetcode.com/problems/count-number-of-nice-subarrays/description/)
+
+## Approach -> 
+Same as above
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int atmost(vector<int> &nums, int k){
+        int l = 0, r = 0, count = 0, numOfSubarr = 0;
+
+        while(r<nums.size()){
+            if(nums[r]%2==1) count++;
+
+            while(count>k && l<=r){
+                if(nums[l]%2==1) count--;
+                l++;
+            }
+            numOfSubarr += r-l+1;
+            r++;
+        }
+        return numOfSubarr;
+    }
+    int numberOfSubarrays(vector<int>& nums, int k) {
+        return atmost(nums, k) - atmost(nums, k-1);
+    }
+};
+```
