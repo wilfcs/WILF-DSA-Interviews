@@ -282,3 +282,51 @@ public:
     }
 };
 ```
+
+
+# [1423. Maximum Points You Can Obtain from Cards](https://leetcode.com/problems/maximum-points-you-can-obtain-from-cards/)
+
+## Approach ->
+Sliding window Technique -> The approach is fairly simple. We have to pick the cards from either the front or the back. We can also pick the cards from both front and back. So in order to find the maximum score we can find the minimum score to make the question simpler. First, we take a window whose size is total size - k. Then we find the least sum in that window. And finally we subtract the total sum of the array with the least sum to find the maximum sum. Note-> We need not calculate the total sum, that will be covered in prefix sum itself.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int maxScore(vector<int>& cardPoints, int k) {
+        // Calculate the total sum of all cards
+        int totalSum = accumulate(cardPoints.begin(), cardPoints.end(), 0);
+
+        // If the number of cards to be selected is equal to the total number of cards,
+        // return the total sum, as we can select all cards.
+        if (k == cardPoints.size()) 
+            return totalSum;
+
+        // Initialize variables for the sliding window approach
+        int ans = INT_MAX, l = 0, r = 0, sum = 0;
+
+        // Update k to represent the size of the desired subarray
+        k = cardPoints.size() - k;
+
+        // Sliding window approach
+        while (r < cardPoints.size()) {
+            sum += cardPoints[r];
+
+            // Check if the size of the current window is equal to k
+            if (r - l + 1 == k)
+                ans = min(ans, sum);
+
+            r++;
+
+            // If the window size exceeds k, move the left pointer to maintain the window size
+            if (r - l + 1 > k) {
+                sum -= cardPoints[l];
+                l++;
+            } 
+        }
+
+        // Return the maximum score, which is the total sum minus the minimum sum within the window
+        return totalSum - ans;
+    }
+};
+```
