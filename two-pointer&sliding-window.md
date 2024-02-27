@@ -123,3 +123,66 @@ public:
     }
 };
 ```
+# [424. Longest Repeating Character Replacement](https://leetcode.com/problems/longest-repeating-character-replacement/description/)
+
+## Approach ->
+The approach is simple.. we will keep updating the window and its elements in a map. If the windowSize - maxRepeating (windowsize-maxrepeating gives us the value of extra elements in the window that we need to convert to make the window largest) element comes out to be greater than k then that means that we have other elements in the map that exceed the value of k. So we remove that element's frequency from the map and move our window.
+
+GPT Explanation:
+
+The approach involves maintaining a sliding window and updating the frequency of each character within the window using a map. The key insight is to track the difference between the window size and the maximum frequency of any character in the window (windowSize - maxRepeating). This difference represents the number of extra elements in the window that need to be converted to make the window as large as possible.
+
+If this difference becomes greater than the allowed operations (k), it implies there are other characters in the window exceeding the permitted modifications. To address this, the algorithm adjusts the window by decrementing the frequency of the leftmost character, effectively moving the left boundary of the window. This process continues iteratively, and at each step, the length of the current window is compared with the maximum length encountered so far, ensuring the result reflects the longest substring containing the same letter achievable within the given constraints.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int characterReplacement(string s, int k) {
+        // Create a map to store the frequency of each character in the window
+        unordered_map<char, int> mp;
+        
+        // Pointers for the left and right boundaries of the window
+        int l = 0, r = 0;
+        
+        // Variable to store the maximum repeating character count in the current window
+        int maxRepeating = 0;
+        
+        // Variable to store the length of the longest substring
+        int ans = 0;
+
+        // Iterate through the string
+        while (r < s.size()) {
+            // Update the frequency of the current character in the window
+            mp[s[r]]++;
+            
+            // Update the maximum repeating character count in the current window
+            maxRepeating = max(maxRepeating, mp[s[r]]);
+            
+            // Calculate the size of the current window
+            int windowSize = r - l + 1;
+
+            // If the number of elements to be changed to make all elements the same
+            // is greater than k, then we need to shrink the window
+            if (windowSize - maxRepeating > k) {
+                // Reduce the frequency of the leftmost character in the window
+                mp[s[l]]--;
+                
+                // Move the left boundary of the window to the right
+                l++;
+            } else {
+                // Update the length of the longest substring
+                ans = max(ans, windowSize);
+            }
+
+            // Move the right boundary of the window to the right
+            r++;
+        }
+
+        // Return the length of the longest substring
+        return ans;
+    }
+};
+```
+
+
