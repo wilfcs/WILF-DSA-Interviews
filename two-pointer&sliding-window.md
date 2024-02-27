@@ -330,3 +330,27 @@ public:
     }
 };
 ```
+
+# [Longest Substring with At Most K Distinct Characters](https://www.codingninjas.com/studio/problems/longest-substring-with-at-most-k-distinct-characters_2221410?utm_source=striver&utm_medium=website&utm_campaign=a_zcoursetuf&leftPanelTabValue=PROBLEM)
+
+## Code ->
+Easy peasy
+```cpp
+int kDistinctChars(int k, string &str)
+{
+    int l = 0, r = 0, ans = 0;
+    unordered_map<char, int> mp;
+
+    while(r<str.size()){
+        mp[str[r]]++;
+        while(mp.size()>k){
+            mp[str[l]]--;
+            if(mp[str[l]]==0) mp.erase(str[l]);
+            l++;
+        }
+        ans = max(ans, r-l+1);
+        r++;
+    }
+    return ans;
+}
+```
