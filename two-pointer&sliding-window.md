@@ -461,3 +461,75 @@ public:
     }
 };
 ```
+
+# [76. Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/description/)
+
+## Approach ->
+The code implements a sliding window approach to find the minimum window substring of string s that contains all characters from string t. The algorithm initializes two pointers, 'l' and 'r', and a hashmap 'mp' to track the frequency of characters in t. The window expands by moving the right pointer, and when all required characters are found, it shrinks by moving the left pointer. The process continues until the end of the string s. The minimum window size and starting index are updated during the iterations, and the final result is returned as a substring or an empty string if no valid window is found.
+
+[video solution](https://www.youtube.com/watch?v=3Bp3OVD1EGc)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        int n = s.size(); 
+
+        // Check if the length of s is less than t, in which case, there is no valid window
+        if(n<t.size()) return "";
+
+        // initialize everything. requiredCount = t.size() to keep track of how many elements we require in our window
+        int l = 0, r = 0, minWindowSize = INT_MAX, requiredCount = t.size(), start = 0;
+        // Create a hashmap 'mp' to track the frequency of characters in t
+        unordered_map<char, int> mp;
+
+        // Initialize the hashmap with the frequency of characters in t because we need all characters present in t in our window
+        for(int i=0; i<t.size(); i++){
+            mp[t[i]]++; 
+        }
+
+        // Iterate through the string s
+        while(r<n){
+            char ch = s[r];
+
+            // when we find an element that is required in our window,
+            // i.e. element's frequency is more than 0 in our map,
+            // then we can reduce the size of requiredCount
+            if(mp[ch]>0) requiredCount--;
+
+            // reduce the frequency of the element from our map
+            mp[ch]--;
+
+            // when we have found all the elements that were required in our window, 
+            // our main job will be to shrink the window size to make the window minimum possible
+            while(requiredCount==0){
+                //shrink window
+
+                int curWindowSize = r-l+1;
+
+                // Update minimum window size and starting index if the current window is smaller
+                if(curWindowSize<minWindowSize){
+                    minWindowSize = curWindowSize;
+                    start = l;
+                }
+
+                // Move left pointer and update the hashmap
+                mp[s[l]]++;
+                
+                // If we have taken out one element from the window that was required because of moving of l, we increase requiredCount by 1
+                if(mp[s[l]]>0) requiredCount++;
+
+                // Move left pointer further
+                l++;
+            }
+
+            // Move right pointer further
+            r++;
+        }
+
+        // Return the result substring or an empty string if no valid window is found
+        return minWindowSize==INT_MAX ? "" : s.substr(start, minWindowSize);
+    }
+};
+```
