@@ -3,9 +3,63 @@ Q. What is a heap?
 Ans-> A heap is a specialized tree-based data structure that satisfies the heap order property. It is a complete binary tree, meaning that all levels are completely filled except possibly for the last level, which is filled from left to right. The heap order property ensures that for every node 'x' in the heap, the key of 'x' is either less than or equal to (in a max heap) or greater than or equal to (in a min heap) the keys of its children. This property allows efficient retrieval and removal of the maximum (or minimum) element from the heap, making heaps useful for priority queues and heap-sort algorithms.
 
 
+# Insertion in heap
+## Approach->
+In the context of heaps, we conceptualize them as binary trees, akin to Binary Search Trees (BST). However, we implement heaps using an array or vector for efficient storage and retrieval. To insert an element into a max heap, the new element is placed at the last leaf node from the left. Subsequently, the algorithm checks whether the node's parent is smaller; if so, it swaps the node with its parent. The formulas for finding children and parents are: left child = 2 * i, right child = 2 * i + 1, and parent = i / 2.
 
+## Code ->
+```cpp
+// Online C++ compiler to run C++ program online
+#include <iostream>
+#include <bits/stdc++.h>
 
+using namespace std;
 
+class heap {
+public:
+    int arr[100];
+    int size;
+
+    heap() {
+        arr[0] = -1;
+        size = 0;
+    }
+
+    void insert(int val) {
+        size++;
+        int index = size;
+        arr[index] = val;
+
+        while (index > 1) {
+            int parent = index / 2;
+            // If the parent is smaller than the current node, swap them
+            if (arr[parent] < arr[index]) {
+                swap(arr[parent], arr[index]);
+                index = parent;
+            } else {
+                return; // Break if the heap order property is satisfied
+            }
+        }
+    }
+
+    void print() {
+        for (int i = 1; i <= size; i++)
+            cout << arr[i] << " ";
+    }
+};
+
+int main() {
+    heap h;
+    h.insert(50);
+    h.insert(55);
+    h.insert(53);
+    h.insert(52);
+    h.insert(54);
+    h.print();
+
+    return 0;
+}
+```
 
 
 
