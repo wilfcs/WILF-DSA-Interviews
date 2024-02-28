@@ -61,6 +61,8 @@ int main() {
 }
 ```
 
+TC-> O(log n)
+
 # Delete from heap
 ## Approach->
 Suppose we have to delete from a max heap, then we perform 3 steps.
@@ -155,8 +157,35 @@ int main() {
 
     return 0;
 }
-```
+``` 
 
+# Heapify
+## Approach ->
+Heapify is a process of converting an array into a heap, where the heap property is satisfied. The heap property states that for each node 'i' at index 'i', the value of the node is greater than or equal to the values of its children (for a max heap). Similarly, for a min heap, the value of the node is less than or equal to the values of its children. We generally perform heapify for the root node. People generally forget this in the interview, so practice it once. It is a recursive approach for making a heap
+
+# Code ->
+```cpp
+void heapify(vector<int>& arr, int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    // Compare with the left child
+    if (left < n && arr[left] > arr[largest])
+        largest = left;
+
+    // Compare with the right child
+    if (right < n && arr[right] > arr[largest])
+        largest = right;
+
+    // If the largest value is not the root, swap and recursively heapify the affected subtree
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest);
+    }
+}
+```
+TC -> O(log n)
 
 
 # 215. Kth Largest Element in an Array
