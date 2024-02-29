@@ -435,3 +435,65 @@ class Solution
     }
 };
 ```
+
+# [K-th Largest Sum Subarray](https://www.codingninjas.com/studio/problems/k-th-largest-sum-contiguous-subarray_920398?leftPanelTabValue=PROBLEM)
+
+## Approach ->
+1. Run a n^2 loop and store the subarray sum in a vector. Then sort the vector to find your answer. The complexity analysis is in the code itself.
+2. Use a min heap to find the kth largest sum subarray. Find out yourself by looking at the code how we did that.
+
+## Code ->
+1. 
+```cpp
+#include <bits/stdc++.h>
+int getKthLargest(vector<int> &arr, int k)
+{
+	//	Write your code here.
+	vector<int> ans;
+
+
+	for(int i=0; i<arr.size(); i++){
+		int sum = 0;
+		for(int j=i; j<arr.size(); j++){
+			sum+=arr[j];
+			ans.push_back(sum);
+		}
+	}
+
+	sort(ans.begin(), ans.end());
+
+	return ans[ans.size()-k];
+}
+
+// TC -> O(n^2 * log(n^2)) = O(2 * n^2 * log(n)) = O(n^2 * log(n))
+// This is because sorting TC is O(n log n) and the ans array that we are sorting is already of size n^2.
+//SC->O(n^2)
+```
+2. 
+```cpp
+#include <bits/stdc++.h>
+int getKthLargest(vector<int> &arr, int k)
+{
+	//	Write your code here.
+	priority_queue<int, vector<int>, greater<int>> min_heap;
+
+	for(int i=0; i<arr.size(); i++){
+		int sum = 0;
+		for(int j=i; j<arr.size(); j++){
+			sum+=arr[j];
+
+			if(min_heap.size()<k) min_heap.push(sum);
+			else{
+				if(min_heap.top()<sum){
+					min_heap.pop();
+					min_heap.push(sum);
+				}
+			}
+		}
+	}
+	return min_heap.top();
+}
+
+//  TC->O(n^2 * log(k))
+// SC->O(n)
+```
