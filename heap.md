@@ -306,3 +306,55 @@ public:
 
 Note: Kth Smallest Element in an Array can also be solved using the approaches above we just have to use max heap instead of min heap and if the element is smaller than heap's top then pop and push that elem in.
 
+# [Is Binary Tree Heap](https://www.geeksforgeeks.org/problems/is-binary-tree-heap/1)
+
+## Approach ->
+In the provided code, the isHeap function checks whether a given binary tree follows the max heap property. The approach involves three helper functions: countNodes to calculate the total number of nodes, isCBT to verify if the tree is a complete binary tree, and isMaxOrder to ensure it adheres to the max heap ordering. The key idea is to validate completeness first, and then verify the max heap property recursively. If both conditions hold, the tree is deemed a max heap.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Helper function to count the number of nodes in the binary tree
+    int countNodes(struct Node* tree) {
+        if (tree == NULL) return 0;
+        return 1 + countNodes(tree->left) + countNodes(tree->right);
+    }
+
+    // Helper function to check if the binary tree is a complete binary tree
+    bool isCBT(struct Node* tree, int index, int cnt) {
+        if (tree == NULL) return true;
+
+        if (index >= cnt) return false;
+
+        bool left = isCBT(tree->left, index * 2 + 1, cnt);
+        bool right = isCBT(tree->right, index * 2 + 2, cnt);
+
+        return left && right;
+    }
+
+    // Helper function to check if the binary tree follows max heap property
+    bool isMaxOrder(struct Node* tree) {
+        if (tree->left == NULL && tree->right == NULL) return true;
+
+        if (tree->right == NULL) {
+            return tree->data > tree->left->data;
+        } else {
+            bool left = isMaxOrder(tree->left);
+            bool right = isMaxOrder(tree->right);
+
+            return (left && right && tree->data > tree->left->data && tree->data > tree->right->data);
+        }
+    }
+
+    // Main function to check if the binary tree is a max heap
+    bool isHeap(struct Node* tree) {
+        int index = 0;
+        int totalCount = countNodes(tree);
+        
+        // Check if the binary tree is a complete binary tree and follows max heap property
+        if (isCBT(tree, index, totalCount) && isMaxOrder(tree)) return true;
+        else return false;
+    }
+};
+```
