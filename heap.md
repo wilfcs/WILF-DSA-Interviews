@@ -167,7 +167,7 @@ Heapify is a process of converting an array into a heap, where the heap property
 ```cpp
 void heapify(vector<int>& arr, int n, int i) {
     int largest = i;
-    int left = 2 * i + 1;
+    int left = 2 * i + 1; // +1 for left and +2 for right when there is 0 based indexing
     int right = 2 * i + 2;
 
     // Compare with the left child
@@ -187,6 +187,63 @@ void heapify(vector<int>& arr, int n, int i) {
 ```
 TC -> O(log n)
 
+# [Heap Sort](https://leetcode.com/problems/sort-an-array/)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Function to heapify a subtree rooted at index i in a vector nums of size n
+    void heapify(vector<int> &nums, int n, int i) {
+        // Assume the current node is the largest
+        int greatest = i;
+        // Calculate indices of left and right children
+        int leftChild = i * 2 + 1;
+        int rightChild = i * 2 + 2;
+
+        // Check if left child exists and is greater than the current greatest
+        if (leftChild < n && nums[greatest] < nums[leftChild]) {
+            greatest = leftChild;
+        }
+        // Check if right child exists and is greater than the current greatest
+        if (rightChild < n && nums[greatest] < nums[rightChild]) {
+            greatest = rightChild;
+        }
+
+        // If the greatest element is not the current root, swap and recursively heapify the affected subtree
+        if (greatest != i) {
+            swap(nums[i], nums[greatest]);
+            heapify(nums, n, greatest);
+        }
+    }
+
+    // Function to perform Heap Sort on the vector nums
+    vector<int> sortArray(vector<int>& nums) {
+        int n = nums.size();
+
+        // Build a max heap by heapifying each non-leaf node in reverse order
+        for(int i = n/2-1; i >= 0; i--) {
+            heapify(nums, n, i);
+        }
+
+        // Extract elements from the heap one by one and heapify the remaining array
+        for(int i = n-1; i > 0; i--) {
+            // Swap the root (maximum element) with the last element
+            swap(nums[0], nums[i]);
+            // Heapify the reduced array to maintain the max heap property
+            heapify(nums, i, 0);
+        }
+
+        // The vector nums is now sorted in ascending order
+        return nums;
+    }
+};
+```
+## Explanation ->
+Heapify Function: This function ensures that a subtree rooted at index i in the vector nums of size n satisfies the max heap property. It recursively checks and swaps elements to maintain the heap property.
+Build Max Heap: The sortArray function starts by building a max heap. It iterates through non-leaf nodes in reverse order and performs heapify operations to establish the max heap property.
+Heap Sort: After building the max heap, the function extracts elements from the heap one by one, placing the maximum element at the end of the vector. This process is repeated until the entire vector is sorted in ascending order.
+The overall strategy is to use a max heap to efficiently find and extract the maximum element at each step, resulting in a sorted array.
 
 # 215. Kth Largest Element in an Array
 ## Approaches ->
