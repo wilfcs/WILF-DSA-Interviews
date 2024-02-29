@@ -245,6 +245,11 @@ Build Max Heap: The sortArray function starts by building a max heap. It iterate
 Heap Sort: After building the max heap, the function extracts elements from the heap one by one, placing the maximum element at the end of the vector. This process is repeated until the entire vector is sorted in ascending order.
 The overall strategy is to use a max heap to efficiently find and extract the maximum element at each step, resulting in a sorted array.
 
+# Priority Queue STL
+- Priority queue works exactly like heap it is just an stl. syntax - priority_queue<int> pq;
+- To build a min heap -> priority_queue<int, vector<int>, greater<int>> pq;
+- Essential operations include top(), pop(), and push(). These operations have time complexities of O(log n) for push() and top(), and O(1) for pop().
+
 # 215. Kth Largest Element in an Array
 ## Approaches ->
 1. We can use the max heap and insert all the elements inside, then pop back k times and return the top element. TC-> O(n log n) because the TC for traversal in the array is n and insertion of each element in max heap will take O(log n) time complexity
