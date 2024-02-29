@@ -358,3 +358,49 @@ public:
     }
 };
 ```
+
+# [Merge two binary Max heaps](https://www.geeksforgeeks.org/problems/merge-two-binary-max-heap0144/1)
+
+## Approach ->
+Just merge the two given arrays and then heapify them to get your answer.
+
+## Code ->
+```cpp
+class Solution{
+public:
+    // Function to heapify a subtree rooted at node i in the given vector 'a' of size 'n'
+    void heapify(vector<int> &a, int i, int n){
+        int largest = i;
+        int left = i * 2 + 1;
+        int right = i * 2 + 2;
+
+        // Compare with left child
+        if (left < n && a[left] > a[largest])
+            largest = left;
+
+        // Compare with right child
+        if (right < n && a[right] > a[largest])
+            largest = right;
+
+        // If the largest is not the current node, swap and recursively heapify
+        if (i != largest){
+            swap(a[i], a[largest]);
+            heapify(a, largest, n);
+        }
+    }
+
+    // Function to merge two binary max heaps represented by vectors 'a' and 'b' of sizes 'n' and 'm'
+    vector<int> mergeHeaps(vector<int> &a, vector<int> &b, int n, int m) {
+        // Merge both heaps into one vector 'a'
+        for (int i = 0; i < m; i++)
+            a.push_back(b[i]);
+
+        // Build heap using the merged array
+        for (int i = (n + m) / 2 + 1; i >= 0; i--){
+            heapify(a, i, a.size());
+        }
+
+        return a;
+    }
+};
+```
