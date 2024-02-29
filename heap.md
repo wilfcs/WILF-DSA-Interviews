@@ -497,3 +497,8 @@ int getKthLargest(vector<int> &arr, int k)
 //  TC->O(n^2 * log(k))
 // SC->O(n)
 ```
+
+# [Merge K Sorted Arrays](https://www.codingninjas.com/studio/problems/merge-k-sorted-arrays_975379)
+--- Pending
+
+#
