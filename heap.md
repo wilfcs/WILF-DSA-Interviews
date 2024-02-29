@@ -404,3 +404,5 @@ public:
     }
 };
 ```
+
+So during heapifying the array why do we run the loop from size/2-1? That's because when heapifying an array to maintain the heap property, we start the loop from size/2-1 because all the elements beyond this point are leaf nodes in the binary heap. Since leaf nodes don't have children, there is no need to perform heapification on them, making the process more efficient by avoiding unnecessary operations on nodes that won't affect the heap structure.
