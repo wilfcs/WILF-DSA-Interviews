@@ -406,3 +406,32 @@ public:
 ```
 
 So during heapifying the array why do we run the loop from size/2-1? That's because when heapifying an array to maintain the heap property, we start the loop from size/2-1 because all the elements beyond this point are leaf nodes in the binary heap. Since leaf nodes don't have children, there is no need to perform heapification on them, making the process more efficient by avoiding unnecessary operations on nodes that won't affect the heap structure.
+
+# [Minimum Cost of ropes](https://www.geeksforgeeks.org/problems/minimum-cost-of-ropes-1587115620/1)
+
+## Code ->
+```cpp
+class Solution
+{
+    public:
+    //Function to return the minimum cost of connecting the ropes.
+    long long minCost(long long arr[], long long n) {
+        // Your code here
+        priority_queue<long long, vector<long long>, greater<long long>> min_heap(arr, arr+n);
+
+        long long ans = 0;
+        
+        while(min_heap.size()>1){
+            long long n1 = min_heap.top();
+            min_heap.pop();
+            long long n2 = min_heap.top();
+            min_heap.pop();
+            
+            ans+=n1+n2;
+            min_heap.push(n1+n2);
+        }
+        
+        return ans;
+    }
+};
+```
