@@ -560,3 +560,81 @@ public:
     }
 };
 ```
+
+# [621. Task Scheduler](https://leetcode.com/problems/task-scheduler/description/)
+
+## Approach ->
+This question is based on a few observations. First observation is the question itself which you might interpret wrong. To understand the question let's take a custom testcase. 
+
+tasks = A, A, A, A, A, B, B, B, C, C. n = 2.
+
+Here we have 5 A's, 3 B's and 2 C's. ATQ we can repeat a number after n times. So we can repeat let's say A after 2 times. Another observation can be that the element with the most frequency should be taken first and given the most priority because we want to finish them first. So in this case A we will try to finish first.
+
+So the CPU Cycles should be -> A, B, C, A, B, C, A, B, IDLE, A, IDLE, IDLE, A.
+Did you notice something here? We are making a window of size n+1 with unique elements here. Here the value of n is 2 so the window size is 3. We can use this for solving the question. 
+
+How to code this question?
+To code the question follow these following steps, keep in mind that we don't need the characters to solve the question we will just need their frequencies so we will simply extract the frequencies of the chars and store them in our max heap to solve the question.
+
+Steps:
+1. Frequency Map: Start by creating a frequency map (unordered_map) to count the occurrences of each task.
+
+2. Priority Queue: Use a priority queue (max heap) to store their frequency. This is because we want to process the most frequent tasks first. We don't need the characters at this point, we will proceed with the frequencies only.
+
+3. Greedy Approach: In each iteration, create a window of size (n+1) to represent one cycle. This window ensures that we adhere to the cooling constraint.
+
+4. Process Tasks: In each cycle, pop tasks from the priority queue and decrease their frequency. Append these tasks with one decreased frequency to a temporary vector.
+
+5. Reinsert Tasks: After processing tasks in the cycle, reinsert the tasks with remaining frequency back into the priority queue.
+
+6. Idle Time: If the priority queue is empty after processing tasks in the cycle, it means there are no more tasks left and we were able to finish all tasks before the n+1 cycle. In this case, add the actual time taken in the cycle to the final answer. Otherwise, add the maximum possible time for a full cycle (n+1).
+
+7. Repeat: Continue this process until there are no more tasks left in the frequency map.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int leastInterval(vector<char>& tasks, int n) {
+        unordered_map<char, int> mp;
+
+        // Step 1: Frequency Map
+        for(int i = 0; i < tasks.size(); i++) 
+            mp[tasks[i]]++;
+
+        priority_queue<int> pq;
+
+        // Step 2: Create Priority Queue with just the frequencies
+        for(auto a: mp) 
+            pq.push(a.second);
+
+        int ans = 0;
+
+        // Step 3-7: Greedy Approach
+        while(pq.size()){
+            int time = 0;
+            vector<int> temp;
+
+            // Step 3: Iterate for the Window of size n+1
+            for(int i = 0; i < n + 1; i++){
+                if(pq.empty()) break;
+                // Push the updated frequency in the temp vector
+                temp.push_back(pq.top() - 1);
+                pq.pop();
+                time++;
+            }
+
+            // Step 4: Repopulate the priority queue
+            for(int i = 0; i < temp.size(); i++){
+                if(temp[i] > 0) 
+                    pq.push(temp[i]);
+            }
+
+            // Step 5-7: Reinsert Tasks, Idle Time, Repeat
+            ans += pq.empty() ? time : n + 1;
+        }
+
+        return ans;
+    }
+};
+```
