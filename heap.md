@@ -642,3 +642,72 @@ public:
 The time complexity of the provided code is O(N log N), where N is the number of tasks.
 - The creation of the frequency map takes O(N) time, where N is the number of tasks.
 - The priority queue operations involve inserting and extracting elements, each of which takes O(log N) time. In the worst case, we might insert and extract all tasks, resulting in O(N log N) for priority queue operations.
+
+# [355. Design Twitter](https://leetcode.com/problems/design-twitter/description/)
+
+## Code ->
+```cpp
+class Twitter {
+public:
+    // Map to store the user's friends (followees).
+    map<int, set<int>> friends;
+
+    // Current timestamp for tweets.
+    int curr = 0;
+
+    // Priority queue to store tweets with timestamp for the news feed.
+    priority_queue<vector<int>> timeline;
+
+    // Constructor to initialize the Twitter object.
+    Twitter() {
+        
+    }
+    
+    // Function to post a new tweet by a user.
+    void postTweet(int userId, int tweetId) {
+        // Push the tweet into the timeline with timestamp and user ID.
+        timeline.push({curr++, tweetId, userId});
+    }
+    
+    // Function to get the 10 most recent tweets in the user's news feed.
+    vector<int> getNewsFeed(int userId) {
+        // Vector to store the result tweets.
+        vector<int> ans;
+        
+        // Create a copy of the timeline priority queue.
+        priority_queue<vector<int>> userTimeline = timeline;
+        
+        // Count variable to track the number of tweets added to the result.
+        int n = 0;
+
+        // Iterate through the user's timeline.
+        while (userTimeline.size() && n < 10) {
+            // Get the top tweet from the timeline.
+            auto topTweet = userTimeline.top();
+            userTimeline.pop();
+
+            // Check if the tweet is posted by the user or a friend (followee).
+            if (topTweet[2] == userId || friends[userId].count(topTweet[2])) {
+                // Add the tweet ID to the result.
+                ans.push_back(topTweet[1]);
+                n++;
+            }
+        }
+
+        // Return the result.
+        return ans;
+    }
+    
+    // Function to make a user follow another user.
+    void follow(int followerId, int followeeId) {
+        // Insert the followee into the set of friends for the follower.
+        friends[followerId].insert(followeeId);
+    }
+    
+    // Function to make a user unfollow another user.
+    void unfollow(int followerId, int followeeId) {
+        // Erase the followee from the set of friends for the follower.
+        friends[followerId].erase(followeeId);
+    }
+};
+```
