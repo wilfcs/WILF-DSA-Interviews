@@ -1444,3 +1444,30 @@ public:
     }
 };
 ```
+
+# [347. Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/description/)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int, int> mp;
+        vector<pair<int, int>> vec;
+
+        for(int i=0; i<nums.size(); i++) mp[nums[i]]++;
+
+        for(auto a: mp) vec.push_back({a.second, a.first});
+
+        sort(vec.rbegin(), vec.rend());
+
+        vector<int> ans;
+        for(int i=0; i<vec.size() && k; i++){
+            ans.push_back(vec[i].second);
+            k--;
+        }
+
+        return ans;
+    }
+};
+```
