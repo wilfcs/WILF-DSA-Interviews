@@ -501,4 +501,62 @@ int getKthLargest(vector<int> &arr, int k)
 # [Merge K Sorted Arrays](https://www.codingninjas.com/studio/problems/merge-k-sorted-arrays_975379)
 --- Pending
 
-#
+# [632. Smallest Range Covering Elements from K Lists](https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists/description/) 
+--- Pending
+
+# [295. Find Median from Data Stream](https://leetcode.com/problems/find-median-from-data-stream/description/)
+
+## Approach ->
+We have to return the median, so if n is odd we just have to return the middle element and if n is even we return the sum of two middle elements divided by 2. Coming to the question, we can imagine this large stream of data in two parts from the middle. eg-> 1,2,3,4,5 can be divided into two parts i.e. 1,2,3 and 4,5. To represent the left part we can take a max heap and to represent the right part from the middle we can take a min heap. That way the top of both the heaps will always give the middle element. So the top of both the heaps in our example will give us 3 and 4. That way we can easily find our median by looking at the value of n that we will also be maintaining. 
+
+Now, how do we insert in the heaps? We know for a fact that the left heap will always be equal in size or one greater than the right heap. So first when we encounter an element just check if it is smaller than the top of left max heap, if it is then push the element in the left heap because it belongs to the left part of the array (data stream) else push it in the right part. Then check if the size of right heap became greater than the left heap, if yes then pop one element from the top and push it in left heap. If the size of left heap is two greater than the right heap then do the same, pop and push in right. We can now easily find out our answer. Look at the code and you'd understand.
+
+## Code ->
+```cpp
+class MedianFinder {
+public:
+    // Max heap for the left part of the array (data stream)
+    priority_queue<int> leftMaxHeap;
+    // Min heap for the right part from the middle of the array (data stream)
+    priority_queue<int, vector<int>, greater<int>> rightMinHeap;
+    // Total number of elements in the data stream
+    int n = 0;
+
+    // Constructor to initialize the MedianFinder object
+    MedianFinder() {
+    }
+    
+    // Function to add an integer 'num' from the data stream to the data structure
+    void addNum(int num) {
+        // Check if the leftMaxHeap is empty or if the current element belongs to the left part
+        if (leftMaxHeap.size() == 0 || leftMaxHeap.top() > num)
+            leftMaxHeap.push(num);
+        else
+            rightMinHeap.push(num);
+
+        // Balance the heaps if necessary
+        if (rightMinHeap.size() > leftMaxHeap.size()) {
+            int temp = rightMinHeap.top();
+            rightMinHeap.pop();
+            leftMaxHeap.push(temp);
+        } else if (leftMaxHeap.size() > rightMinHeap.size() + 1) {
+            int temp = leftMaxHeap.top();
+            leftMaxHeap.pop();
+            rightMinHeap.push(temp);
+        }
+
+        // Increment the total count of elements
+        n++;
+    }
+    
+    // Function to return the median of all elements so far in the data stream
+    double findMedian() {
+        // Check if the total count of elements is odd
+        if (n % 2 == 1)
+            return leftMaxHeap.top();
+        // If even, return the average of the two middle elements
+        else
+            return double(double(leftMaxHeap.top() + rightMinHeap.top()) / 2);
+    }
+};
+```
