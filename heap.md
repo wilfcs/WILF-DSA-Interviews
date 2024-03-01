@@ -711,3 +711,46 @@ public:
     }
 };
 ```
+
+# [703. Kth Largest Element in a Stream](https://leetcode.com/problems/kth-largest-element-in-a-stream/description/)
+
+## Code ->
+```cpp
+class KthLargest {
+public:
+    // Min heap to store the k largest elements in the stream.
+    priority_queue<int, vector<int>, greater<int>> min_heap;
+
+    // Variable to store the value of k.
+    int kth = 0;
+
+    // Constructor to initialize the object with k and nums.
+    KthLargest(int k, vector<int>& nums) {
+        // Set the value of k.
+        kth = k;
+
+        // Iterate through the nums array.
+        for (int i = 0; i < nums.size(); i++) {
+            // Push the current element into the min heap.
+            min_heap.push(nums[i]);
+
+            // If the size of the min heap exceeds k, pop the smallest element.
+            if (min_heap.size() > k)
+                min_heap.pop();
+        }
+    }
+    
+    // Function to add a new element to the stream.
+    int add(int val) {
+        // Push the new element into the min heap.
+        min_heap.push(val);
+
+        // If the size of the min heap exceeds k, pop the smallest element.
+        if (min_heap.size() > kth)
+            min_heap.pop();
+
+        // Return the top element of the min heap, representing the kth largest element.
+        return min_heap.top();
+    }
+};
+```
