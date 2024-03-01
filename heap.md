@@ -499,7 +499,77 @@ int getKthLargest(vector<int> &arr, int k)
 ```
 
 # [Merge K Sorted Arrays](https://www.codingninjas.com/studio/problems/merge-k-sorted-arrays_975379)
---- Pending
+## [Approach](https://www.youtube.com/watch?v=l8CuET0jlDU)
+Watch the vid above. But if you follow the - insert everything in a 1d vector and sort it approach then the TC will be O(n*k log(n*k)). But using pq we can take advantage of the arrays already being sorted and solve it in O(n*k log(k)) TC.
+
+## Code ->
+```cpp
+class Solution
+{
+public:
+    // Define a structure to store the value, row, and column of an element.
+    struct data
+    {
+        int val; // value of the element
+        int row; // row index of the element
+        int col; // column index of the element
+
+        data(int v, int r, int c) : val(v), row(r), col(c) {}
+    };
+
+    // Define a custom comparison function for the priority queue.
+    struct myComp
+    {
+        // Compare elements based on their values.
+        bool operator()(const data &a, const data &b)
+        {
+            return a.val > b.val;
+        }
+    };
+
+    // Function to merge k sorted arrays.
+    vector<int> mergeKArrays(vector<vector<int>> arr, int k)
+    {
+        // Initialize an empty vector to store the merged sorted array.
+        vector<int> ans;
+
+        // Priority queue to store elements along with their row and column information.
+        // Using myComp as the custom comparison function.
+        priority_queue<data, vector<data>, myComp> pq;
+
+        // Push the first element from each array into the priority queue.
+        for (int i = 0; i < k; i++)
+        {
+            data d(arr[i][0], i, 0);
+            pq.push(d);
+        }
+
+        // Process the priority queue until it becomes empty.
+        while (pq.size())
+        {
+            // Extract the minimum element from the priority queue.
+            auto curr = pq.top();
+            pq.pop();
+
+            // Add the value of the current element to the result.
+            ans.push_back(curr.val);
+
+            // Get the row and column indices of the current element.
+            int r = curr.row, c = curr.col;
+
+            // If there are more elements in the same row, push the next element into the priority queue.
+            if (c + 1 < arr[r].size())
+            {
+                data d(arr[r][c + 1], r, c + 1);
+                pq.push(d);
+            }
+        }
+
+        // Return the merged sorted array.
+        return ans;
+    }
+};
+```
 
 # [632. Smallest Range Covering Elements from K Lists](https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists/description/) 
 --- Pending
