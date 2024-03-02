@@ -121,3 +121,50 @@ class Solution {
 Time Complexity: For an undirected graph, O(N) + O(2E), For a directed graph, O(N) + O(E), Because for every node we are calling the recursive function once, the time taken is O(N) and 2E is for total degrees as we traverse for all adjacent nodes.
 
 Space Complexity: O(3N) ~ O(N), Space for dfs stack space, visited array and an adjacency list.
+
+# [547. Number of Provinces](https://leetcode.com/problems/number-of-provinces/description/)
+
+## Approach ->
+Note that we are not given the adjacency matrix in this question, we are just given a matrix with the values 1 and 0 representing the adjacency matrix. So the dfs call will be a lot different from what we usually do in case of adjacency matrix. Or you can make yourself an adjacency matrix either but what's the fun in it? Try figuring out what we are doing in this q.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Depth-First Search (DFS) function to traverse the graph
+    void dfs(int num, vector<int> &visited, vector<vector<int>> &isConnected) {
+        // Mark the current city as visited
+        visited[num] = 1;
+
+        // Iterate through the isConnected list of the current city
+        for (int i = 0; i < isConnected[num].size(); i++) {
+            // Check if the current city is connected to city i and i is not visited
+            if (isConnected[num][i] && !visited[i]) {
+                // Recursively perform DFS on the connected city i
+                dfs(i, visited, isConnected);
+            }
+        }
+    }
+
+    // Function to find the total number of provinces
+    int findCircleNum(vector<vector<int>>& isConnected) {
+        int ans = 0;
+        int n = isConnected.size();
+
+        // Vector to keep track of visited cities
+        vector<int> visited(n, 0);
+
+        // Iterate through all cities
+        for (int i = 0; i < n; i++) {
+            // Check if the current city is not visited
+            if (!visited[i]) {
+                // Increment the province count and perform DFS on the current city
+                ans++;
+                dfs(i, visited, isConnected);
+            }
+        }
+
+        return ans;
+    }
+};
+```
