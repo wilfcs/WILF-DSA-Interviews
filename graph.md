@@ -168,3 +168,48 @@ public:
     }
 };
 ```
+
+# [200. Number of Islands](https://leetcode.com/problems/number-of-islands/description/)
+
+## Approach ->
+The main idea is to visit all the neigbouring lands and mark them in the visited matrix. That way when we complete once cycle or marking, we know for a fact that we have discovered an island. SO maintain a matrix of visited places in the grid. Iterate through each cell in the grid and If the cell is unvisited or the grid is land then call dfs to mark the neighbouring lands as 1. Now with each dfs call we are marking the neighbouring lands as 1. After the call is completed all the neighbour lands are marked 1 and those lands combined form an island.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Function to check if a cell is valid for DFS
+    bool isValid(int row, int col, vector<vector<char>> &grid, vector<vector<int>> &visited){
+        // return false if out of bounds or grid's value is 0 or is already visited
+        if(row<0 || row>grid.size()-1 || col<0 || col>grid[0].size()-1 || grid[row][col]=='0' || visited[row][col]==1) return false;
+        else return true;
+    }
+    // Depth-First Search (DFS) function to explore and mark connected land cells in our visited matrix
+    void dfs(int row, int col, vector<vector<char>> &grid, vector<vector<int>> &visited){
+        visited[row][col] = 1;
+
+        // Explore neighboring cells if valid
+        if(isValid(row+1, col, grid, visited)) dfs(row+1, col, grid, visited);
+        if(isValid(row-1, col, grid, visited)) dfs(row-1, col, grid, visited);
+        if(isValid(row, col+1, grid, visited)) dfs(row, col+1, grid, visited);
+        if(isValid(row, col-1, grid, visited)) dfs(row, col-1, grid, visited);
+    }
+    int numIslands(vector<vector<char>>& grid) {
+        int ans = 0;
+        vector<vector<int>> visited(grid.size(), vector<int>(grid[0].size(),0));
+
+        // Iterate through each cell in the grid
+        for(int i=0; i<grid.size(); i++){
+            for(int j=0; j<grid[0].size(); j++){
+                // If the cell is unvisited and represents land, start DFS
+                if(!visited[i][j] && grid[i][j]=='1'){
+                    dfs(i, j, grid, visited);
+                    ans++;
+                }
+            }
+        }
+
+        return ans;
+    }
+};
+```
