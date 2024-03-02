@@ -571,9 +571,6 @@ public:
 };
 ```
 
-# [632. Smallest Range Covering Elements from K Lists](https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists/description/) 
---- Pending
-
 # [295. Find Median from Data Stream](https://leetcode.com/problems/find-median-from-data-stream/description/)
 
 ## Approach ->
@@ -823,4 +820,89 @@ public:
         return min_heap.top();
     }
 };
+```
+
+
+# [632. Smallest Range Covering Elements from K Lists](https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists/description/) 
+
+## Code ->
+```cpp
+// most difficult question of heap
+
+class Solution {
+public:
+    // Define a structure 'node' to represent elements in the matrix
+    struct node {
+        int val;  // Value of the element
+        int row;  // Row index of the element in the matrix
+        int col;  // Column index of the element in the matrix
+
+        // Constructor to initialize the 'node' structure
+        node(int data, int r, int c) {
+            val = data;
+            row = r;
+            col = c;
+        }
+    };
+
+    // Define a structure 'compare' for custom comparison in the priority queue
+    struct compare {
+        bool operator()(node &a, node &b) {
+            // Compare nodes based on their values in descending order
+            return a.val > b.val;
+        }
+    };
+
+    // Function to find the smallest range that includes at least one number from each list
+    vector<int> smallestRange(vector<vector<int>>& nums) {
+        // Initialize variables to keep track of the minimum and maximum values
+        int mini = INT_MAX, maxi = INT_MIN;
+
+        // Create a min-heap (priority queue) to keep track of the smallest elements
+        priority_queue<node, vector<node>, compare> minHeap;
+
+        // Initialize the min-heap with the first element from each list
+        for (int i = 0; i < nums.size(); i++) {
+            node n(nums[i][0], i, 0);
+            minHeap.push(n);
+            mini = min(mini, nums[i][0]);
+            maxi = max(maxi, nums[i][0]);
+        }
+
+        // Initialize variables to store the start and end of the smallest range
+        int start = mini, end = maxi;
+
+        // Process the min-heap until it is not empty
+        while (minHeap.size()) {
+            // Extract the minimum element from the min-heap
+            node curr = minHeap.top();
+            minHeap.pop();
+
+            // Update the minimum value
+            mini = curr.val;
+
+            // Check if the current range is smaller than the existing range
+            if (maxi - mini < end - start) {
+                // Update the start and end values if a smaller range is found
+                start = mini;
+                end = maxi;
+            }
+
+            // Check if there are more elements in the current list
+            if (curr.col + 1 < nums[curr.row].size()) {
+                // Update the maximum value and push the next element from the current list
+                maxi = max(maxi, nums[curr.row][curr.col + 1]);
+                node n(nums[curr.row][curr.col + 1], curr.row, curr.col + 1);
+                minHeap.push(n);
+            } else {
+                // Break the loop if there are no more elements in the current list
+                break;
+            }
+        }
+
+        // Return the smallest range as a vector
+        return {start, end};
+    }
+};
+
 ```
