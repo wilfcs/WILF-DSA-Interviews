@@ -70,3 +70,54 @@ public:
     }
 };
 ```
+## Complexity analysis ->
+Time Complexity: O(N) + O(2E), Where N = Nodes, 2E is for total degrees as we traverse all adjacent nodes. 2E because degree's formula is 2*Edges.
+
+Let's break it down:
+
+When we visit a node during the BFS traversal, we go through its adjacency list to visit its neighbors.
+For each neighbor, we check if it has been visited before. If not, we add it to the queue and mark it as visited.
+For an undirected graph, each edge contributes to the degree (number of neighbors) of both nodes it connects.
+So, when we traverse the adjacency list of each node, we encounter each edge twice (once for each endpoint of the edge), leading to a factor of 2 in the time complexity analysis. Therefore, the time complexity is often expressed as O(N + 2E), but the constant factor is dropped, and it simplifies to O(N + E).
+
+Simple example: Look at a graph right now and think if for each node say 0 aren't we visiting its one neighbour say 1 and for that neighbour 1 aren't we revisiting its neighbour 0. So aren't we visiting each edge twice?
+
+Space Complexity: O(3N) ~ O(N), Space for queue data structure visited array and an adjacency list
+
+
+
+# [DFS of Graph](https://www.geeksforgeeks.org/problems/depth-first-traversal-for-a-graph/1)
+
+## Approach ->
+Just use recursion and keep track of the visited nodes
+
+## Code ->
+```cpp
+class Solution {
+  private:
+    void dfs(vector<int> &ans, int visited[], int node, vector<int> adj[]){
+        ans.push_back(node);
+        visited[node] = 1;
+        
+        for(int i=0; i<adj[node].size(); i++){
+            if(!visited[adj[node][i]])
+                dfs(ans, visited, adj[node][i], adj);
+        }
+    }
+  public:
+    // Function to return a list containing the DFS traversal of the graph.
+    vector<int> dfsOfGraph(int V, vector<int> adj[]) {
+        // Code here
+        vector<int> ans;
+        int visited[V] = {0};
+        
+        dfs(ans, visited, 0, adj);
+        
+        return ans;
+    }
+};
+```
+## Complexity analysis ->
+Time Complexity: For an undirected graph, O(N) + O(2E), For a directed graph, O(N) + O(E), Because for every node we are calling the recursive function once, the time taken is O(N) and 2E is for total degrees as we traverse for all adjacent nodes.
+
+Space Complexity: O(3N) ~ O(N), Space for dfs stack space, visited array and an adjacency list.
