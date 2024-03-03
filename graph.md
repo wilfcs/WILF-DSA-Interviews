@@ -316,3 +316,70 @@ public:
 ```
 
 TC -> O(m * n), SC -> O(m * n)
+
+# [Detect cycle in an undirected graph](https://www.geeksforgeeks.org/problems/detect-cycle-in-an-undirected-graph/1)
+
+## Approach ->
+We will detect cycle using BFS.
+
+The idea is simple, suppose this is a graph we are given: 
+
+1 -- 2
+|    |
+3 -- 4
+
+When we start checking from 1 using BFS we push 1 in queue and see in the adj list that it connects to 2 and 3 and 2 and 3 are non visited so we mark them as visited and push 2 and 3 in our queue. 
+
+Now we check for 2 from our queue. 2 is connected to 4 and 1. 4 is not visited so we mark 4 as visited and push in our queue. 1 is visited but 1 is also the parent of 2 so because of the parent fact we ignore 1.
+
+Now we check for 3 from our queue. 3 is connected to 1 and 3. 1 is visited but it is the parent of 3 so we ignore 1. 4 is also visited but its not the parent of 3. How can 4 be visited already and not be the parent? That clearly means that there is a cycle in our graph. So if someone was visited and it is not the parent then we have a cycle. 
+
+We also have to keep in mind that there can be multiple provinces so run a loop for all the nodes in the main function and if they are not visited then call the isLoop/bfs function to check if loop exist.
+
+## Code ->
+```cpp
+class Solution {
+private:
+    // Helper function to perform BFS traversal and detect cycle
+    bool isCycle(vector<int> adj[], vector<int> &visited, int elem) {
+        visited[elem] = 1;
+        queue<pair<int, int>> q;
+        // Pushing the element and its parent into the queue
+        q.push({elem, -1});
+
+        while (q.size()) {
+            elem = q.front().first;
+            int parent = q.front().second;
+            q.pop();
+
+            // checking adj list of element
+            for (int i = 0; i < adj[elem].size(); i++) {
+                // If the neighbor is visited and not the parent, then there is a cycle
+                if (visited[adj[elem][i]] && adj[elem][i] != parent)
+                    return true;
+                // If the neighbor is already visited and parent, continue to the next neighbor
+                else if (visited[adj[elem][i]])
+                    continue;
+
+                // Push the neighbor and its parent (the element itself) into the queue and mark it as visited
+                q.push({adj[elem][i], elem});
+                visited[adj[elem][i]] = 1;
+            }
+        }
+        return false;
+    }
+
+public:
+    // Function to detect cycle in an undirected graph
+    bool isCycle(int V, vector<int> adj[]) {
+        vector<int> visited(V, 0);
+
+        // Iterate through each vertex and check for cycles if they aren't visited ofcourse
+        for (int i = 0; i < V; i++) {
+            if (!visited[i])
+                if (isCycle(adj, visited, i)) return true;
+        }
+        return false;
+    }
+};
+```
