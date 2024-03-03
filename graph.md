@@ -250,3 +250,69 @@ public:
     }
 };
 ```
+
+# [994. Rotting Oranges](https://leetcode.com/problems/rotting-oranges/description/)
+
+## Approach ->
+The approach here is to use Breadth-First Search (BFS) traversal to simulate the rotting process of oranges.
+BFS ensures that the traversal direction is consistent: left, right, up, and down and we are able to find minutes for each traversal. That way we can find out that in exactly how much time all the oranges are rotting. Using DFS this is not possible because we are going depth wise and not into a consistent 4 direction.
+
+```cpp
+
+
+class Solution {
+public:
+    // Helper function to check if a given position (i, j) is a valid fresh orange.
+    bool isValid(vector<vector<int>>& grid, int i, int j){
+        // Check if (i, j) is within the bounds of the grid and if it represents a fresh orange (1).
+        return i >= 0 && j >= 0 && i < grid.size() && j < grid[0].size() && grid[i][j] == 1;
+    }
+    
+    // Main function to calculate the minimum minutes required to rot all oranges.
+    int orangesRotting(vector<vector<int>>& grid) {
+        if(grid.empty()) return 0; // Handle the case where the grid is empty.
+        
+        int minutes = 0, total = 0, rotten = 0, row = grid.size(), col = grid[0].size();
+        queue<pair<int, int>> q; // Queue to store the indexes of rotten oranges.
+        
+        // Push all already rotten oranges into the queue and calculate the total number of oranges (both fresh and rotten).
+        // Finding total number of oranges is crucial because at the end we will compare total oranges with total oranges we have rotten.
+        // If the total oranges present and total oranges we have rotten is equal, we will return minutes taken to rot all oranges, else return -1
+        for(int i = 0; i < row; i++){
+            for(int j = 0; j < col; j++){
+                if(grid[i][j] == 2){
+                    q.push({i, j});
+                    total++;
+                }
+                else if(grid[i][j] == 1)
+                    total++;
+            }
+        }       
+
+        // Perform BFS to rot adjacent fresh oranges and update their status. Also, push their indexes into the queue.
+        while(!q.empty()){
+            int sizeOfQ = q.size();
+            rotten += sizeOfQ; // Update the count of rotten oranges.
+
+            // Rot adjacent fresh oranges and push their indexes into the queue.
+            while(sizeOfQ--){
+                int i = q.front().first, j = q.front().second;
+                q.pop();
+                
+                if(isValid(grid, i + 1, j)) q.push({i + 1, j}), grid[i + 1][j] = 2;
+                if(isValid(grid, i - 1, j)) q.push({i - 1, j}), grid[i - 1][j] = 2;
+                if(isValid(grid, i, j + 1)) q.push({i, j + 1}), grid[i][j + 1] = 2;
+                if(isValid(grid, i, j - 1)) q.push({i, j - 1}), grid[i][j - 1] = 2;
+            }
+
+            // If the queue is not empty, there are more rounds of rotting, so increase the minutes.
+            if(!q.empty()) minutes++;
+        }
+        
+        // If the total number of oranges equals the number of rotten oranges, return the minutes, else return -1.
+        return total == rotten ? minutes : -1;
+    }
+};
+```
+
+TC -> O(m * n), SC -> O(m * n)
