@@ -383,3 +383,5 @@ public:
     }
 };
 ```
+
+![graph image](https://media.geeksforgeeks.org/img-practice/PROD/addEditProblem/700219/Web/Other/891791f9-1abb-45b1-80f2-7af46d73dcd2_1685086491.png)
