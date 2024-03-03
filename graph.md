@@ -319,7 +319,7 @@ TC -> O(m * n), SC -> O(m * n)
 
 # [Detect cycle in an undirected graph](https://www.geeksforgeeks.org/problems/detect-cycle-in-an-undirected-graph/1)
 
-## Approach ->
+## Approach 1 ->
 We will detect cycle using BFS.
 
 The idea is simple, suppose this is a graph we are given: 
@@ -336,7 +336,7 @@ Now we check for 3 from our queue. 3 is connected to 1 and 3. 1 is visited but i
 
 We also have to keep in mind that there can be multiple provinces so run a loop for all the nodes in the main function and if they are not visited then call the isLoop/bfs function to check if loop exist.
 
-## Code ->
+## Code 1 ->
 ```cpp
 class Solution {
 private:
@@ -384,4 +384,62 @@ public:
 };
 ```
 
-![graph image](https://media.geeksforgeeks.org/img-practice/PROD/addEditProblem/700219/Web/Other/891791f9-1abb-45b1-80f2-7af46d73dcd2_1685086491.png)
+Time Complexity: O(N + 2E) + O(N), Where N = Nodes, 2E is for total degrees as we traverse all adjacent nodes. In the case of connected components of a graph, it will take another O(N) time.
+
+Space Complexity: O(N) + O(N) ~ O(N), Space for queue data structure and visited array.
+
+# Approach 2 ->
+Using DFS.
+
+The approach is almost the same. We pass the parent of the elem too in the function call and we check for its adjacent elements. If the neighbour is visited and its not the parent we return true (i.e. cycle present), else we make the recursive call. If at any point our recursive call is returning true we finally return true.
+
+## Code ->
+```cpp
+class Solution {
+private:
+    // Function to check for cycles using DFS.
+    bool isCycle(vector<int> adj[], vector<int> &visited, int elem, int parent) {
+        // Mark the current element as visited.
+        visited[elem] = 1;
+
+        // Iterate through the adjacent vertices.
+        for (int i = 0; i < adj[elem].size(); i++) {
+            // Check if the adjacent vertex is visited and not the parent.
+            if (visited[adj[elem][i]] && adj[elem][i] != parent) {
+                return true;  // Cycle detected.
+            } else if (visited[adj[elem][i]]) {
+                continue;  // Skip if already visited.
+            }
+
+            // Recursively call the function for the adjacent vertex.
+            if (isCycle(adj, visited, adj[elem][i], elem)) {
+                return true;  // if the recursive call is returning true, return true finally and break the recursive calls.
+            }
+        }
+
+        return false;  // No cycle detected for the current vertex.
+    }
+
+public:
+    // Function to detect cycle in an undirected graph.
+    bool isCycle(int V, vector<int> adj[]) {
+        vector<int> visited(V, 0);  // Initialize visited vector.
+
+        // Iterate through each vertex.
+        for (int i = 0; i < V; i++) {
+            // Check if the vertex is unvisited.
+            if (!visited[i]) {
+                // Call the recursive DFS function to check for cycles.
+                if (isCycle(adj, visited, i, -1)) {
+                    return true;  // Cycle detected in the graph.
+                }
+            }
+        }
+
+        return false;  // No cycles found in the entire graph.
+    }
+};
+```
+Time Complexity: O(N + 2E) + O(N), Where N = Nodes, 2E is for total degrees as we traverse all adjacent nodes. In the case of connected components of a graph, it will take another O(N) time.
+
+Space Complexity: O(N) + O(N) ~ O(N), Space for recursive stack space and visited array.
