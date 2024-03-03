@@ -213,3 +213,40 @@ public:
     }
 };
 ```
+
+# [733. Flood Fill](https://leetcode.com/problems/flood-fill/description/)
+
+Easy peasy
+
+# Code ->
+```cpp
+class Solution {
+public:
+    bool isValid(vector<vector<int>>& ans, int sr, int sc, int color, int elem){
+        // Check if the pixel is within the bounds of the image and has the same color as the starting pixel.
+        // Also, check if the pixel is not already colored with the new color.
+        if(sr<0 || sc<0 || sr>=ans.size() || sc>=ans[0].size() || ans[sr][sc]!=elem || ans[sr][sc]==color)
+            return false;
+        else return true;
+    }
+    void bfs(vector<vector<int>>& image, int sr, int sc, int color, vector<vector<int>> &ans, int elem){
+        // Set the color of the current pixel to the new color.
+        ans[sr][sc] = color;
+
+        // Check and recursively call DFS on the neighboring pixels in 4 directions.
+        if(isValid(ans, sr+1, sc, color, elem)) bfs(image, sr+1, sc, color, ans, elem);
+        if(isValid(ans, sr-1, sc, color, elem)) bfs(image, sr-1, sc, color, ans, elem);
+        if(isValid(ans, sr, sc+1, color, elem)) bfs(image, sr, sc+1, color, ans, elem);
+        if(isValid(ans, sr, sc-1, color, elem)) bfs(image, sr, sc-1, color, ans, elem);
+    }
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
+        // Create a copy of the original image.
+        vector<vector<int>> ans(image.size(), vector<int>(image[0].size()));
+        ans = image;
+
+        // Start the flood fill from the specified pixel.
+        bfs(image, sr, sc, color, ans, image[sr][sc]);
+        return ans;
+    }
+};
+```
