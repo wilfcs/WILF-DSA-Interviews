@@ -780,7 +780,9 @@ public:
 ```
 # [Detect cycle in a directed graph](https://www.geeksforgeeks.org/problems/detect-cycle-in-a-directed-graph/1)
 ## Approach ->
+
 ![Example](images/directedGraphCycle.webp)
+
 In the directed graph shown above, let's try to figure out if the normal cycle detection algo of a undirected graph work or not.  The undirected dfs algo won't work because look at the example, if you traverse in this graph using the directed graph DFS algo then it will detect the loop at 3,4,5,7 but if you carefully observe there is no loop because of the directions of the edges. But there is a loop at 8,9 and 10. 
 
 In the directed graph cycle detection algorithm, we use two vectors: one to mark visited nodes and another to track nodes visited in the current path. As we traverse the graph, if we encounter a node that is already in the current path, it suggests a cycle. To prevent false positives, we reset the path vector to 0 when we complete the current path. This strategy ensures accurate cycle detection in directed graphs, addressing the limitations of the undirected cycle detection algorithm.
@@ -826,6 +828,89 @@ public:
         }
 
         return false;  // No cycle found in the entire graph
+    }
+};
+```
+
+# [802. Find Eventual Safe States](https://leetcode.com/problems/find-eventual-safe-states/description/)
+
+## Approaches ->
+1. 
+In this q we are simply checking for the cycle. Because if a node is safe then it must eventually stop at a terminal node. And if a node is not safe then ofcouse it will not stop at any node. A terminal node is the node which points to no other node. Hence if we do not detect a cycle for a given node, that node is safe. To check cycle we have applied dfs cycle detection technique. And we are checking the cycle for each nodes seperately. TC-> O(N^2)
+
+## Code ->
+```cpp
+class Solution {
+public:
+    bool detectCycle(int i, vector<vector<int>> &adj, vector<int> &visited, vector<int> &curVisited){
+        visited[i] = 1;
+        curVisited[i] = 1;
+        
+        for(auto a: adj[i]){
+            if(!visited[a]){
+                if(detectCycle(a, adj, visited, curVisited)) return true;
+            }
+            else if(curVisited[a]) return true;
+        }
+        
+        curVisited[i] = 0;
+        return false;
+    }
+    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        vector <int> ans;
+        vector <int> visited(graph.size(), 0);
+        vector <int> curVisited(graph.size(), 0);
+        
+        for(int i=0; i<graph.size(); i++){
+            if(!detectCycle(i, graph, visited, curVisited)) ans.push_back(i);
+        }
+        
+        return ans;
+    }
+};
+```
+
+2. We can improve our TC to O(N + 2E) by simply obversving the following: 
+If we run the dfs for only the non visited nodes and we keep marking the visited nodes as 1, we can save a lot of time. We can do this because we are also maintaining curVisited array. CurVisited is always eventually 0 for the nodes that do not have cycle in it but is 1 for the path/nodes that have cycle. We can take advantage of that and write our code the following way ->
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Same as before
+    bool detectCycle(int i, vector<vector<int>> &adj, vector<int> &visited, vector<int> &curVisited){
+        visited[i] = 1;
+        curVisited[i] = 1;
+        
+        for(auto a: adj[i]){
+            if(!visited[a]){
+                if(detectCycle(a, adj, visited, curVisited)) return true;
+            }
+            else if(curVisited[a]) return true;
+        }
+        
+        curVisited[i] = 0;
+        return false;
+    }
+    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        vector <int> ans;
+        vector <int> visited(graph.size(), 0);
+        vector <int> curVisited(graph.size(), 0);
+        
+        // if not visited then call the cycle detection dfs
+        for(int i=0; i<graph.size(); i++){
+            if(!visited[i])
+                detectCycle(i, graph, visited, curVisited);
+        }
+
+        // the curVisited will always be 1 for the path that had a cycle
+        // so it will obviously be 0 for the safe paths/nodes
+        for(int i=0; i<curVisited.size(); i++){
+            // simply push the nodes that has 0 in their curVisited array into our ans
+            if(curVisited[i]==0) ans.push_back(i);
+        }
+        
+        return ans;
     }
 };
 ```
