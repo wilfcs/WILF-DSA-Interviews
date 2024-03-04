@@ -600,3 +600,59 @@ public:
     }
 };
 ```
+
+# [1020. Number of Enclaves](https://leetcode.com/problems/number-of-enclaves/description/)
+
+## Approach ->
+Exactly as same as the last one
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Function to check if a cell is a valid land cell
+    bool isValid(vector<vector<int>>& grid, int i, int j) {
+        // Check if the indices are within the grid boundaries and the cell is land
+        if (i >= 0 && j >= 0 && i < grid.size() && j < grid[0].size() && grid[i][j] == 1)
+            return true;
+        else
+            return false;
+    }
+
+    // Function to mark connected land cells as water (set to 0)
+    void makeZero(vector<vector<int>>& grid, int i, int j) {
+        grid[i][j] = 0; // Mark the current land cell as water
+
+        // Recursively mark neighboring land cells as water
+        if (isValid(grid, i + 1, j)) makeZero(grid, i + 1, j);
+        if (isValid(grid, i - 1, j)) makeZero(grid, i - 1, j);
+        if (isValid(grid, i, j + 1)) makeZero(grid, i, j + 1);
+        if (isValid(grid, i, j - 1)) makeZero(grid, i, j - 1);
+    }
+
+    // Main function to count the number of land cells that cannot reach the boundary
+    int numEnclaves(vector<vector<int>>& grid) {
+        int row = grid.size(), col = grid[0].size();
+
+        // Mark connected land cells as water for the left and right boundaries
+        for (int i = 0; i < row; i++) {
+            if (grid[i][0] == 1) makeZero(grid, i, 0);
+            if (grid[i][col - 1] == 1) makeZero(grid, i, col - 1);
+        }
+
+        // Mark connected land cells as water for the top and bottom boundaries
+        for (int i = 0; i < col; i++) {
+            if (grid[0][i] == 1) makeZero(grid, 0, i);
+            if (grid[row - 1][i] == 1) makeZero(grid, row - 1, i);
+        }
+
+        int ans = 0;
+        // Count the remaining land cells (not reachable from the boundary)
+        for (int i = 0; i < row; i++)
+            for (int j = 0; j < col; j++)
+                if (grid[i][j] == 1) ans++;
+
+        return ans;
+    }
+};
+```
