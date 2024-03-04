@@ -914,3 +914,68 @@ public:
     }
 };
 ```
+
+# [Topological sort - Kahn’s Algorithm/BFS](https://www.geeksforgeeks.org/problems/topological-sort/1?itm_source=geeksforgeeks&itm_medium=article&itm_campaign=bottom_sticky_on_article)
+
+## Approach ->
+The code aims to perform a topological sort on a directed acyclic graph (DAG)
+
+Topological Sort:
+
+An ordering of the vertices in a directed graph where each directed edge goes from a vertex earlier in the order to a vertex later in the order. In simple words the algo states that the vertex that is the least dependent (i.e. the node that has the least indegree aka least number of incoming edges) will be printed first in the topological sort algo and the vertex that are dependent on other vertices, are printed later.
+
+Directed Acyclic Graph (DAG):
+
+A directed graph without cycles, meaning there are no closed loops in the relationships between vertices. This is important for a topological sort.
+
+So we will take the following approach to solve this using Kahn's algo aka BFS:
+
+1. We will make an indegree vector that will store the indegree of all the vertices present in the graph.  Each element at index i represents the in-degree of vertex i.
+2. Create an empty queue (q). And for each node that had no dependency i.e. indegree == 0, push it in our queue.
+3. Perform simple bfs and when we pop out an element/node from queue, push it in our ans. Then for all the adjacent elements of our node just keep reducing its indegree. 
+4. When the indegree of an element is reduced to 0 then push it in our queue. Look at the code for further understanding...
+
+## Code ->
+```cpp
+class Solution
+{
+	public:
+	//Function to return list containing vertices in Topological order. 
+	vector<int> topoSort(int V, vector<int> adj[]) 
+	{
+	    vector<int> ans;
+        // Step 1: Create an indegree vector and calculate in-degrees for each element
+        // Push it in our indegree vector
+	    vector<int> indegree(V, 0);
+	    for(int i=0; i<V; i++){
+	        int size = adj[i].size();
+	        for(int j=0; j<size; j++){
+	            indegree[adj[i][j]]++;  
+	        } 
+	    }
+	    
+	   // Step 2: Create a queue and initially push all vertices with in-degree 0
+	    queue<int> q;
+	    for(int i=0; i<V; i++){
+	        if(indegree[i]==0) q.push(i);
+	    }
+	    
+	   // Step 3: Perform BFS (while the queue is not empty)
+	    while(q.size()){
+	        int curr = q.front();  // Take the front node from the queue
+            q.pop();
+            ans.push_back(curr);  // Add it to the topological order
+
+            // Iterate through the adjacent vertices of the current node
+            for(int i = 0; i < adj[curr].size(); i++){
+                indegree[adj[curr][i]]--;  // Reduce in-degree of adjacent vertices
+
+                // If the new in-degree becomes 0, push the vertex to the queue
+                if(indegree[adj[curr][i]] == 0) 
+                    q.push(adj[curr][i]);
+            }
+        }
+	    
+	    return ans;
+	}
+};
