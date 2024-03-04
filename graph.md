@@ -543,3 +543,60 @@ public:
     }
 };
 ```
+
+# [130. Surrounded Regions](https://leetcode.com/problems/surrounded-regions/description/)
+
+## Approach ->
+
+This is a very simple question if you are able to observe one thing. Think about it.
+
+The only observation here is that the 0s that are on the boundary and 0s connected to the boundary 0s, all those 0s can never become X. All the other 0s can. So simply traverse the boundary and make every 0 as B and also the 0s connected to them as B recursively. When that is done, traverse the matrix and convert Bs to 0s and rest everything to X
+
+## Code ->
+```cpp
+class Solution {
+public:
+    bool isValid(vector<vector<char>>& board, int i, int j){
+        if(i>=0 && i<board.size() && j>=0 && j<board[0].size() && board[i][j]=='O')
+            return true;
+        return false;
+    }
+    void makeB(vector<vector<char>>& board, int i, int j){
+        // make the current element B because it is a valid element i.e. lies in the range of the 2d array and also is a 'O'.
+        board[i][j] = 'B';
+        
+        // check if the left, right, up and down elems are valid and if yes then call the function recursively.
+        if(isValid(board, i+1, j))
+            makeB(board, i+1, j);
+        if(isValid(board, i-1, j))
+            makeB(board, i-1, j);
+        if(isValid(board, i, j+1))
+            makeB(board, i, j+1);
+        if(isValid(board, i, j-1))
+            makeB(board, i, j-1);
+    }
+    void solve(vector<vector<char>>& board) {
+        int row = board.size();
+        int col = board[0].size();
+        
+        // Calling makeB for every corner elements of the 2d array
+        // Make the cornor 'O's as 'B' and the 'O's connected to them as 'B' as well
+        for(int i=0; i<row; i++){
+            if(board[i][0] == 'O') makeB(board, i, 0);
+            if(board[i][col-1] == 'O') makeB(board, i, col-1);
+        }
+        for(int i=0; i<col; i++){
+            if(board[0][i] == 'O') makeB(board, 0, i);
+            if(board[row-1][i] == 'O') makeB(board, row-1, i);
+        }
+        
+        
+        // Changing all the 'B' in the board to 'O'
+        // Keep everything else as 'X'
+        for(int i=0; i<row; i++)
+            for(int j=0; j<col; j++)
+                if(board[i][j] == 'B') board[i][j] = 'O';
+                else board[i][j] = 'X';
+    }
+};
+```
