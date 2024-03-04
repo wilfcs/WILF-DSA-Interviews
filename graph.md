@@ -979,3 +979,57 @@ class Solution
 	    return ans;
 	}
 };
+```
+
+Time Complexity: O(V+E), where V = no. of nodes and E = no. of edges. This is a simple BFS algorithm.
+
+Space Complexity: O(N) + O(N) ~ O(2N), O(N) for the indegree array, and O(N) for the queue data structure used in BFS(where N = no.of nodes).
+
+# [Topological sort - Using DFS](https://www.geeksforgeeks.org/problems/topological-sort/1?itm_source=geeksforgeeks&itm_medium=article&itm_campaign=bottom_sticky_on_article)
+
+## Approach ->
+We will be solving it using the DFS traversal technique. DFS goes in-depth, i.e., traverses all nodes by going ahead, and when there are no further nodes to traverse in the current path, then it backtracks on the same path and traverses other unvisited nodes. The intuition is that as we keep going the depthts of the tree, we will eventually reach a node which is the most dependant, so push it in our stack. And as we backtrack, we reach the nodes that are less dependant so keep pushing them and we'll have our dependant nodes in sorted order of their dependancy
+
+The algorithm steps are as follows:
+
+1. We must traverse all components of the graph.
+2. Make sure to carry a visited array(all elements are initialized to 0) and a stack data structure, where we are going to store the nodes after completing the DFS call.
+3. In the DFS call, first, the current node is marked as visited. Then DFS call is made for all its adjacent nodes.
+4. After visiting all its adjacent nodes, DFS will backtrack to the previous node and meanwhile, the current node is pushed into the stack.
+5. Finally, we will get the stack containing one of the topological sortings of the graph. We can use an array instead of stack as well. In the code I have used an array and then reversed it at the end.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Helper function for Depth-First Search (DFS)
+    void DFS(int i, vector<int>& ans, vector<int>& visited, vector<int> adj[]) {
+        visited[i] = 1;  // Step 3: Mark the current node as visited
+        for (auto neighbor : adj[i]) {
+            if (visited[neighbor] == 0) {
+                // Step 3: Recursively call DFS for unvisited neighbors
+                DFS(neighbor, ans, visited, adj);
+            }
+        }
+        ans.push_back(i);  // Step 4: Push the current node into the result after visiting all neighbors
+    }
+
+    // Function to return a list containing vertices in Topological order.
+    vector<int> topoSort(int V, vector<int> adj[]) {
+        vector<int> ans;      // Vector to store the topological order
+        vector<int> visited(V, 0);  // Step 2: Array to keep track of visited nodes
+
+        // Step 1: Iterate through all nodes in the graph
+        for (int i = 0; i < V; i++) {
+            if (visited[i] == 0) {
+                // Step 2: Call DFS for unvisited nodes
+                DFS(i, ans, visited, adj);
+            }
+        }
+
+        // Step 5: Reverse the order to get the final topological sort
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};
+```
