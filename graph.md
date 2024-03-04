@@ -666,13 +666,18 @@ If we are able to colour a graph with two colours such that no adjacent nodes ha
 
 ## Example ->
 Input 1:
+
 ![Input 1](images/bpGraph1.png)
 ![Output 1](images/bpGraph2.png)
+
 Output: True
+---
 
 Input 2:
+
 ![Input 2](images/bpGraph3.png)
 ![Output 2](images/bpGraph4.png)
+
 Output: False
 
 ## Approach ->
