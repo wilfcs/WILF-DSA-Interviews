@@ -778,3 +778,54 @@ public:
 	}
 };
 ```
+# [Detect cycle in a directed graph](https://www.geeksforgeeks.org/problems/detect-cycle-in-a-directed-graph/1)
+## Approach ->
+![Example](images/directedGraphCycle.webp)
+In the directed graph shown above, let's try to figure out if the normal cycle detection algo of a undirected graph work or not.  The undirected dfs algo won't work because look at the example, if you traverse in this graph using the directed graph DFS algo then it will detect the loop at 3,4,5,7 but if you carefully observe there is no loop because of the directions of the edges. But there is a loop at 8,9 and 10. 
+
+In the directed graph cycle detection algorithm, we use two vectors: one to mark visited nodes and another to track nodes visited in the current path. As we traverse the graph, if we encounter a node that is already in the current path, it suggests a cycle. To prevent false positives, we reset the path vector to 0 when we complete the current path. This strategy ensures accurate cycle detection in directed graphs, addressing the limitations of the undirected cycle detection algorithm.
+
+Look at the code to understand properly...
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Function to detect cycle in a directed graph using DFS.
+    bool dfs(vector<int> adj[], vector<int> &visited, vector<int> &pathVisited, int node, int V) {
+        visited[node] = 1;          // Mark the current node as visited
+        pathVisited[node] = 1;      // Mark the current node as visited in the current DFS path
+
+        // Iterate through the neighbors of the current node
+        for (int i = 0; i < adj[node].size(); i++) {
+            // If the neighbor is not visited, recursively call DFS for that neighbor
+            if (!visited[adj[node][i]]) {
+                if (dfs(adj, visited, pathVisited, adj[node][i], V)) return true; // break the recursion and return true if dfs return true
+            }
+            // If the neighbor is already visited in the current DFS path, a cycle is detected
+            else {
+                if (pathVisited[adj[node][i]]) return true;
+            }
+        }
+
+        pathVisited[node] = 0;  // Reset pathVisited for the current node after exploration
+        return false;           // No cycle found in the current DFS path
+    }
+
+    // Function to check if a directed graph contains a cycle.
+    bool isCyclic(int V, vector<int> adj[]) {
+        vector<int> visited(V, 0);       // Array to track visited nodes
+        vector<int> pathVisited(V, 0);   // Array to track visited nodes in the current DFS path
+
+        // Iterate through each node in the graph
+        for (int i = 0; i < V; i++) {
+            // If the node is not visited, start DFS from that node
+            if (!visited[i]) {
+                if (dfs(adj, visited, pathVisited, i, V)) return true;  // If cycle found, return true
+            }
+        }
+
+        return false;  // No cycle found in the entire graph
+    }
+};
+```
