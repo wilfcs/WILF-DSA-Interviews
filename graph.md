@@ -1081,3 +1081,60 @@ class Solution {
     }
 };
 ```
+
+# [210. Course Schedule II](https://leetcode.com/problems/course-schedule-ii/description/) && [207. Course Schedule](https://leetcode.com/problems/course-schedule/description/)
+
+## Approach for Course Schedule II->
+The solutions will be similar for both questions as we need to check for one, and in the other, we need to print the order. The questions state that the given pairs signify the dependencies of tasks. For example, the pair {u, v} signifies that to perform task v, first we need to finish task u. Now, if we closely observe, we can think of a directed edge between u and v(u -> v) where u and v are two nodes. Now, if we can think of each task as a node and every pair as a directed edge between those two nodes, the whole problem becomes a graph problem of topological sort. We clearly have dependencies here so it's a normal topo sort problem.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Helper function to create an adjacency list from prerequisites
+    void makeAdj(vector<vector<int>> &adj, vector<vector<int>> &prerequisites) {
+        for (int i = 0; i < prerequisites.size(); i++) {
+            adj[prerequisites[i][0]].push_back(prerequisites[i][1]);
+        }
+    }
+
+    // Main function to find the order of courses to be taken
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<vector<int>> adj(numCourses);
+        makeAdj(adj, prerequisites);  // Step 1: Create an adjacency list
+
+        vector<int> indegree(numCourses, 0);  // Step 2: Calculate indegree for each course
+
+        for (int i = 0; i < prerequisites.size(); i++) {
+            indegree[prerequisites[i][1]]++;
+        }
+
+        queue<int> q;
+        vector<int> ans;
+
+        // Step 3: Push courses with indegree 0 into the queue
+        for (int i = 0; i < indegree.size(); i++) {
+            if (indegree[i] == 0) q.push(i);
+        }
+
+        // Step 4: Perform topological sort using BFS
+        while (q.size()) {
+            int curr = q.front();
+            q.pop();
+            ans.push_back(curr);
+
+            // Reduce indegree of adjacent courses and push those with indegree 0
+            for (int i = 0; i < adj[curr].size(); i++) {
+                indegree[adj[curr][i]]--;
+                if (indegree[adj[curr][i]] == 0) q.push(adj[curr][i]);
+            }
+        }
+
+        // Step 5: Check if all courses can be completed, otherwise return an empty vector
+        if (ans.size() != numCourses) return {};
+        
+        reverse(ans.begin(), ans.end());  // Reverse the order to get the final result
+        return ans;
+    }
+};
+```
