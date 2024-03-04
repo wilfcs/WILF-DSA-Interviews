@@ -778,7 +778,7 @@ public:
 	}
 };
 ```
-# [Detect cycle in a directed graph](https://www.geeksforgeeks.org/problems/detect-cycle-in-a-directed-graph/1)
+# [Detect cycle in a directed graph (Using DFS)](https://www.geeksforgeeks.org/problems/detect-cycle-in-a-directed-graph/1)
 ## Approach ->
 
 ![Example](images/directedGraphCycle.webp)
@@ -1030,6 +1030,54 @@ public:
         // Step 5: Reverse the order to get the final topological sort
         reverse(ans.begin(), ans.end());
         return ans;
+    }
+};
+```
+
+# [Detect cycle in a directed graph (USING BFS)](https://www.geeksforgeeks.org/problems/detect-cycle-in-a-directed-graph/1)
+
+## Approach ->
+We have already solved this using DFS. Now we will solve it using BFS. This is an implementation of Kahn's algo.
+
+Simply run the Kahn's algo and we know for a fact that Kahn's algo only runs (topo sort only runs) for DAG (Directed Asyclic Graph). So if there is a cycle then it will not run for all its nodes. 
+
+## Code ->
+```cpp
+class Solution {
+  public:
+    // Function to detect cycle in a directed graph.
+    bool isCyclic(int V, vector<int> adj[]) {
+        // code here
+         vector<int> indegree(V, 0);
+	    
+	    for(int i=0; i<V; i++){
+	        int size = adj[i].size();
+	        for(int j=0; j<size; j++){
+	            indegree[adj[i][j]]++;  
+	        } 
+	    }
+	    
+	    queue<int> q;
+	    int cnt = 0;
+	    
+	    for(int i=0; i<V; i++){
+	        if(indegree[i]==0) q.push(i);
+	    }
+	    
+	    while(q.size()){
+	        int curr = q.front(); 
+	        q.pop();
+	        // increase the count if we find an element in our queue
+	        cnt++;
+	        
+	        for(int i=0; i<adj[curr].size(); i++){
+	            indegree[adj[curr][i]]--;
+	            if(indegree[adj[curr][i]] == 0) q.push(adj[curr][i]);
+	        }
+	    }
+	    
+	    // if the number of elements processed are equal to no. of nodes then no loop present
+	    return cnt==V ? false : true;
     }
 };
 ```
