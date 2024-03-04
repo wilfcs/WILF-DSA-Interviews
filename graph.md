@@ -671,7 +671,7 @@ Input 1:
 ![Output 1](images/bpGraph2.png)
 
 Output: True
----
+
 
 Input 2:
 
@@ -680,7 +680,9 @@ Input 2:
 
 Output: False
 
-## Approach ->
+## Approaches ->
+1. BFS:
+
  This code checks if a graph is bipartite, meaning it can be split into two independent sets of nodes, ensuring that no two connected nodes share the same color. First thing to notice here is that the graph might be disconnected. It handles disconnected graphs by iterating through each unprocessed node and running a breadth-first search (BFS) for each component.
 
 The approach involves using a visited vector to mark nodes as uncolored (-1). During BFS, nodes are colored alternatively (1 or 2). If, at any point, a node's neighbor has the same color as itself and the neighbour is not the parent of the node, the graph is not bipartite.
@@ -734,5 +736,45 @@ public:
 
         return true; // The entire graph is bipartite
     }
+};
+```
+
+2. DFS:
+
+## Code ->
+```cpp
+class Solution {
+private: 
+    bool dfs(int node, int col, int color[], vector<int> adj[]) {
+        color[node] = col; 
+        
+        // traverse adjacent nodes
+        for(auto it : adj[node]) {
+            // if uncoloured
+            if(color[it] == -1) {
+                if(dfs(it, !col, color, adj) == false) return false; 
+            }
+            // if previously coloured and have the same colour
+            else if(color[it] == col) {
+                return false; 
+            }
+        }
+        
+        return true; 
+    }
+public:
+	bool isBipartite(int V, vector<int>adj[]){
+	    int color[V];
+	    for(int i = 0;i<V;i++) color[i] = -1; 
+	    
+	    // for connected components
+	    for(int i = 0;i<V;i++) {
+	        if(color[i] == -1) {
+	            if(dfs(i, 0, color, adj) == false) 
+	                return false; 
+	        }
+	    }
+	    return true; 
+	}
 };
 ```
