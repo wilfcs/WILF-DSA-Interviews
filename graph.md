@@ -443,3 +443,103 @@ public:
 Time Complexity: O(N + 2E) + O(N), Where N = Nodes, 2E is for total degrees as we traverse all adjacent nodes. In the case of connected components of a graph, it will take another O(N) time.
 
 Space Complexity: O(N) + O(N) ~ O(N), Space for recursive stack space and visited array.
+
+# [542. 01 Matrix](https://leetcode.com/problems/01-matrix/description/)
+
+## Approach ->
+
+Google asked this question so obviously hitting bfs from each cell when you find a 1 is not the approach its looking for, added that it will give TLE. So let's think of a better approach.
+
+The intuition behind this solution is to use a multi-source BFS approach where you start from the positions of '0' and propagate outward to compute the distance of each cell from the nearest '0'. This is more efficient than running BFS from each '1' cell individually.
+
+Here's a step-by-step explanation of the intuition:
+
+1. Initialization:
+
+Initialize a matrix (ans) to store the distances. Initialize it with -1, indicating that the distances are not yet computed.
+Create a queue (q) to perform BFS.
+
+2. Enqueue '0' Cells:
+
+Iterate through the input matrix (mat).
+Whenever you encounter a '0', enqueue its position into the queue (q) and set its distance in the ans matrix to 0.
+
+3. BFS:
+
+Start the BFS process by dequeuing a cell from the queue.
+
+For the dequeued cell, check its neighboring cells:
+-  If a neighboring cell is valid (within matrix boundaries and not visited yet), enqueue it.
+-  Set the distance of the neighboring cell in the ans matrix to the current cell's distance plus 1.
+
+4. Repeat BFS:
+
+Continue the BFS process until the queue is empty.
+The BFS will propagate from the '0' cells to their neighboring cells, updating the distances along the way.
+
+5. Result:
+
+The ans matrix will now contain the distances of each cell from the nearest '0'.
+
+
+## Code -> 
+```cpp
+class Solution {
+private:
+    // Function to check if a cell is valid and has not been visited yet
+    bool isValid(vector<vector<int>> &ans, int i, int j){
+        if(i < 0 || j < 0 || i >= ans.size() || j >= ans[0].size() || ans[i][j] != -1)
+            return false;
+        else
+            return true;
+    }
+
+public:
+    // Function to update the matrix with distances from nearest 0
+    vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
+        // Initialize the answer matrix with -1 (unvisited) and a queue for BFS
+        vector<vector<int>> ans(mat.size(), vector<int>(mat[0].size(), -1));
+        queue<pair<int, int>> q;
+
+        // Push the positions of '0' into the queue and set their distance to 0
+        for(int i = 0; i < mat.size(); i++){
+            for(int j = 0; j < mat[0].size(); j++){
+                if(mat[i][j] == 0){
+                    q.push({i, j});
+                    ans[i][j] = 0;
+                }
+            }
+        }
+
+        // Perform BFS to update distances for other cells
+        while(q.size()){
+            int i = q.front().first;
+            int j = q.front().second;
+
+            q.pop();
+
+            // Check and update distances for valid neighboring cells by simple if valid conditions
+            // Could have used a while(size--) loop and checked isValid for each level but that that will give TLE
+            // and there is no need also because we don't have anything to do with the levels specifically
+            if(isValid(ans, i + 1, j)){
+                q.push({i + 1, j});
+                ans[i + 1][j] = ans[i][j] + 1;
+            }
+            if(isValid(ans, i - 1, j)){
+                q.push({i - 1, j});
+                ans[i - 1][j] = ans[i][j] + 1;
+            }
+            if(isValid(ans, i, j + 1)){
+                q.push({i, j + 1});
+                ans[i][j + 1] = ans[i][j] + 1;
+            }
+            if(isValid(ans, i, j - 1)){
+                q.push({i, j - 1});
+                ans[i][j - 1] = ans[i][j] + 1;
+            }
+        }
+
+        return ans;
+    }
+};
+```
