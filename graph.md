@@ -1138,3 +1138,114 @@ public:
     }
 };
 ```
+
+# [Alien Dictionary](https://www.geeksforgeeks.org/problems/alien-dictionary/1)
+
+## Approach ->
+The problem involves finding the order of characters in an alien language.
+By analyzing consecutive pairs of words, we can determine the order of characters that appear before others.
+This analysis can be modeled as a directed graph where each node represents a character, and edges indicate their order.
+The goal is to find a linear ordering of characters using topological sort.
+
+
+1. **Problem Overview:**
+   - Given a sorted dictionary of an alien language.
+   - Need to find the order of characters in the language.
+
+2. **Observation:**
+   - Analyzing pairs of consecutive words helps us determine character order.
+
+3. **Modeling as a Graph:**
+   - Consider each character as a node in a directed graph.
+   - Edges indicate the order of characters.
+
+4. **Creating the Graph:**
+   - Iterate through consecutive word pairs.
+   - Find the first differing character and create a directed edge.
+   - Form an adjacency list for the graph.
+
+5. **Graph Analysis:**
+   - The problem now resembles finding a linear ordering of nodes (characters) using topological sort.
+
+6. **Steps for Solution:**
+   - Calculate the indegree of each node (count of incoming edges).
+   - Use BFS for topological sorting.
+   - Result is a linear order of characters.
+
+7. **Final Result:**
+   - Convert the ordered nodes to characters to get the language order.
+
+## Code ->
+
+```cpp
+class Solution {
+public:
+    vector<int> topoSort(int V, vector<int> adj[]) {
+        int indegree[V] = {0};
+        // Calculate indegree for each node
+        for (int i = 0; i < V; i++) {
+            for (auto it : adj[i]) {
+                indegree[it]++;
+            }
+        }
+
+        queue<int> q;
+        // Enqueue nodes with indegree 0 to start BFS
+        for (int i = 0; i < V; i++) {
+            if (indegree[i] == 0) {
+                q.push(i);
+            }
+        }
+        vector<int> topo;
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+            topo.push_back(node);
+
+            // Reduce indegree of adjacent nodes
+            for (auto it : adj[node]) {
+                indegree[it]--;
+                if (indegree[it] == 0) q.push(it);
+            }
+        }
+
+        return topo;
+    }
+
+    string findOrder(string dict[], int N, int K) {
+        vector<int> adj[K];
+        
+        // Create adjacency list based on word comparisons
+        for (int i = 0; i < N - 1; i++) {
+            string s1 = dict[i];
+            string s2 = dict[i + 1];
+            int len = min(s1.size(), s2.size());
+            
+            // Find the first differing character and create a directed edge
+            for (int ptr = 0; ptr < len; ptr++) {
+                if (s1[ptr] != s2[ptr]) {
+                    adj[s1[ptr] - 'a'].push_back(s2[ptr] - 'a'); // word on top has more priority
+                    break;
+                }
+            }
+        }
+
+        // Perform topological sorting
+        vector<int> topo = topoSort(K, adj);
+        string ans = "";
+        
+        // Convert ordered nodes to characters
+        for (auto it : topo) {
+            ans = ans + char(it + 'a');
+        }
+        
+        return ans;
+    }
+};
+```
+
+**Explanation:**
+
+- The problem involves understanding the order of characters in an alien language.
+- We represent characters as nodes in a graph and analyze consecutive words to create directed edges.
+- Topological sorting helps find the linear order of characters, and the result is converted to the final language order.
