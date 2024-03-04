@@ -656,3 +656,78 @@ public:
     }
 };
 ```
+
+# [785. Is Graph Bipartite?](https://leetcode.com/problems/is-graph-bipartite/description/)
+
+## Question Explanation ->
+Problem Statement: Given an adjacency list of a graph adj of V no. of vertices having 0 based index. Check whether the graph is bipartite or not.
+
+If we are able to colour a graph with two colours such that no adjacent nodes have the same colour, it is called a bipartite graph.
+
+## Example ->
+Input 1:
+![Input 1](images\bpGraph1.png)
+![Output 1](images\bpGraph2.png)
+Output: True
+
+Input 2:
+![Input 2](images\bpGraph3.png)
+![Output 2](images\bpGraph4.png)
+Output: False
+
+## Approach ->
+ This code checks if a graph is bipartite, meaning it can be split into two independent sets of nodes, ensuring that no two connected nodes share the same color. First thing to notice here is that the graph might be disconnected. It handles disconnected graphs by iterating through each unprocessed node and running a breadth-first search (BFS) for each component.
+
+The approach involves using a visited vector to mark nodes as uncolored (-1). During BFS, nodes are colored alternatively (1 or 2). If, at any point, a node's neighbor has the same color as itself and the neighbour is not the parent of the node, the graph is not bipartite.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // BFS function to check if a connected component is bipartite
+    bool bfs(vector<vector<int>> &graph, vector<int> &visited, int i) {
+        queue<pair<int, int>> q;
+        q.push({i, 1}); // Start with node i, color 1
+        visited[i] = 1; // Mark the current node as color 1
+
+        while (q.size()) {
+            int curr = q.front().first;
+            int color = q.front().second;
+            q.pop();
+
+            for (int i = 0; i < graph[curr].size(); i++) {
+                int neighbour = graph[curr][i]; // Extract the neighbour/child of the parent
+
+                if (neighbour == curr) continue; // Skip parent node
+
+                if (visited[neighbour] == -1) {
+                    // If neighbour is not visited, color it with the opposite color in visited vector
+                    int newColor = (color == 1) ? 2 : 1;
+                    visited[neighbour] = newColor;
+
+                    // Push the neighbour in queue with its corresponding color
+                    q.push({neighbour, newColor});
+                } else {
+                    // If the neighbour has the same color as the current node, graph is not bipartite
+                    if (visited[neighbour] == color) return false;
+                }
+            }
+        }
+
+        return true; // The connected component is bipartite
+    }
+
+    // Function to check if the entire graph is bipartite (handles disconnected graphs)
+    bool isBipartite(vector<vector<int>> &graph) {
+        vector<int> visited(graph.size(), -1); // Initialize visited vector
+
+        // Iterate through each node in the graph
+        for (int i = 0; i < graph.size(); i++) {
+            // Check if the node is not already processed and run BFS for each unprocessed node
+            if (visited[i] == -1 && !bfs(graph, visited, i)) return false;
+        }
+
+        return true; // The entire graph is bipartite
+    }
+};
+```
