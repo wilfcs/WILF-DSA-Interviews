@@ -1249,3 +1249,63 @@ public:
 - The problem involves understanding the order of characters in an alien language.
 - We represent characters as nodes in a graph and analyze consecutive words to create directed edges.
 - Topological sorting helps find the linear order of characters, and the result is converted to the final language order.
+
+# [Shortest path in Undirected Graph having unit distance](https://www.geeksforgeeks.org/problems/shortest-path-in-undirected-graph-having-unit-distance/1)
+
+## Approach ->
+Use BFS to traverse the graph starting from the source node. Update the distance vector for each visited node, considering the unit distance between connected nodes. Read the code for further understanding.
+
+## Code ->
+```cpp
+class Solution {
+  public:
+    vector<int> shortestPath(vector<vector<int>>& edges, int N,int M, int src){
+        // code here
+        vector<int> adj[N];
+        
+        // first we make the adjacency list
+        for(auto a: edges){
+            adj[a[0]].push_back(a[1]);
+            adj[a[1]].push_back(a[0]);
+        }
+        
+        // then we create a distance vector to store distance from source
+        // initialize all its elements to INT MAX
+        vector<int> dist(N, INT_MAX);
+        vector<int> visited(N, 0);
+        
+        // distance of src from src would be 0 and its visited
+        dist[src] = 0;
+        visited[src] = 1;
+        
+        // create q and do normal bfs
+        queue<int> q;
+        q.push(src);
+        
+        while(q.size()){
+            int curr = q.front();
+            q.pop();
+            
+            for(int i=0; i<adj[curr].size(); i++){
+                if(!visited[adj[curr][i]]){
+                    visited[adj[curr][i]] = 1;
+                    // make the distance of the adj child of a node as node's dist from src+1
+                    dist[adj[curr][i]] = dist[curr] + 1;
+                    q.push(adj[curr][i]);
+                }
+            }
+        }
+        
+        // if a node is cannot be visited from src then we have to mark it as -1 atc
+        // create ans vector and populate the ans vector with dist if dist isnt INT MAX
+        
+        vector<int> ans(N);
+        for(int i=0; i<dist.size(); i++){
+            if(dist[i]!=INT_MAX) ans[i]=dist[i];
+            else ans[i] = -1;
+        }
+        
+        return ans;
+    }
+};
+```
