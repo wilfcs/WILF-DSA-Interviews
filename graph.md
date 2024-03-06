@@ -1453,3 +1453,57 @@ public:
 Q. Why don't we use Dijkstra if there is a negative weight?
 
 ans -> Dijkstra's algorithm is not suitable for graphs with negative weights since it may lead to an undesirable scenario. Consider the case where two nodes, 0 and 1, are connected by an edge with a weight of -2. Initially, the priority queue (pq) is populated with the pair (0,0) representing node 0 with a distance of 0, as the starting point. Subsequently, the pair (-2,1) is added to the pq to reach node 1. However, to revisit node 0, a weight of -4 is required, which is less than the initial weight of 0, resulting in an endless loop of continually pushing the same elements into the priority queue.
+
+Time Complexity: O(E log V) - This is due to the priority queue operations. For each edge (E), there are potentially log(V) operations, considering the insertion and extraction operations in the priority queue.
+
+Space Complexity: O(|E| + |V|)
+
+
+### Using set instead of a pq ->
+
+We can use a set instead of a priority queue because both data structures essentially keep the smallest element on top. However, opting for a set provides an advantage: we can efficiently delete elements. For instance, if a node has already been visited and is present in the set, finding a better path allows us to delete the previous occurrence of that node from the set. This deletion operation helps avoid unnecessary reprocessing of the same node, making the set an effective alternative to a priority queue in this context.
+
+## Code ->
+```cpp
+class Solution
+{
+	public:
+	//Function to find the shortest distance of all the vertices
+    //from the source vertex S.
+    vector <int> dijkstra(int V, vector<vector<int>> adj[], int S)
+    {
+        // Code here
+        // Create min heap of pair to store min distance and node from source
+        set<pair<int, int>> st;
+        vector<int> dist(V, 1e9);
+        
+        st.insert({0, S});
+        dist[S] = 0;
+        
+        
+        while(st.size()){
+            // Note how we did these operations 
+            auto it = *(st.begin());
+            int node = it.second;
+            int distance = it.first;
+            st.erase(it);
+            
+            for(auto itr: adj[node]){
+                int edgeWeight = itr[1];
+                int adjNode = itr[0];
+                
+                if(distance + edgeWeight < dist[adjNode]){
+                    // Here we can remove the node from set if it already was visited
+                    // this is to reduce tc a little
+                    if(dist[adjNode]!=1e9) st.erase({dist[adjNode], adjNode});
+                    
+                    dist[adjNode] = distance + edgeWeight;
+                    st.insert({dist[adjNode], adjNode});
+                }
+            }
+        }
+        
+        return dist;
+    }
+};
+```
