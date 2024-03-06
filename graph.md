@@ -1393,3 +1393,58 @@ public:
     }
 };
 ```
+
+# [Implementing Dijkstra Algorithm - Using Priority Queue](https://www.geeksforgeeks.org/problems/implementing-dijkstra-set-1-adjacency-matrix/1?utm_source=youtube&utm_medium=collab_striver_ytdescription&utm_campaign=implementing-dijkstra-set-1-adjacency-matrix)
+
+## Approach ->
+So whenever there is a undirected graph with non negative weighths, we use Dijkstra's algorithm.
+To use Dijkstra's algo, this time we will be using pq.
+The priority queue (pq) is used in Dijkstra's algorithm to efficiently select the node with the minimum distance from the source vertex. The key intuition behind this choice is to always explore the node with the currently smallest known distance, ensuring that the algorithm prioritizes paths that are likely to be shorter.
+
+## Code ->
+```cpp
+class Solution
+{
+public:
+    // Function to find the shortest distance of all the vertices
+    // from the source vertex S.
+    vector<int> dijkstra(int V, vector<vector<int>> adj[], int S)
+    {
+        // Create min heap of pair to store min distance and node from the source
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+        
+        // Vector to store the distances from the source to all vertices
+        vector<int> dist(V, 1e9); // Initialize with a large value as infinity
+        
+        // Push the source vertex into the priority queue with distance 0
+        pq.push({0, S});
+        dist[S] = 0; // Distance from source to itself is 0
+
+        // Dijkstra's algorithm loop
+        while (pq.size())
+        {
+            // Extract the node with the minimum distance from the priority queue
+            int node = pq.top().second;
+            int distance = pq.top().first;
+            pq.pop();
+
+            // Iterate over the adjacent nodes of the current node
+            for (auto itr : adj[node])
+            {
+                int edgeWeight = itr[1];
+                int adjNode = itr[0];
+
+                // Relaxation step: Update the distance if a shorter path is found
+                if (distance + edgeWeight < dist[adjNode])
+                {
+                    dist[adjNode] = distance + edgeWeight;
+                    pq.push({dist[adjNode], adjNode});
+                }
+            }
+        }
+
+        // Return the vector containing the shortest distances from the source
+        return dist;
+    }
+};
+```
