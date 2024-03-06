@@ -1309,3 +1309,87 @@ class Solution {
     }
 };
 ```
+
+# [Shortest path in Directed Acyclic Graph](https://www.geeksforgeeks.org/problems/shortest-path-in-undirected-graph/1)
+
+## Approach ->
+In a Directed Acyclic Graph (DAG), finding the shortest path from a source node to all other nodes is simplified due to the absence of cycles. The idea is to perform a Topological Sort, which orders the nodes based on their dependencies, ensuring that a node is processed only after all its prerequisites have been processed.
+
+Steps:
+1. **Topological Sort (DFS):** Implement a depth-first search (DFS) based topological sort to obtain the order of nodes.
+2. **Initialize Distances:** Set initial distances from the source to all nodes to a large value except for the source node, which is set to 0.
+3. **Relaxation:** Iterate through the topologically sorted nodes and relax their adjacent nodes by updating the distance if a shorter path is found.
+4. **Unreachable Nodes:** Convert nodes with still-large distances to -1, indicating that they are unreachable from the source.
+5. **Output:** The resulting vector contains the shortest distances from the source to all nodes in the DAG.
+
+## Code ->
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    // Function to perform Topological Sort using DFS
+    void topoSort(int node, vector<pair<int, int>>& adj[], int vis[], stack<int>& st) {
+        vis[node] = 1;
+        for (auto it : adj[node]) {
+            int v = it.first;
+            if (!vis[v]) {
+                topoSort(v, adj, vis, st);
+            }
+        }
+        st.push(node);
+    }
+
+    vector<int> shortestPath(int N, int M, vector<vector<int>>& edges) {
+        // Create a graph in the form of an adjacency list
+        vector<pair<int, int>> adj[N];
+        for (int i = 0; i < M; i++) {
+            int u = edges[i][0];
+            int v = edges[i][1];
+            int wt = edges[i][2];
+            adj[u].push_back({v, wt});
+        }
+
+        // Initialize a visited array with all nodes marked as unvisited (0)
+        int vis[N] = {0};
+
+        // Perform topological sort using DFS and store the result in the stack 'st'
+        stack<int> st;
+        for (int i = 0; i < N; i++) {
+            if (!vis[i]) {
+                topoSort(i, adj, vis, st);
+            }
+        }
+
+        // Initialize a vector 'dist' to store the shortest distances, initially set to a large value
+        vector<int> dist(N, 1e9);
+
+        // Distance from source node (0) to itself is 0
+        dist[0] = 0;
+
+        // Process nodes in topological order and relax their adjacent nodes
+        while (!st.empty()) {
+            int node = st.top();
+            st.pop();
+
+            for (auto it : adj[node]) {
+                int v = it.first;
+                int wt = it.second;
+
+                // Relaxation step: Compare current distance with the new distance through the current node
+                if (dist[node] + wt < dist[v]) {
+                    dist[v] = wt + dist[node];
+                }
+            }
+        }
+
+        // Convert unreachable nodes (with distance still set to a large value) to -1
+        for (int i = 0; i < N; i++) {
+            if (dist[i] == 1e9) dist[i] = -1;
+        }
+
+        return dist;
+    }
+};
+```
