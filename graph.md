@@ -1397,7 +1397,8 @@ public:
 # [Implementing Dijkstra Algorithm - Using Priority Queue](https://www.geeksforgeeks.org/problems/implementing-dijkstra-set-1-adjacency-matrix/1?utm_source=youtube&utm_medium=collab_striver_ytdescription&utm_campaign=implementing-dijkstra-set-1-adjacency-matrix)
 
 ## Approach ->
-So whenever there is a undirected graph with non negative weighths, we use Dijkstra's algorithm.
+So whenever there is a undirected graph with non negative weighths, we use Dijkstra's algorithm. Dijkstra's doesn't work when there is a negative weight.
+
 To use Dijkstra's algo, this time we will be using pq.
 The priority queue (pq) is used in Dijkstra's algorithm to efficiently select the node with the minimum distance from the source vertex. The key intuition behind this choice is to always explore the node with the currently smallest known distance, ensuring that the algorithm prioritizes paths that are likely to be shorter.
 
@@ -1448,3 +1449,7 @@ public:
     }
 };
 ```
+
+Q. Why don't we use Dijkstra if there is a negative weight?
+
+ans -> Dijkstra's algorithm is not suitable for graphs with negative weights since it may lead to an undesirable scenario. Consider the case where two nodes, 0 and 1, are connected by an edge with a weight of -2. Initially, the priority queue (pq) is populated with the pair (0,0) representing node 0 with a distance of 0, as the starting point. Subsequently, the pair (-2,1) is added to the pq to reach node 1. However, to revisit node 0, a weight of -4 is required, which is less than the initial weight of 0, resulting in an endless loop of continually pushing the same elements into the priority queue.
