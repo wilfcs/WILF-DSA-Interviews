@@ -1782,3 +1782,69 @@ public:
     }
 };
 ```
+# [787. Cheapest Flights Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/description/)
+
+## Approach ->
+First approach after seeing the weighted graph that will come to your head will be Dijkstra's but unlike the other questions, in this question our priority of judgement will not be distance, it will be stops. We will be using simple BFS and for that we will be checking our levels. We just need a queue for that, no pq required. 
+Lets prioritize paths with fewer stops over shorter distances.
+
+Here are the steps: 
+
+1. Create an adjacency list, a queue storing {stops, {node, dist}}, and a distance array.
+2. Initialize source distance to 0 and stops to 0, push into the queue.
+3. Pop from the queue, update distances if better, and push adjacent nodes with increased stops.
+4. Repeat until the queue is empty. Return calculated distance if stops reach the required limit; otherwise, return -1. Use a queue instead of a priority queue for efficiency.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+        // Create an adjacency list to represent the graph
+        vector<vector<pair<int, int>>> adj(n);  // node -> nextNode, dist
+
+        // Populate the adjacency list based on the given flights
+        for(int i = 0; i < flights.size(); i++){
+            adj[flights[i][0]].push_back({flights[i][1], flights[i][2]});
+        }
+
+        // Use a queue to implement Dijkstra's algorithm
+        queue<pair<int, pair<int, int>>> q;  // stops, {node, dist}
+
+        // Initialize distance array with maximum values
+        vector<int> dist(n, INT_MAX);
+
+        // Push the source node with initial distance and stops into the queue
+        q.push({0, {src, 0}});
+        dist[src] = 0;  // Distance from source to itself is zero
+
+        // Dijkstra's algorithm
+        while(!q.empty()) {
+            // Dequeue the front element
+            int stop = q.front().first;
+            int node = q.front().second.first;
+            int weight = q.front().second.second;
+            q.pop();
+
+            // Check if the number of stops exceeds the limit
+            if(stop > k) continue;
+
+            // Explore neighbors and update distances
+            for(int i = 0; i < adj[node].size(); i++){
+                int adjNode = adj[node][i].first;
+                int edW = adj[node][i].second;
+
+                // Update the distance if a shorter path is found
+                if(weight + edW < dist[adjNode] && stop <= k){
+                    dist[adjNode] = weight + edW;
+                    q.push({stop + 1, {adjNode, weight + edW}});
+                }
+            }
+        }
+
+        // Check if destination is reachable and return the minimum cost
+        if(dist[dst] != INT_MAX) return dist[dst];
+        else return -1;
+    }
+};
+```
