@@ -1640,3 +1640,145 @@ public:
     }
 };
 ```
+
+
+```cpp
+
+class Solution {
+public:
+    typedef pair<int, pair<int, int>> P;
+    vector<vector<int>> dirs = {
+                {-1,0},
+        {0,-1},         {0,1},
+                {1, 0}
+    };
+   // Interesting right :-) 
+    
+    int minimumEffortPath(vector<vector<int>>& heights) {
+        int m = heights.size();
+        int n = heights[0].size();
+        
+        auto isSafe = [&](int x, int y) {
+            return x>=0 && x<m && y>=0 && y<n;
+        };
+        
+        vector<vector<int>> result(m, vector<int>(n, INT_MAX));
+        priority_queue<P, vector<P>, greater<P>> pq;
+        
+        pq.push({0, {0, 0}});
+        result[0][0] = 0;
+  
+        while(!pq.empty()) {
+            int diff  = pq.top().first;
+            auto node = pq.top().second;
+            pq.pop();
+
+            int x = node.first;
+            int y = node.second;
+            
+            //Why returning now ?
+            //Because there is no way that the rest of elements can update the weight of destination cell even smaller due to the min heap.
+            if(x == m-1 && y == n-1)
+                return diff;
+            
+	    for(auto dir:dirs) {
+		int x_   = x + dir[0];
+		int y_   = y + dir[1];
+
+		if(isSafe(x_, y_)) {
+
+		    int newDiff = max(diff, abs(heights[x][y] - heights[x_][y_]));
+		    if(result[x_][y_] > newDiff) {
+			result[x_][y_] = newDiff;
+			pq.push({result[x_][y_], {x_, y_}});
+		    }
+		}
+	     }
+        }
+   
+        return result[m-1][n-1];
+
+    }
+};
+```
+
+# [1631. Path With Minimum Effort](https://leetcode.com/problems/path-with-minimum-effort/description/)
+
+## Approach ->
+Another impl of dijkstra's. Try solving it when you see it. Couldn't solve in the first go.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    // Define a custom pair for priority queue
+    typedef pair<int, pair<int, int>> P;
+
+    // Define the possible directions to move (up, left, right, down)
+    vector<vector<int>> dirs = {
+        {-1, 0},
+        {0, -1},
+        {0, 1},
+        {1, 0}
+    };
+
+    int minimumEffortPath(vector<vector<int>>& heights) {
+        // Get the number of rows and columns in the matrix
+        int m = heights.size();
+        int n = heights[0].size();
+
+        // Lambda function to check if a cell is within bounds
+        auto isSafe = [&](int x, int y) {
+            return x >= 0 && x < m && y >= 0 && y < n;
+        };
+
+        // Initialize a matrix to store the minimum effort for each cell
+        vector<vector<int>> result(m, vector<int>(n, INT_MAX));
+
+        // Initialize a min heap priority queue
+        priority_queue<P, vector<P>, greater<P>> pq;
+
+        // Push the starting cell (0,0) with 0 effort to the priority queue
+        pq.push({0, {0, 0}});
+        result[0][0] = 0;
+
+        // Continue until the priority queue is empty
+        while (!pq.empty()) {
+            // Extract the minimum effort and corresponding cell from the priority queue
+            int diff = pq.top().first;
+            auto node = pq.top().second;
+            pq.pop();
+
+            // Extract the coordinates of the cell
+            int x = node.first;
+            int y = node.second;
+
+            // Check if the current cell is the destination cell (bottom-right)
+            // If so, return the minimum effort
+            if (x == m - 1 && y == n - 1)
+                return diff;
+
+            // Explore all possible neighbors
+            for (auto dir : dirs) {
+                int x_ = x + dir[0];
+                int y_ = y + dir[1];
+
+                // Check if the neighbor is within bounds
+                if (isSafe(x_, y_)) {
+                    // Calculate the new effort for the neighbor
+                    int newDiff = max(diff, abs(heights[x][y] - heights[x_][y_]));
+
+                    // If the new effort is smaller than the recorded effort, update and push to the priority queue
+                    if (result[x_][y_] > newDiff) {
+                        result[x_][y_] = newDiff;
+                        pq.push({result[x_][y_], {x_, y_}});
+                    }
+                }
+            }
+        }
+
+        // This line is reached only if the destination cell is not reached, but it should not affect the logic
+        return result[m - 1][n - 1];
+    }
+};
+```
