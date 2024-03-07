@@ -1456,6 +1456,8 @@ ans -> Dijkstra's algorithm is not suitable for graphs with negative weights sin
 
 Time Complexity: O(E log V) - This is due to the priority queue operations. For each edge (E), there are potentially log(V) operations, considering the insertion and extraction operations in the priority queue.
 
+[Complexity analysis video in depth](https://www.youtube.com/watch?v=3dINsjyfooY&list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&index=34)
+
 Space Complexity: O(|E| + |V|)
 
 
@@ -1504,6 +1506,137 @@ class Solution
         }
         
         return dist;
+    }
+};
+```
+-> Pending Question and solution:
+# [Shortest Path in Weighted undirected graph](https://www.geeksforgeeks.org/problems/shortest-path-in-weighted-undirected-graph/1)
+<!-- In this question we have to find the shortest path from src to dest and we have to maintain the path in a ds and return it. This question is just an extension of dijkstra algo question where we were required to find the shortest path from src to each node. In this question we will be doing the following:
+
+We have to remember where am I coming from while performing dijkstra. So we will keep a track of the parent node where we are coming from and keep updating it. So we will take a pq, a dist vector and a parent vector. In the start assign the parent values as the index values, and distance values as infinity. Now perform the simple Dijkstra's and keep maintaining the parent whenever you make a change in the distance vector. By the end you will have a parent vector which will reflect the path of the minimum distances of every node from src node. So to find the path of src to dest, keep the pointer at dist and keep going backwards by looking at its parent till you finally reach the src. Now reverse that path and that's your answer. If you were not able to reach src then return {-1}. -->
+
+# [1091. Shortest Path in Binary Matrix](https://leetcode.com/problems/shortest-path-in-binary-matrix/description/)
+
+## Approach ->
+We can use bfs in this question because there is no weight attached to the graph, but since we have to find the shortest path we can also use dijkstra. 
+
+1. Using BFS ->
+Use simple BFS, and as you expand your levels keep increasing the level variable. If you reach the end return level, else return -1. Simple, right?
+
+2. Using Dijkstra's ->
+Use normal dijkstra's with weights as 1. Keep in mind that the distance vector that we used to take in normal dijkstra's used to be a 1d matrix but this question's distance vector will be a 2d matrix.
+
+## Code ->
+1. 
+
+```cpp
+class Solution {
+public:
+    int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
+        // Lambda function of isValid
+        auto isValid = [&](int row, int col){
+            // retur true if row and col are in the range and the val there is 0
+            return row >= 0 && col >= 0 && row < grid.size() &&
+            col < grid[0].size() && grid[row][col]==0; 
+        };
+
+        // Code for main starts here
+
+        if (grid[0][0] == 1 || grid[grid.size() - 1][grid[0].size() - 1] == 1) {
+            return -1; // Check if the start or end point is blocked
+        }
+
+        int level = 0;
+
+        // This will store the coordinates of gird in q
+        queue<pair<int, int>> q;
+        q.push({0,0});
+
+        // As we keep visiting 0s we will mark them as 1s in grid itself
+        grid[0][0] = 1;
+
+        while(q.size()){
+            int n = q.size();
+            // iterate for the size of q because we are dealing in levels here.
+            while(n--){
+                int row = q.front().first;
+                int col = q.front().second;
+                q.pop();
+                
+                // if its the bottom right index, return level + 1
+                if(row==grid.size()-1 && col==grid[0].size()-1) return level+1;
+
+                // check the validity of all 8 directions and push them in the queue
+                // also mark the grid corresponding to that position as 1
+                if(isValid(row+1, col)) q.push({row+1, col}), grid[row+1][col]=1;
+                if(isValid(row-1, col)) q.push({row-1, col}), grid[row-1][col]=1;
+                if(isValid(row, col+1)) q.push({row, col+1}), grid[row][col+1]=1;
+                if(isValid(row, col-1)) q.push({row, col-1}), grid[row][col-1]=1;
+                if(isValid(row+1, col+1)) q.push({row+1, col+1}), grid[row+1][col+1]=1;
+                if(isValid(row-1, col-1)) q.push({row-1, col-1}), grid[row-1][col-1]=1;
+                if(isValid(row+1, col-1)) q.push({row+1, col-1}), grid[row+1][col-1]=1;
+                if(isValid(row-1, col+1)) q.push({row-1, col+1}), grid[row-1][col+1]=1;
+            }
+            // increase the level
+            level++;
+        }
+        //  if the last node wasn't visited then return -1
+        return -1;
+    }
+};
+```
+
+2. 
+
+```cpp
+class Solution {
+public:
+    typedef pair<int, pair<int, int>> P;  // Define a pair to represent distance and coordinates
+    vector<vector<int>> directions{{1, 1}, {0, 1}, {1, 0}, {0, -1}, {-1, 0}, {-1, -1}, {1, -1}, {-1, 1}};  // Define possible directions to move
+
+    int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
+        int m = grid.size();
+        int n = grid[0].size();
+
+        if (m == 0 || n == 0 || grid[0][0] != 0)
+            return -1;  // If the grid is empty or the start point is blocked, return -1
+
+        auto isSafe = [&](int x, int y) {
+            return x >= 0 && x < m && y >= 0 && y < n;  // Check if the coordinates are within the grid boundaries
+        };
+
+        vector<vector<int>> result(m, vector<int>(n, INT_MAX));  // Initialize a 2D vector to store the shortest distances
+        priority_queue<P, vector<P>, greater<P>> pq;  // Priority queue to store nodes with minimum distance
+
+        pq.push({0, {0, 0}});  // Push the start node with distance 0
+        result[0][0] = 0;  // Set the distance to the start node as 0
+
+        while (!pq.empty()) {
+            int d = pq.top().first;  // Current distance
+            pair<int, int> node = pq.top().second;  // Current node's coordinates
+            pq.pop();  // Pop the current node from the priority queue
+
+            int x = node.first;
+            int y = node.second;
+
+            for (auto dir : directions) {
+                int x_ = x + dir[0];  // New x-coordinate
+                int y_ = y + dir[1];  // New y-coordinate
+                int dist = 1;  // Distance between adjacent nodes
+
+                if (isSafe(x_, y_) && grid[x_][y_] == 0 && d + dist < result[x_][y_]) {
+                    // If the new coordinates are safe, the cell is not blocked, and the new distance is smaller,
+                    pq.push({d + dist, {x_, y_}});  // Push the new node with updated distance
+                    grid[x_][y_] = 1;  // Mark the cell as visited
+                    result[x_][y_] = d + dist;  // Update the shortest distance to the new node
+                }
+            }
+        }
+
+        if (result[m - 1][n - 1] == INT_MAX)
+            return -1;  // If there is no valid path to the destination, return -1
+
+        return result[m - 1][n - 1] + 1;  // Return the shortest path length to the destination
     }
 };
 ```
