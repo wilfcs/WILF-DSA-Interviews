@@ -2073,3 +2073,24 @@ public:
     }
 };
 ```
+
+# Minimum Spanning Tree (MST)
+
+A spanning tree is a tree in which we have N nodes(i.e. All the nodes present in the original graph) and N-1 edges and all nodes are reachable from each other.
+
+Among all possible spanning trees of a graph, the minimum spanning tree is the one for which the sum of all the edge weights is the minimum.
+
+For example:
+
+This is a spanning tree ->
+
+![ST](images/MST1.webp)
+
+This is the MST for the above spanning tree ->
+
+![MST](images/MST2.webp)
+
+Sum of edge weights = 17
+
+Note: There may exist multiple minimum spanning trees for a graph like a graph may have multiple spanning trees.
+
