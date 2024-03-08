@@ -1968,3 +1968,41 @@ public:
     }
 };
 ```
+
+# [Floyd Warshall](https://www.geeksforgeeks.org/problems/implementing-floyd-warshall2042/1)
+
+## Approach ->
+[Read Article](https://takeuforward.org/data-structure/floyd-warshall-algorithm-g-42/)
+
+Floyd Warshall will take the Tc of O(N^3). But it will solve the problem even if there is a negative cyclic (it will be able to detect cyclic loop if to go from point A to point A itself the distance is in negative). But if there is no negative cycle then you can apply dijkstra's and this problem will be solved in Tc of O(N * E * log N).
+
+## Code ->
+```cpp
+class Solution {
+  public:
+	void shortest_distance(vector<vector<int>>&matrix){
+	    // Code here
+	    int n = matrix.size();
+	    
+	    // ATQ if we can't reach a node from another node then the weight is given as -1
+	    // Let's convert that to INT_MAX for ease of calculations.
+	    for(int i=0; i<n; i++)
+	        for(int j=0; j<n; j++)
+	            if(matrix[i][j]==-1) matrix[i][j] = 1e8;
+	            
+	   
+	   // Floyd Warshall
+	   for(int k=0; k<n; k++)
+	       for(int i=0; i<n; i++)
+	           for(int j=0; j<n; j++)
+	               // Update the distance matrix with the shortest path from i to j through k
+	               matrix[i][j] = min(matrix[i][j], matrix[i][k] + matrix[k][j]);
+    
+	   
+	   // Convert back the INT_MAX that we did in the start to -1 again
+	   for(int i=0; i<matrix.size(); i++)
+	        for(int j=0; j<matrix[0].size(); j++)
+	            if(matrix[i][j]==1e8) matrix[i][j] = -1;
+	}
+};
+```
