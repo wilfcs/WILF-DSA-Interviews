@@ -1905,3 +1905,66 @@ public:
     }
 };
 ```
+
+# [Distance from the Source (Bellman-Ford Algorithm)](https://www.geeksforgeeks.org/problems/distance-from-the-source-bellman-ford-algorithm/1)
+
+## Approach ->
+The bellman-Ford algorithm helps to find the shortest distance from the source node to all other nodes. But, we have already learned Dijkstra’s algorithm (Dijkstra’s algorithm article link) to fulfill the same purpose. Now, the question is how this algorithm is different from Dijkstra’s algorithm.
+
+While learning Dijkstra’s algorithm, we came across the following two situations, where Dijkstra’s algorithm failed:
+
+If the graph contains negative edges.
+If the graph has a negative cycle (In this case Dijkstra’s algorithm fails to minimize the distance, keeps on running, and goes into an infinite loop. As a result it gives TLE error).
+Negative Cycle: A cycle is called a negative cycle if the sum of all its weights becomes negative. 
+
+Bellman-Ford’s algorithm successfully solves these problems. It works fine with negative edges as well as it is able to detect if the graph contains a negative cycle. But this algorithm is only applicable for directed graphs. In order to apply this algorithm to an undirected graph, we just need to convert the undirected edges into directed edges like the following:
+
+![Diagram](images/bellmanFord.webp)
+
+In this algorithm, the edges can be given in any order. The intuition is to relax all the edges for N-1( N = no. of nodes) times sequentially. After N-1 iterations, we should have minimized the distance to every node.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    /* Function to implement Bellman Ford
+    * edges: vector of vectors which represents the graph
+    * S: source vertex to start traversing the graph with
+    * V: number of vertices
+    */
+    vector<int> bellman_ford(int V, vector<vector<int>>& edges, int S) {
+        // Initialize distance array to store the shortest distances from the source
+        vector<int> dist(V, 1e8); // 1e8 represents infinity, as it is greater than any possible distance
+        dist[S] = 0; // Distance from the source to itself is always 0
+
+        // Relax edges for V-1 iterations
+        for (int i = 0; i < V - 1; i++) {
+            // Iterate through all edges
+            for (auto e : edges) {
+                int node = e[0];
+                int adjNode = e[1];
+                int weight = e[2];
+
+                // Relaxation step: Update the distance if a shorter path is found
+                if (dist[node] != 1e8 && dist[node] + weight < dist[adjNode]) {
+                    dist[adjNode] = dist[node] + weight;
+                }
+            }
+        }
+
+        // Nth relaxation to check for negative cycles
+        for (auto e : edges) {
+            int node = e[0];
+            int adjNode = e[1];
+            int weight = e[2];
+
+            // If further relaxation is possible, there's a negative cycle
+            if (dist[node] != 1e8 && dist[node] + weight < dist[adjNode]) {
+                return {-1}; // Negative cycle detected, return a special value
+            }
+        }
+
+        return dist; // Return the shortest distances array
+    }
+};
+```
