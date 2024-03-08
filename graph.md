@@ -1848,3 +1848,60 @@ public:
     }
 };
 ```
+
+# [787. Cheapest Flights Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/description/)
+
+## Code ->
+```cpp
+// Normal dijkstra's impl
+class Solution {
+public:
+    typedef pair<int, int> P;
+    int networkDelayTime(vector<vector<int>>& times, int n, int k) {
+        // Create an adjacency list to represent the graph: node -> {adjNode, weight}
+        vector<vector<P>> adj(n+1);
+
+        // Populate the adjacency list based on the given times
+        for(int i=0; i<times.size(); i++){
+            adj[times[i][0]].push_back({times[i][1], times[i][2]});
+        }
+
+        // Use a priority queue to implement Dijkstra's algorithm: {weight, node}
+        priority_queue<P, vector<P>, greater<P>> pq;
+
+        // Initialize distance array with maximum values
+        vector<int> dist(n+1, 1e9);
+
+        // Push the source node with initial distance 0 into the priority queue
+        pq.push({0, k});
+        dist[k] = 0;
+
+        // Dijkstra's algorithm
+        while(pq.size()){
+            int node = pq.top().second;  // Extract node with the minimum weight
+            int weight = pq.top().first;
+            pq.pop();
+
+            // Explore neighbors and update distances
+            for(int i=0; i<adj[node].size(); i++){
+                int adjElem = adj[node][i].first;  // Adjacent node
+                int adjW = adj[node][i].second;    // Weight of the edge
+
+                // Update the distance if a shorter path is found
+                if(adjW + weight < dist[adjElem]){
+                    dist[adjElem] = adjW + weight;
+                    pq.push({adjW + weight, adjElem});
+                }
+            }
+        }
+
+        // Find the maximum distance in the distance array
+        int maxElem = INT_MIN;
+        for(int i=1; i<=n; i++) maxElem = max(maxElem, dist[i]);
+
+        // Check if any nodes are unreachable, return -1; otherwise, return the maximum distance
+        if(maxElem == 1e9) return -1;
+        else return maxElem;
+    }
+};
+```
