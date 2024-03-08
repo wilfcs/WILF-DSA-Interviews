@@ -2006,3 +2006,70 @@ class Solution {
 	}
 };
 ```
+
+# [1334. Find the City With the Smallest Number of Neighbors at a Threshold Distance](https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/description/)
+
+## Approach ->
+The question might sound confusing but lool at the first example given in the q to understand it. Basically we have to find all the nodes we can go to from all the nodes that is present and if let's say we can go from node a to nodes b,c and d within the threshold value given then we know we can go to 3 nodes from a. We have to return the greatest node value that has the least number of nodes we can visit. Look at the example to understand the problem.
+
+In order to solve this problem, we will use the Floyd Warshall algorithm.
+
+We know Floyd Warshall algorithm helps us to generate a 2D matrix, that stores the shortest distances from each node to every other node. In the generated 2D matrix, each cell matrix[i][j] represents the shortest distance from node i to node j.
+
+After generating the 2D matrix(that contains the shortest paths) using the Floyd Warshall algorithm, for each node, we will count the number of nodes with a distance lesser or equal to the distanceThreshold by iterating each row of that matrix. Finally, we will choose the node with the minimum number of adjacent cities(whose distance is at the most distanceThreshold) and with the largest value.
+
+Note: This 2D matrix can also be generated using Dijkstra’s algorithm. As Dijkstra’s algorithm is a single-source shortest-path algorithm, we need to calculate the shortest distances for one single node at a time. So, to create the 2D matrix we need to apply Dijkstra’s algorithm to each of the V nodes separately.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
+        vector<vector<int>> dist(n, vector<int>(n, INT_MAX));
+
+        for(int i=0; i<edges.size(); i++){
+            int from = edges[i][0];
+            int to = edges[i][1];
+            int weight = edges[i][2];
+
+            // since undirected graph so we from can go to to and to can go to from
+            // update them with weight in the adj list dist
+            dist[from][to] = weight;
+            dist[to][from] = weight;
+        }
+
+        // Distance from a city to itself is 0
+        for(int i=0; i<n; i++) dist[i][i] = 0;
+
+        // Floyd Warshall algorithm to find shortest distances between all pairs of cities
+        for(int k=0; k<n; k++){
+            for(int i=0; i<n; i++){
+                for(int j=0; j<n; j++){
+                    // Avoid integer overflow by checking for INT_MAX
+                    if (dist[i][k] == INT_MAX || dist[k][j] == INT_MAX)
+						continue;
+                    dist[i][j] = min(dist[i][j], dist[i][k]+dist[k][j]);
+                }
+            }
+        }
+
+        int ans = -1;
+        int mini = n;
+
+        // Count the number of reachable cities for each city
+        for(int i=0; i<n; i++){
+            int numOfNodes = 0;
+            for(int j=0; j<n; j++){
+                if(dist[i][j]<=distanceThreshold) numOfNodes++;
+            }
+            // Update answer if the current city has fewer or equal reachable cities
+            if(numOfNodes<=mini){
+                mini = numOfNodes;
+                ans = i;
+            }
+        }
+
+        return ans;
+    }
+};
+```
