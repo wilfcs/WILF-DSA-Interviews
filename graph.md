@@ -2094,3 +2094,90 @@ Sum of edge weights = 17
 
 Note: There may exist multiple minimum spanning trees for a graph like a graph may have multiple spanning trees.
 
+
+If we were required to find the MST Path then we would have taken three things into our pq but since we are required to only find the sum of the MST so we will take the weight and the node in the pq.
+
+The intuition behind this is simple greedy. We are just taking the minimal path and storing it in our pq and marking the node as visited and that helps us only processing the minimal paths.
+
+
+# [Minimum Spanning Tree -> USING Prim's Algo](https://www.geeksforgeeks.org/problems/minimum-spanning-tree/1)
+
+## Approach ->
+In order to implement Prim’s algorithm, we will be requiring an array(visited array) and a priority queue that will essentially represent a min-heap. We need another array(MST) as well if we wish to store the edge information of the minimum spanning tree.
+
+The algorithm steps are as follows:
+
+Priority Queue(Min Heap): The priority queue will be storing the pairs (edge weight, node). We can start from any given node. Here we are going to start from node 0 and so we will initialize the priority queue with (0, 0). If we wish to store the mst of the graph, the priority queue should instead store the triplets (edge weight, adjacent node, parent node) and in that case, we will initialize with (0, 0, -1).
+
+Visited array: All the nodes will be initially marked as unvisited.
+
+sum variable: It will be initialized with 0 and we wish that it will store the sum of the edge weights finally.
+
+MST array(optional): If we wish to store the minimum spanning tree(MST) of the graph, we need this array. This will store the edge information as a pair of starting and ending nodes of a particular edge.
+
+1. We will first push edge weight 0, node value 0, and parent -1 as a triplet into the priority queue to start the algorithm.
+Note: We can start from any node of our choice. Here we have chosen node 0.
+2. Then the top-most element (element with minimum edge weight as it is the min-heap we are using) of the priority queue is popped out.
+3. After that, we will check whether the popped-out node is visited or not.
+If the node is visited: We will continue to the next element of the priority queue.
+If the node is not visited: We will mark the node visited in the visited array and add the edge weight to the sum variable. If we wish to store the mst, we should insert the parent node and the current node into the mst array as a pair in this step.
+4. Now, we will iterate on all the unvisited adjacent nodes of the current node and will store each of their information in the specified triplet format i.e. (edge weight, node value, and parent node) in the priority queue.
+5. We will repeat steps 2, 3, and 4 using a loop until the priority queue becomes empty.
+6. Finally, the sum variable should store the sum of all the edge weights of the minimum spanning tree.
+
+## Code ->
+
+```cpp
+class Solution
+{
+public:
+    // Function to find sum of weights of edges of the Minimum Spanning Tree.
+    int spanningTree(int V, vector<vector<int>> adj[])
+    {
+        // Variable to store the sum of weights of the Minimum Spanning Tree.
+        int sum = 0;
+
+        // Priority Queue to store edges with their weights in ascending order.
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+
+        // Vector to keep track of visited nodes during the traversal.
+        vector<int> visited(V, 0);
+
+        // Initializing the algorithm by adding the starting node (0) with weight 0 to the priority queue.
+        pq.push({0, 0});
+
+        // Loop until the priority queue is not empty.
+        while (pq.size())
+        {
+            // Extracting the edge with the minimum weight from the priority queue.
+            int dist = pq.top().first; // Weight of the current edge.
+            int node = pq.top().second; // End vertex of the current edge.
+            pq.pop();
+
+            // Check if the current node is already visited, skip if it is.
+            if (visited[node])
+                continue;
+
+            // Mark the current node as visited.
+            visited[node] = 1;
+
+            // Add the weight of the current edge to the overall sum.
+            sum += dist;
+
+            // Iterate through the adjacency list of the current node.
+            for (int i = 0; i < adj[node].size(); i++)
+            {
+                // Extract the end vertex and weight of the adjacent edge.
+                int adjDist = adj[node][i][1]; // Weight of the adjacent edge.
+                int adjNode = adj[node][i][0]; // End vertex of the adjacent edge.
+
+                // Add the adjacent edge to the priority queue for further exploration.
+                pq.push({adjDist, adjNode});
+            }
+        }
+
+        // Return the sum of weights of the Minimum Spanning Tree.
+        return sum;
+    }
+};
+```
