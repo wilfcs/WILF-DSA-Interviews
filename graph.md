@@ -2670,3 +2670,168 @@ public:
     }
 };
 ```
+# [721. Accounts Merge](https://leetcode.com/problems/accounts-merge/description/)
+
+## Approach ->
+By far the toughest graph question so far...
+
+**Question Explanation:**
+- We are given a list of accounts where each account is represented by a list of strings.
+- The first element in each account is the name, and the remaining elements are emails associated with that account.
+- The goal is to merge accounts that belong to the same person. Two accounts belong to the same person if they share at least one common email.
+- After merging, return the accounts in the format where the first element is the name, and the rest are emails sorted in order.
+
+**Intuition:**
+- To merge accounts, we need to establish connections between them based on common emails.
+- We can use the Disjoint Set data structure (Union-Find) to efficiently manage these connections and find the ultimate parent of each account.
+
+**Approach:**
+1. **Data Structure Initialization:**
+   - Use Disjoint Set to keep track of connected components.
+   - Each account is a node in the Disjoint Set.
+
+2. **Union Operation:**
+   - Iterate through each account's emails.
+   - If an email is already present in the map, perform the union operation between the current account and the account to which the email belongs.
+   - This step establishes connections between accounts that share common emails.
+
+3. **Merging Accounts:**
+   - Iterate through the map of emails and find the ultimate parent for each account using Disjoint Set's find operation.
+   - Group emails based on their ultimate parent.
+
+4. **Sorting Emails and Creating Result:**
+   - Sort emails within each group.
+   - Create the final result in the required format.
+
+**Code Explanation:**
+- **DisjointSet Class:**
+  - Maintains the rank and parent vectors.
+  - Implements the findUltimateParent and unionByRank operations.
+
+- **Solution Class:**
+  - Initializes DisjointSet and a map to store email-index associations.
+  - Performs union operation and establishes connections between accounts.
+  - Creates groups of emails based on ultimate parents.
+  - Sorts emails within each group.
+  - Constructs the final result in the required format.
+
+## Code ->
+```cpp
+class DisjointSet {
+public:
+    // Vector to store the rank of each node
+    vector<int> rank;
+    // Vector to store the parent of each node
+    vector<int> parent;
+
+    // Constructor to initialize the Disjoint Set with 'n' nodes
+    DisjointSet(int n) {
+        // Initialize rank vector with zeros
+        rank.resize(n + 1, 0);
+        // Initialize parent vector with node indices
+        parent.resize(n + 1);
+        for (int i = 0; i <= n; i++) 
+            parent[i] = i;
+    }
+
+    // Function to find the ultimate parent of a node with path compression
+    int findUltimateParent(int node) {
+        // If the current node is its own parent, return the node
+        if (parent[node] == node) 
+            return node;
+        // Use path compression by updating the parent to the ultimate parent
+        return parent[node] = findUltimateParent(parent[node]);
+    }
+
+    // Function to perform union by rank operation
+    void unionByRank(int u, int v) {
+        // Find the ultimate parents of nodes 'u' and 'v'
+        int up_u = findUltimateParent(u);
+        int up_v = findUltimateParent(v);
+
+        // If they already belong to the same component, no need to union
+        if (up_u == up_v) 
+            return;
+
+        // Connect the smaller rank tree to the larger rank tree
+        if (rank[up_u] > rank[up_v]) 
+            parent[up_v] = up_u;
+        else if (rank[up_u] < rank[up_v]) 
+            parent[up_u] = up_v;
+        // If ranks are equal, connect any parent and increase the rank
+        else {
+            parent[up_u] = up_v;
+            rank[up_v]++;
+        }
+    }
+};
+
+class Solution {
+public:
+    vector<vector<string>> accountsMerge(vector<vector<string>>& accounts) {
+        // Get the number of accounts
+        int n = accounts.size();
+        // Initialize DisjointSet for managing connections
+        DisjointSet ds(n);
+        // Map to store email-index associations for union operations
+        unordered_map<string, int> mp;
+
+        // Iterate through each account
+        for(int i=0; i<accounts.size(); i++){
+            // Iterate through each email in the account
+            for(int j=1; j<accounts[i].size(); j++){
+                // Extract the email
+                string mail = accounts[i][j];
+                // Check if the email is already mapped to an index
+                if(mp.count(mail)) 
+                    // If yes, perform the union operation between the current account and the mapped account
+                    ds.unionByRank(i, mp[mail]);
+                else 
+                    // If no, map the email to the current account's index
+                    mp[mail] = i;
+            }
+        }
+
+        // Vector to store grouped emails based on ultimate parents
+        vector<vector<string>> mergedMail(n);
+
+        // Iterate through the map of emails
+        for(auto it: mp){
+            // Extract the email
+            string mail = it.first;
+            // Find the ultimate parent for the mapped account's index
+            int node = ds.findUltimateParent(it.second);
+            // Group the email with others under the ultimate parent
+            mergedMail[node].push_back(mail);
+        }
+
+        // Vector to store the final result
+        vector<vector<string>> ans;
+
+        // Iterate through grouped emails
+        for(int i=0; i<mergedMail.size(); i++){
+            // Skip empty groups
+            if(mergedMail[i].size()==0) continue;
+
+            // Sort emails within each group
+            sort(mergedMail[i].begin(), mergedMail[i].end());
+
+            // Vector to store the account information in the required format
+            vector<string> temp;
+            // Add the account name as the first element
+            temp.push_back(accounts[i][0]);
+            // Add sorted emails to the temp vector
+            for(auto a: mergedMail[i]) temp.push_back(a);
+
+            // Add the temp vector to the final result
+            ans.push_back(temp);
+        }
+
+        // Return the final result
+        return ans;
+    }
+};
+```
+Time Complexity: O(N+E) + O(E*4ɑ) + O(N*(ElogE + E)) where N = no. of indices or nodes and E = no. of emails. The first term is for visiting all the emails. The second term is for merging the accounts. And the third term is for sorting the emails and storing them in the answer array.
+
+Space Complexity: O(N)+ O(N) +O(2N) ~ O(N) where N = no. of nodes/indices. The first and second space is for the ‘mergedMail’ and the ‘ans’ array. The last term is for the parent and size array used inside the Disjoint set data structure.
