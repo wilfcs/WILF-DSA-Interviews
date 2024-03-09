@@ -2526,7 +2526,6 @@ public:
     }
 };
 
-
 // Main function
 class Solution {
 public:
@@ -2549,6 +2548,125 @@ public:
         }
 
         return ans;
+    }
+};
+```
+
+# [1319. Number of Operations to Make Network Connected](https://leetcode.com/problems/number-of-operations-to-make-network-connected/description/)
+
+## Approach ->
+Intuition:
+- The goal is to make the given graph connected by removing a minimal number of edges.
+- We cannot add random edges from outside, only remove edges and place them elsewhere in the graph.
+- To connect different components, we need to connect any node from one component to any node from another.
+- We aim to find the minimum number of edges to remove and place strategically to make the graph connected.
+
+Observations:
+1. Connecting Components: To connect two components, we connect any node from the first to any node from the second component.
+2. Minimum Edges: We need a minimum of (n - 1) edges to connect n components. eg-> We will return an ans of 3 if there are 4 components to connect.
+3. Extra Edges: Edges that can be assumed as removable, which, if used, could make the graph connected.
+4. Components and Extra Edges: If a graph has (n - 1) extra edges, we can make it connected and return n-1 as our answer.
+
+Approach:
+1. Extract all edge information in the form of pairs (u, v) and store it in an array.
+2. Iterate through the array, check ultimate parent equality using findUltimateParent() from Disjoint Set:
+   - If ultimate parents of u and v are the same, and u is obviously connected to v atq, then that means that we have an extra edge in the graph that we don't need. So increase the count of extra edges by 1.
+   - If different, apply union (unionBySize() or unionByRank()) on u and v to connect and shrink them.
+3. Count the number of components:
+   - Iterate over nodes, and for each node:
+     - If the node is its ultimate parent, increase the count of components by 1.
+4. Compare counts of extra edges and components:
+   - If extra edges count is greater or equal to the number of components - 1, return number of components - 1.
+   - Otherwise, return -1.
+
+## Code ->
+```cpp
+// DisjointSet class for implementing Union-Find operations
+class DisjointSet {
+public:
+    // Vector to store the rank of each node
+    vector<int> rank;
+    // Vector to store the parent of each node
+    vector<int> parent;
+
+    // Constructor to initialize the Disjoint Set with 'n' nodes
+    DisjointSet(int n) {
+        // Initialize rank vector with zeros
+        rank.resize(n + 1, 0);
+        // Initialize parent vector with node indices
+        parent.resize(n + 1);
+        for (int i = 0; i <= n; i++) 
+            parent[i] = i;
+    }
+
+    // Function to find the ultimate parent of a node with path compression
+    int findUltimateParent(int node) {
+        // If the current node is its own parent, return the node
+        if (parent[node] == node) 
+            return node;
+        // Use path compression by updating the parent to the ultimate parent
+        return parent[node] = findUltimateParent(parent[node]);
+    }
+
+    // Function to perform union by rank operation
+    void unionByRank(int u, int v) {
+        // Find the ultimate parents of nodes 'u' and 'v'
+        int up_u = findUltimateParent(u);
+        int up_v = findUltimateParent(v);
+
+        // If they already belong to the same component, no need to union
+        if (up_u == up_v) 
+            return;
+
+        // Connect the smaller rank tree to the larger rank tree
+        if (rank[up_u] > rank[up_v]) 
+            parent[up_v] = up_u;
+        else if (rank[up_u] < rank[up_v]) 
+            parent[up_u] = up_v;
+        // If ranks are equal, connect any parent and increase the rank
+        else {
+            parent[up_u] = up_v;
+            rank[up_v]++;
+        }
+    }
+};
+
+// Solution class for finding the minimum number of edges to make the graph connected
+class Solution {
+public:
+    int makeConnected(int n, vector<vector<int>>& connections) {
+        // Create an instance of the DisjointSet class
+        DisjointSet ds(n);
+
+        int cntExtras = 0;
+
+        // Iterate through the given connections
+        for(int i=0; i<connections.size(); i++){
+            int u = connections[i][0];
+            int v = connections[i][1];
+
+            // Check if the ultimate parents of 'u' and 'v' are the same
+            if(ds.findUltimateParent(u) == ds.findUltimateParent(v)) 
+                cntExtras++;  // Increment the count of extra-edges
+            else{
+                ds.unionByRank(u, v);  // Apply union operation to connect nodes 'u' and 'v'
+            }
+        }
+
+        int numOfComponents = 0;
+
+        // Count the number of components in the graph
+        for(int i=0; i<n; i++){
+            if(ds.parent[i]==i) numOfComponents++;
+        }
+
+        int ans = numOfComponents - 1;  // Calculate the minimum edges required to make the graph connected
+
+        // Check if the number of extra-edges is greater or equal to the required minimum edges
+        if(ans <= cntExtras) 
+            return ans;
+        else 
+            return -1;  // If not, return -1 as it is not possible to make the graph connected
     }
 };
 ```
