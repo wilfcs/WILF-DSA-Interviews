@@ -2188,7 +2188,7 @@ The maximum size of the priority queue can be E so after at most E iterations th
 Space Complexity: O(E) + O(V), where E = no. of edges and V = no. of vertices. O(E) occurs due to the size of the priority queue and O(V) due to the visited array. If we wish to get the mst, we need an extra O(V-1) space to store the edges of the most.
 
 
-# [Disjoint Set | Union by Rank | Union by Size | Path Compression](https://takeuforward.org/data-structure/disjoint-set-union-by-rank-union-by-size-path-compression-g-46/)
+# Disjoint Set | Union by Rank | Union by Size | Path Compression
 
 Read the extensive article [here](https://takeuforward.org/data-structure/disjoint-set-union-by-rank-union-by-size-path-compression-g-46/) if you don't understand the explanation below.
 
@@ -2250,6 +2250,7 @@ public:
     DisjointSet(int n) {
         // Initialize rank vector with zeros
         rank.resize(n + 1, 0);
+        parent.resize(n+1);
         // Initialize parent vector with node indices
         for (int i = 0; i <= n; i++) 
             parent[i] = i;
@@ -2345,3 +2346,126 @@ void unionBySize(int u, int v) {
     // The union operation is now complete
 }
 ```
+
+Time Complexity:  The time complexity is O(4 * alpha) which is very small and close to 1. So, we can consider 4 as a constant.
+
+# [Kruskal’s Algorithm – Minimum Spanning Tree](https://www.geeksforgeeks.org/problems/minimum-spanning-tree/1)
+
+## Approach ->
+
+We will be using Kruskal's algo to solve the MST problem.
+
+In Kruskal's algorithm, we'll use the Disjoint Set data structure, which has two important functions: `findUltimateParent()` (helps find the ultimate parent of a node) and `unionByRank()` or `unionBySize()` (used to connect two nodes in the graph).
+
+Here's a simpler breakdown of the steps:
+
+1. First, we need to collect the edge information from the given adjacency list. This information includes the weight of the edge (`wt`), the current node (`u`), and its adjacent node (`v`). We store these tuples in an array.
+
+2. Sort the array in ascending order based on edge weights. This sorting is crucial as it helps us process edges from the smallest to the largest weight.
+
+3. Iterate through the sorted edges. For each edge:
+   - Extract the nodes `u` and `v`.
+   - Check if the ultimate parents of both nodes are the same using `findUltimateParent()`.
+   - If the ultimate parents are the same, skip this edge as there's already a connection.
+   - If the ultimate parents are different, add the edge weight to the final result (`mstWt`) and perform the union operation (`unionByRank()` or `unionBySize()`) on nodes `u` and `v`.
+
+4. After processing all edges, the final result (`mstWt`) gives us the sum of weights in the Minimum Spanning Tree (MST).
+
+In simpler terms, Kruskal's algorithm builds the MST by considering edges in ascending order of weights. For each edge, it checks if connecting its nodes would create a cycle. If not, it adds the edge to the MST and updates the data structure accordingly. This process continues until all nodes are connected with the minimum possible total weight.
+
+## Code ->
+```cpp
+class DisjointSet {
+    // Vector to store the rank of each node
+    vector<int> rank;
+    // Vector to store the parent of each node
+    vector<int> parent;
+
+public:
+    // Constructor to initialize the Disjoint Set with 'n' nodes
+    DisjointSet(int n) {
+        // Initialize rank vector with zeros
+        rank.resize(n + 1, 0);
+        // Initialize parent vector with node indices
+        parent.resize(n + 1);
+        for (int i = 0; i <= n; i++) 
+            parent[i] = i;
+    }
+
+    // Function to find the ultimate parent of a node with path compression
+    int findUltimateParent(int node) {
+        // If the current node is its own parent, return the node
+        if (parent[node] == node) 
+            return node;
+        // Use path compression by updating the parent to the ultimate parent
+        return parent[node] = findUltimateParent(parent[node]);
+    }
+
+    // Function to perform union by rank operation
+    void unionByRank(int u, int v) {
+        // Find the ultimate parents of nodes 'u' and 'v'
+        int up_u = findUltimateParent(u);
+        int up_v = findUltimateParent(v);
+
+        // If they already belong to the same component, no need to union
+        if (up_u == up_v) 
+            return;
+
+        // Connect the smaller rank tree to the larger rank tree
+        if (rank[up_u] > rank[up_v]) 
+            parent[up_v] = up_u;
+        else if (rank[up_u] < rank[up_v]) 
+            parent[up_u] = up_v;
+        // If ranks are equal, connect any parent and increase the rank
+        else {
+            parent[up_u] = up_v;
+            rank[up_v]++;
+        }
+    }
+};
+
+class Solution {
+public:
+    // Function to find the sum of weights of edges of the Minimum Spanning Tree.
+    int spanningTree(int V, vector<vector<int>> adj[]) {
+        // Vector to store edges with weights and corresponding nodes
+        vector<pair<int, pair<int, int>>> edges;
+        
+        // Populate the edges vector with weights and node pairs
+        for(int i = 0; i < V; i++) {
+            for(int j = 0; j < adj[i].size(); j++) {
+                int adjNode = adj[i][j][0];
+                int wt = adj[i][j][1];
+                int node = i;
+                
+                edges.push_back({wt, {node, adjNode}});
+            }
+        }
+        
+        // Initialize Disjoint Set with 'V' nodes
+        DisjointSet ds(V);
+        
+        // Sort edges by weight in ascending order
+        sort(edges.begin(), edges.end());
+        
+        int mstW = 0; // Variable to store the total weight of the Minimum Spanning Tree
+        
+        // Iterate through sorted edges and build the Minimum Spanning Tree
+        for(int i = 0; i < edges.size(); i++) {
+            int wt = edges[i].first;
+            int u = edges[i].second.first;
+            int v = edges[i].second.second;
+            
+            // Check if including the edge forms a cycle in the MST
+            if(ds.findUltimateParent(u) != ds.findUltimateParent(v)) {
+                // Include the edge and update the Disjoint Set
+                mstW += wt;
+                ds.unionByRank(u, v);
+            }
+        }
+        
+        return mstW; // Return the total weight of the Minimum Spanning Tree
+    }
+};
+```
+
