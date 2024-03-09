@@ -2181,3 +2181,167 @@ public:
     }
 };
 ```
+
+Time Complexity: O(E*logE) + O(E*logE)~ O(E*logE), where E = no. of given edges.
+The maximum size of the priority queue can be E so after at most E iterations the priority queue will be empty and the loop will end. Inside the loop, there is a pop operation that will take logE time. This will result in the first O(E*logE) time complexity. Now, inside that loop, for every node, we need to traverse all its adjacent nodes where the number of nodes can be at most E. If we find any node unvisited, we will perform a push operation and for that, we need a logE time complexity. So this will result in the second O(E*logE). 
+
+Space Complexity: O(E) + O(V), where E = no. of edges and V = no. of vertices. O(E) occurs due to the size of the priority queue and O(V) due to the visited array. If we wish to get the mst, we need an extra O(V-1) space to store the edges of the most.
+
+
+# [Disjoint Set | Union by Rank | Union by Size | Path Compression](https://takeuforward.org/data-structure/disjoint-set-union-by-rank-union-by-size-path-compression-g-46/)
+
+Read the extensive article [here](https://takeuforward.org/data-structure/disjoint-set-union-by-rank-union-by-size-path-compression-g-46/) if you don't understand the explanation below.
+
+**Question Summary:**
+
+The article discusses the Disjoint Set data structure, a crucial topic in graph theory. The focus is on dynamic graphs, where the structure changes over time. The question involves determining if two nodes, 1 and 5, are in the same component of an undirected graph.
+
+Question: Given two components of an undirected graph
+
+![Diagram](images/disjointSet.webp)
+
+The question is whether node 1 and node 5 are in the same component or not.
+
+**Intuition:**
+
+Traditional approaches like DFS or BFS may take O(N+E) time, but Disjoint Set can provide a constant-time solution. The Disjoint Set data structure is particularly useful for dynamic graphs, allowing efficient operations after each graph modification.
+
+**Approach:**
+
+1. **Functionalities of Disjoint Set:**
+   - Finding the ultimate parent for a node (`findUltimateParent()`).
+   - Union operation, which involves connecting two nodes.
+
+2. **Union by Rank:**
+   - **Rank:** Distance from the furthest leaf node. The ultimate parent will have the highest rank.
+   - **Ultimate Parent:** The topmost/root node.
+   - Union by rank optimizes the union operation by considering ranks. Smaller rank trees connect to larger rank trees. Equal ranks involve increasing one rank.
+
+3. **`findUltimateParent()` Function:**
+   - Finds the ultimate parent for a given node.
+   - Employs path compression to optimize by connecting each node in a path to its ultimate parent.
+
+4. **Path Compression:**
+   - Connects each node in a path to its ultimate parent.
+   - Reduces time complexity by eliminating the need to traverse the entire path.
+
+5. **Code Implementation:**
+   - `DisjointSet` class with `rank` and `parent` vectors.
+   - `findUltimateParent()` uses path compression.
+   - `unionByRank()` implements union by rank, considering ranks and ultimate parents.
+
+Look at the code to understand everything->
+
+## Code ->
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+// Implementation of the Disjoint Set data structure
+class DisjointSet {
+    // Vector to store the rank of each node
+    vector<int> rank;
+    // Vector to store the parent of each node
+    vector<int> parent;
+
+public:
+    // Constructor to initialize the Disjoint Set with 'n' nodes
+    DisjointSet(int n) {
+        // Initialize rank vector with zeros
+        rank.resize(n + 1, 0);
+        // Initialize parent vector with node indices
+        for (int i = 0; i <= n; i++) 
+            parent[i] = i;
+    }
+
+    // Function to find the ultimate parent of a node with path compression
+    int findUltimateParent(int node) {
+        // If the current node is its own parent, return the node
+        if (parent[node] == node) 
+            return node;
+        // Use path compression by updating the parent to the ultimate parent
+        return parent[node] = findUltimateParent(parent[node]);
+    }
+
+    // Function to perform union by rank operation
+    void unionByRank(int u, int v) {
+        // Find the ultimate parents of nodes 'u' and 'v'
+        int up_u = findUltimateParent(u);
+        int up_v = findUltimateParent(v);
+
+        // If they already belong to the same component, no need to union
+        if (up_u == up_v) 
+            return;
+
+        // Connect the smaller rank tree to the larger rank tree
+        if (rank[up_u] > rank[up_v]) 
+            parent[up_v] = up_u;
+        else if (rank[up_u] < rank[up_v]) 
+            parent[up_u] = up_v;
+        // If ranks are equal, connect any parent and increase the rank
+        else {
+            parent[up_u] = up_v;
+            rank[up_v]++;
+        }
+    }
+};
+
+// Main function for testing the Disjoint Set implementation
+int main() {
+    // Create a Disjoint Set with 7 nodes
+    DisjointSet ds(7);
+
+    // Perform union by rank operations on sample edges
+    ds.unionByRank(1, 2);
+    ds.unionByRank(2, 3);
+    ds.unionByRank(4, 5);
+    ds.unionByRank(6, 7);
+    ds.unionByRank(5, 6);
+
+    // Check if nodes 3 and 7 belong to the same component
+    if (ds.findUltimateParent(3) == ds.findUltimateParent(7)) 
+        cout << "Same" << endl;
+    else 
+        cout << "Not Same" << endl;
+
+    // Perform another union and check again
+    ds.unionByRank(3, 7);
+
+    if (ds.findUltimateParent(3) == ds.findUltimateParent(7)) 
+        cout << "Same" << endl;
+    else 
+        cout << "Not Same" << endl;
+
+    return 0;
+}
+```
+
+Can we not use rank and use size to solve the same proble? Yes. Here is the code snippet of the unionBySize function. Rest everything else will be the same.
+
+## Code ->
+```cpp
+void unionBySize(int u, int v) {
+    // Find the ultimate parents of nodes 'u' and 'v'
+    int up_u = findUltimateParent(u);
+    int up_v = findUltimateParent(v);
+
+    // If nodes 'u' and 'v' already belong to the same component, no union is needed
+    if (up_u == up_v)
+        return;
+
+    // Connect the smaller size tree to the larger size tree
+    if (size[up_u] < size[up_v]) {
+        // Update the parent of 'u' to 'v', as 'v' has a larger size
+        parent[up_u] = up_v;
+        // Update the size of 'v' by adding the size of 'u'
+        size[up_v] += size[up_u];
+    } else {
+        // Update the parent of 'v' to 'u', as 'u' has a larger size or sizes are equal
+        parent[up_v] = up_u;
+        // Update the size of 'u' by adding the size of 'v'
+        size[up_u] += size[up_v];
+    }
+    // The union operation is now complete
+}
+```
