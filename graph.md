@@ -2469,3 +2469,86 @@ public:
 };
 ```
 
+# [547. Number of Provinces - Using Disjoint Set](https://leetcode.com/problems/number-of-provinces/description/)
+
+## Approach ->
+Very easy, use the same disjoint set class to find the ultimate parents. After you find them, just iterate in the parents vector and see if parent[i]==i itself, reflecting that i is the ultimate parent. The number of UP is the ans basically. 
+Note: Don't forget to bring parent under public in our DisjointSet class.
+
+## Code ->
+```cpp
+class DisjointSet {
+public:
+     // Vector to store the rank of each node
+    vector<int> rank;
+    // Vector to store the parent of each node
+    vector<int> parent;
+
+    // Constructor to initialize the Disjoint Set with 'n' nodes
+    DisjointSet(int n) {
+        // Initialize rank vector with zeros
+        rank.resize(n + 1, 0);
+        // Initialize parent vector with node indices
+        parent.resize(n + 1);
+        for (int i = 0; i <= n; i++) 
+            parent[i] = i;
+    }
+
+    // Function to find the ultimate parent of a node with path compression
+    int findUltimateParent(int node) {
+        // If the current node is its own parent, return the node
+        if (parent[node] == node) 
+            return node;
+        // Use path compression by updating the parent to the ultimate parent
+        return parent[node] = findUltimateParent(parent[node]);
+    }
+
+    // Function to perform union by rank operation
+    void unionByRank(int u, int v) {
+        // Find the ultimate parents of nodes 'u' and 'v'
+        int up_u = findUltimateParent(u);
+        int up_v = findUltimateParent(v);
+
+        // If they already belong to the same component, no need to union
+        if (up_u == up_v) 
+            return;
+
+        // Connect the smaller rank tree to the larger rank tree
+        if (rank[up_u] > rank[up_v]) 
+            parent[up_v] = up_u;
+        else if (rank[up_u] < rank[up_v]) 
+            parent[up_u] = up_v;
+        // If ranks are equal, connect any parent and increase the rank
+        else {
+            parent[up_u] = up_v;
+            rank[up_v]++;
+        }
+    }
+};
+
+
+// Main function
+class Solution {
+public:
+    int findCircleNum(vector<vector<int>>& isConnected) {
+        int n = isConnected.size();
+        DisjointSet ds(n);
+
+        // Iterate through the adjacency matrix and perform union for connected nodes
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+                if(isConnected[i][j]) ds.unionByRank(i, j);
+            }
+        }
+
+        int ans = 0;
+
+        // Count the number of unique parent nodes, each representing a connected component
+        for(int i=0; i<n; i++){
+            if(ds.parent[i]==i) ans++;
+        }
+
+        return ans;
+    }
+};
+```
