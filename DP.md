@@ -203,7 +203,7 @@ int frogJump(int n, vector<int> &heights)
 Time Complexity: O(N)
 Space Complexity: O(1)
 
-# [ Minimal Cost](https://www.codingninjas.com/studio/problems/minimal-cost_8180930?utm_source=striver&utm_medium=website&utm_campaign=a_zcoursetuf&leftPanelTabValue=PROBLEM)
+# [Minimal Cost](https://www.codingninjas.com/studio/problems/minimal-cost_8180930?utm_source=striver&utm_medium=website&utm_campaign=a_zcoursetuf&leftPanelTabValue=PROBLEM)
 This question is exactly same as last question but in the last q we could have moved 2 steps, in this question we can move k steps
 
 ## Codes
@@ -265,4 +265,80 @@ int minimizeCost(int n, int k, vector<int> &height){
     }
     return dp[n - 1]; // The result is stored in the last element of dp
 }
+```
+
+# [198. House Robber](https://leetcode.com/problems/house-robber/description/)
+
+## Codes->
+1. 
+```cpp
+class Solution {
+public:
+    int helper(vector<int> &nums, int n, vector<int> &dp){
+        if(n<0) return 0;
+        if(n==0) return nums[0];
+
+        if(dp[n]!=-1) return dp[n];
+
+        int pick = nums[n] + helper(nums, n-2, dp);
+        int notPick = 0 + helper(nums, n-1, dp);
+
+        return dp[n] = max(pick, notPick);
+    }
+    int rob(vector<int>& nums) {
+        int n = nums.size()-1;
+        vector<int> dp(n+1, -1);
+
+        return helper(nums, n, dp);
+    }
+};
+```
+
+2. 
+```cpp
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> dp(n+1, -1);
+
+        dp[0] = nums[0];
+
+        for(int i=1; i<n; i++){
+            int pick = nums[i];
+            if(i>1) pick = nums[i] + dp[i-2];
+            int notPick = 0 + dp[i-1];
+
+            dp[i] = max(pick, notPick);
+        }
+
+        return dp[n-1];
+    }
+};
+```
+
+3. 
+```cpp
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        int n = nums.size();
+
+        int prev1 = nums[0];
+        int prev2 = 0;
+
+        for(int i=1; i<n; i++){
+            int pick = nums[i];
+            if(i>1) pick = nums[i] + prev2;
+            int notPick = 0 + prev1;
+
+            int curr = max(pick, notPick);
+
+            prev2 = prev1;
+            prev1 = curr;
+        }
+
+        return prev1;
+    }
+};
 ```
