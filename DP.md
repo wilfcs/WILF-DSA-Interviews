@@ -385,3 +385,198 @@ public:
     }
 };
 ```
+
+# [Ninja’s Training](https://www.codingninjas.com/studio/problems/ninja%E2%80%99s-training_3621003?utm_source=striver&utm_medium=website&utm_campaign=a_zcoursetuf&leftPanelTabValue=PROBLEM)
+
+## Approach ->
+Now we have stepped our foot in the relms of 2D/3D DP and DP on Grids problems. 
+The problem involves finding the maximum merit points a ninja can earn over 'N' days, where each day offers three activities with associated merit points.
+The constraint is that the same activity cannot be performed on two consecutive days.
+
+For example ->
+
+![Eg.](images/ninja-training.jpg)
+
+If we pick 50 on day 1 then we cannot pick 100 on day 2 because these are the same activites. So we will pick 10 on day 1 and 100 on day 2. Ans - 110.
+
+Recursive Approach:
+
+Express the Problem in Terms of Indexes:
+
+Define a recursive function with parameters 'day' and 'last,' where day represents the row and last represents the column i.e. the particular activity we should avoid the next day. 
+
+Try Out All Possible Choices at a Given Index:
+
+For each day, consider all three activities, excluding the activity performed on the previous day.
+Recursively call the function for the next day with the chosen activity.
+
+Take the Maximum of All Choices:
+
+Return the maximum merit points among all the choices for the current day.
+
+Then apply memoisation, tabulation and space optimization as you go...
+
+## Codes
+1. 
+```cpp
+#include <bits/stdc++.h>
+
+int helper(int day, int last, vector<vector<int>> &points, vector<vector<int>> &dp){
+   // Base case: if it's the first day, return the maximum merit point for any activity
+    if (day == 0) {
+        int maxi = 0;
+        for (int i = 0; i < 3; i++) {
+            if (last != i)
+                maxi = max(maxi, points[day][i]);
+        }
+        return maxi;
+    }
+
+    // Check if the result for the current day and last activity is already calculated
+    if (dp[day][last] != -1) return dp[day][last];
+
+    int maxi = 0;
+    // Iterate over activities for the current day
+    for (int i = 0; i < 3; i++) {
+        // Ensure the same activity is not performed on two consecutive days
+        if (last != i) {
+            // Calculate the merit points for the current day and update the maximum
+            int point = points[day][i] + helper(day - 1, i, points, dp);
+            maxi = max(maxi, point);
+        }     
+    }
+
+    // Memoize the result by storing it in the dp array
+    return dp[day][last] = maxi;
+} 
+
+
+int ninjaTraining(int n, vector<vector<int>> &points)
+{
+    // Write your code here.
+    vector<vector<int>> dp(n, vector<int>(4, -1));
+    // Notice how we passed 3 insead of -1 at the place of last
+    // This is because dp is checking for dp[day][last] and if we..
+    // pass -1 then segmentation fault will occur.
+    return helper(n-1, 3, points, dp);
+}
+```
+Time Complexity: O(N*4*3)
+Space Complexity: O(N) + O(N*4)
+
+2. 
+```cpp
+#include <bits/stdc++.h>
+
+int ninjaTraining(int n, vector<vector<int>> &points)
+{
+    // Initialize a 2D dp array with dimensions (n x 4) for dynamic programming
+    // dp[i][j] represents the maximum merit points up to day 'i' with the last activity as 'j'
+    vector<vector<int>> dp(n, vector<int>(4, -1));
+
+    // Initialize base cases for the first day (day 0)
+    // Preparing the initial values of dp table,
+    // before the main dp loop, where we consider subsequent days.
+    dp[0][0] = max(points[0][1], points[0][2]);
+    dp[0][1] = max(points[0][0], points[0][2]);
+    dp[0][2] = max(points[0][0], points[0][1]);
+    dp[0][3] = max(points[0][0], max(points[0][1], points[0][2]));
+
+    // Iterate over the days, starting from day 1
+    for(int day = 1; day < n; day++) {
+        // Notice how 'last' is iterated up to 4 to match the size of the dp array
+        for(int last = 0; last < 4; last++) {
+            // Initialize the merit points for the current day and last activity
+            dp[day][last] = 0;
+            
+            // Iterate over the possible activities for the current day
+            for(int i = 0; i < 3; i++) {
+                // Avoid choosing the same activity as the last day
+                if(last != i) {
+                    // Calculate the merit points for the current day and update dp array
+                    int point = points[day][i] + dp[day-1][i];
+                    dp[day][last] = max(dp[day][last], point);
+                }
+            }
+        }
+    }
+
+    // Return the maximum merit points for the last day with any activity
+    return dp[n-1][3];
+}
+```
+Time Complexity: O(N*4*3)
+
+Reason: There are three nested loops
+
+Space Complexity: O(N*4)
+
+We have eleminated the recursion stack space from the SC
+
+3. 
+The space optimization technique in this dynamic programming solution involves only keeping track of the information needed for the current day and the previous day, instead of storing the entire 2D array.
+
+### Algorithm / Intuition:
+
+1. **Original Dynamic Programming Equation:**
+   - The original equation to update the dp array is:
+     ```cpp
+     dp[day][last] = max(dp[day][last], points[day][task] + dp[day-1][task]);
+     ```
+   - It calculates the maximum merit points for the current day and the last activity based on the merit points of the current activity and the merit points accumulated up to the previous day for different activities.
+
+2. **Space Optimization:**
+   - Instead of storing the entire 2D array 'dp' of size N*4, we use two 1D arrays 'prev' and 'temp' each of size 4.
+   - 'prev' stores the maximum merit points up to the previous day.
+   - 'temp' is a dummy array used to calculate the next row's values.
+   - We iterate over the activities and update 'temp' based on the current day's activities and 'prev'.
+
+3. **Update for Each Day:**
+   - As we move to the next day, 'temp' becomes 'prev' for the next step.
+   - This process is repeated for each day until we reach the last day.
+   - At the end of the iterations, 'prev[3]' contains the maximum merit points for the last day with any activity.
+
+### Code:
+```cpp
+#include <bits/stdc++.h>
+
+int ninjaTraining(int n, vector<vector<int>> &points)
+{
+    // Initialize a 1D array 'prev' to store the maximum merit points up to the previous day
+    vector<int> prev(n, -1);
+
+    // Initialize base cases for the first day (day 0)
+    prev[0] = max(points[0][1], points[0][2]);
+    prev[1] = max(points[0][0], points[0][2]);
+    prev[2] = max(points[0][0], points[0][1]);
+    prev[3] = max(points[0][0], max(points[0][1], points[0][2]));
+
+    // Iterate over the days, starting from day 1
+    for(int day = 1; day < n; day++) {
+        vector<int> temp(4, -1);
+
+        for(int last = 0; last < 4; last++) {
+            temp[last] = 0;
+
+            // Iterate over the possible activities for the current day
+            for(int i = 0; i < 3; i++) {
+                if(last != i) {
+                    // Calculate the merit points for the current day and update 'temp' array
+                    int point = points[day][i] + prev[i];
+                    temp[last] = max(temp[last], point);
+                }
+            }
+        }
+
+        // Update 'prev' array with the values from 'temp'
+        prev = temp;
+    }
+
+    // Return the maximum merit points for the last day with any activity
+    return prev[3];
+}
+```
+
+### Complexity Analysis:
+- Time Complexity: O(N) where N is the number of days.
+- Space Complexity: O(1) additional space used for 'prev' and 'temp' arrays.
