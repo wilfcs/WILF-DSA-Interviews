@@ -850,3 +850,107 @@ public:
     }
 };
 ```
+
+# [120. Triangle](https://leetcode.com/problems/triangle/description/)
+
+## Approach ->
+Very similar to the last question but the only mistake you might do in this is take the size of the dp array wrong. This is not a problem where the size of the grid is n*n. Here the rows are constantly changing with +1.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int helper(vector<vector<int>>& triangle, vector<vector<int>>& dp, int i, int j, int m){
+        // no need of outside the bounds case
+        if(i==m) return triangle[i][j];
+        if(dp[i][j]!=-1) return dp[i][j];
+
+        int down = helper(triangle, dp, i+1, j, m);
+        int downRight = helper(triangle, dp, i+1, j+1, m);
+
+        return dp[i][j] = triangle[i][j] + min(down, downRight);
+    }
+    int minimumTotal(vector<vector<int>>& triangle) {
+        int m = triangle.size();
+        // notice the size here
+        vector<vector<int>> dp(m, vector<int>(m, -1));
+
+        return helper(triangle, dp, 0, 0, m-1);
+    }
+};
+```
+
+2. 
+Now there is a twist here. In the memo approach, this was the base case -> if(i==m) return triangle[i][j];
+
+So how many base cases did this code run? ans -> m base cases. Because we are comparing i with m i.e. the last row of the triangle and the last row will have m elements. So in our tabulation base case we assign our dp[m-1] with all the elements at the bottom of the triangle. 
+
+One more thing to notice in all the questions above was that we go from n-1 to 0 in our recurance relation in memoization approaches but we went from 1 to n-1 in our tabulation approach. But in this q we are going from 0 to m-1 in our memoization approach so we will be going from m-2 to 0 in our tabulation approach. 
+
+```cpp
+class Solution {
+public:
+    // Main function to find the minimum path sum in the triangle
+    int minimumTotal(vector<vector<int>>& triangle) {
+        int m = triangle.size();  // Number of rows in the triangle
+        vector<vector<int>> dp(m, vector<int>(m, -1));  // Memoization table
+
+        // Initialize the last row of the dp array with the values of the last row in the triangle
+        for (int i = m - 1; i >= 0; i--) {
+            dp[m - 1][i] = triangle[m - 1][i];
+        }
+
+        // Iterate from the second-to-last row to the first row
+        for (int i = m - 2; i >= 0; i--) {
+            // j will run from i because total columns in any row == row number
+            for (int j = i; j >= 0; j--) {
+                // Calculate the minimum path sum by considering the two possible moves
+                int down = dp[i + 1][j];
+                int downRight = dp[i + 1][j + 1];
+
+                // Update the dp array with the minimum path sum for the current element
+                dp[i][j] = triangle[i][j] + min(down, downRight);
+            }
+        }
+
+        // The top of the dp array now contains the minimum path sum
+        // Note how we returned dp[0][0]. Everything is in reverse. Pretty easy right!
+        return dp[0][0];
+    }
+};
+```
+3. 
+```cpp
+class Solution {
+public:
+    // Main function to find the minimum path sum in the triangle
+    int minimumTotal(vector<vector<int>>& triangle) {
+        int m = triangle.size();  // Number of rows in the triangle
+        vector<int> next(m, -1);  // Temporary array to store the minimum path sums for the next row
+
+        // Initialize the last row of the temporary array with the values of the last row in the triangle
+        for (int i = m - 1; i >= 0; i--) {
+            next[i] = triangle[m - 1][i];
+        }
+
+        // Iterate from the second-to-last row to the first row
+        for (int i = m - 2; i >= 0; i--) {
+            vector<int> temp(m, -1);  // Temporary array to store the updated minimum path sums for the current row
+            // j will run from i because the total columns in any row == row number
+            for (int j = i; j >= 0; j--) {
+                // Calculate the minimum path sum by considering the two possible moves
+                int down = next[j];
+                int downRight = next[j + 1];
+
+                // Update the temporary array with the minimum path sum for the current element
+                temp[j] = triangle[i][j] + min(down, downRight);
+            }
+            next = temp;  // Update the next array with the values calculated for the current row
+        }
+
+        // The top of the temporary array now contains the minimum path sum
+        // Note how we returned next[0]. Everything is in reverse. Pretty easy right!
+        return next[0];
+    }
+};
+```
