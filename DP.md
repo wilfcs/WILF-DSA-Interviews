@@ -577,6 +577,23 @@ int ninjaTraining(int n, vector<vector<int>> &points)
 }
 ```
 
+The only thing to keep in mind here is that wherever we have to replace the previous values we use prev vector and wherever we are dealing in the current value we are using the temp vector.
+eg :
+
+Replaced
+
+```cpp
+int point = points[day][i] + dp[day-1][i];
+dp[day][last] = max(dp[day][last], point);
+```
+
+With
+
+```cpp
+int point = points[day][i] + prev[i];
+temp[last] = max(temp[last], point);
+```
+
 ### Complexity Analysis:
 - Time Complexity: O(N) where N is the number of days.
 - Space Complexity: O(1) additional space used for 'prev' and 'temp' arrays.
