@@ -342,3 +342,46 @@ public:
     }
 };
 ```
+
+# [213. House Robber II](https://leetcode.com/problems/house-robber-ii/description/)
+
+## Approach ->
+The only difference in this q from the last one is that the array is circular. That tells us that we can either include the last index elem or the first index elem in our answer. So basically make two temp vectors by removing first and the last elements from nums and pass it in our function. Then return the max result.
+
+## Code ->
+```cpp
+class Solution {
+public:
+    int helper(vector<int>& nums){
+        int n = nums.size();
+        int prev1 = nums[0];
+        int prev2 = 0;
+
+        for(int i=1; i<n; i++){
+            int pick = nums[i];
+            if(i>1) pick = nums[i] + prev2;
+            int notPick = 0 + prev1;
+
+            int curr = max(pick, notPick);
+
+            prev2 = prev1;
+            prev1 = curr;
+        }
+
+        return prev1;
+    }
+    int rob(vector<int>& nums) {
+        // Don't forget to mention this base condition during interview
+        // These are the small things that an interviewer looks for
+        if(nums.size()==1) return nums[0];
+        vector<int> temp1, temp2;
+        for(int i=0; i<nums.size(); i++){
+            if(i!=0) temp1.push_back(nums[i]);
+            if(i!=nums.size()-1) temp2.push_back(nums[i]);
+        }
+
+        return max(helper(temp1), helper(temp2));
+        
+    }
+};
+```
