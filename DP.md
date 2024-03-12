@@ -954,3 +954,125 @@ public:
     }
 };
 ```
+
+In the start we had a fixed starting point and a fixed ending point. In the last question we had a fixed starting point and a variable ending point. What if we have a variable starting point and a variable ending point? Let's see...
+
+# [931. Minimum Falling Path Sum](https://leetcode.com/problems/minimum-falling-path-sum/description/)
+
+## Approach ->
+Take the maximum of all choices:
+As we have to find the minimum path sum of all the possible unique paths, we will return the minimum of all the choices we have from the bottom row.
+
+## Code ->
+1. 
+```cpp
+class Solution {
+public:
+    int helper(vector<vector<int>>& matrix, int m, int n, vector<vector<int>>& dp){
+        // Base case: If the column index is out of bounds, return INT_MAX
+        if(n<0 || n>=dp[0].size()) return INT_MAX;
+        // Base case: If we are at the first row, return the value in the matrix
+        if(m==0) return matrix[m][n];
+
+        if(dp[m][n]!=-1) return dp[m][n];
+
+        // Calculate the minimum falling path sum by exploring three possible moves
+        int top = helper(matrix, m-1, n, dp);
+        int topLeft = helper(matrix, m-1, n-1, dp);
+        int topRight = helper(matrix, m-1, n+1, dp);
+
+        return dp[m][n] = matrix[m][n] + min(top, min(topLeft, topRight));
+    }
+    int minFallingPathSum(vector<vector<int>>& matrix) {
+        int m = matrix.size(), n = matrix[0].size();
+        vector<vector<int>> dp(m, vector<int>(n, -1));
+        
+        int ans = INT_MAX;
+
+        // Answer will be the min path bw each element in the bottom row.
+        // Iterate over each element in the bottom row to find the minimum path sum
+        for(int i=0; i<n; i++){
+            ans = min(ans, helper(matrix, m-1, i, dp));
+        }
+
+        return ans;
+    }
+};
+```
+But this approach will still give us TLE. TC of recursion ->  O(3 ^ n) because we have 3 options for n rows. Tc after memoization-> O(n*n)
+
+Space Complexity: O(N) + O(N*M)
+2. 
+```cpp
+class Solution {
+public:
+    int minFallingPathSum(vector<vector<int>>& matrix) {
+        int m = matrix.size(), n = matrix[0].size();
+        vector<vector<int>> dp(m, vector<int>(n, 0));
+
+        for(int j=0; j<n; j++) dp[0][j] = matrix[0][j];
+
+        for(int i=1; i<m; i++){
+            for(int j=0; j<n; j++){
+                int top=INT_MAX, topLeft=INT_MAX, topRight=INT_MAX;
+                if(i>0) top = dp[i-1][j];
+                if(i>0 && j>0) topLeft = dp[i-1][j-1];
+                if(i>0 && j+1<m)topRight = dp[i-1][j+1];
+
+                dp[i][j] = matrix[i][j] + min(top, min(topLeft, topRight));
+            }
+        }
+        
+        // IMPORTANT: We don't call any function for the bottom most row
+        // Instead we convert the function call here to tabulation as well
+        int ans = INT_MAX;
+
+        for(int i=0; i<n; i++){
+            ans = min(ans, dp[m-1][i]);
+        }
+
+        return ans;
+
+    }
+};
+```
+Time Complexity: O(N*M)
+
+Space Complexity: O(N*M)
+
+3. Easy Peasy - same as always 
+```cpp
+class Solution {
+public:
+    int minFallingPathSum(vector<vector<int>>& matrix) {
+        int m = matrix.size(), n = matrix[0].size();
+        vector<int> prev(m, -1);
+
+        for(int j=0; j<n; j++) prev[j] = matrix[0][j];
+
+        for(int i=1; i<m; i++){
+            vector<int> temp(m, -1);
+            for(int j=0; j<n; j++){
+                int top=INT_MAX, topLeft=INT_MAX, topRight=INT_MAX;
+                if(i>0) top = prev[j];
+                if(i>0 && j>0) topLeft = prev[j-1];
+                if(i>0 && j+1<m)topRight = prev[j+1];
+
+                temp[j] = matrix[i][j] + min(top, min(topLeft, topRight));
+            }
+            prev = temp;
+        }
+        
+
+        // Even we convert the function call here to tabulation
+        int ans = INT_MAX;
+
+        for(int i=0; i<n; i++){
+            ans = min(ans, prev[i]);
+        }
+
+        return ans;
+
+    }
+};
+```
