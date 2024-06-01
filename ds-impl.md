@@ -432,3 +432,99 @@ int main() {
     return 0;
 }
 ```
+
+# Stack impl using LL
+## Code ->
+```cpp
+#include <iostream>
+using namespace std;
+
+// Node class to represent each element in the stack
+class Node {
+public:
+    int data;
+    Node* next;
+
+    // Constructor to initialize node with a specific value
+    Node(int data) {
+        this->data = data;
+        next = NULL;
+    }
+};
+
+// Stack class to manage stack operations
+class Stack {
+private:
+    Node* top; // Pointer to the top node of the stack
+
+public:
+    // Constructor to initialize stack
+    Stack() {
+        top = NULL;
+    }
+
+    // Function to add an element to the stack
+    void push(int x) {
+        Node* newNode = new Node(x);
+        newNode->next = top;
+        top = newNode;
+    }
+
+    // Function to remove the top element from the stack
+    int pop() {
+        if (isEmpty()) {
+            cout << "Underflow: Stack is empty" << endl;
+            return -1;
+        }
+        Node* temp = top;
+        top = top->next;
+        int popped = temp->data;
+        delete temp;
+        return popped;
+    }
+
+    // Function to return the top element of the stack
+    int peek() {
+        if (isEmpty()) {
+            cout << "Stack is empty" << endl;
+            return -1;
+        }
+        return top->data;
+    }
+
+    // Function to check if the stack is empty
+    bool isEmpty() {
+        return top == NULL;
+    }
+
+    // Function to return the size of the stack
+    int size() {
+        int count = 0;
+        Node* temp = top;
+        while (temp != NULL) {
+            count++;
+            temp = temp->next;
+        }
+        return count;
+    }
+};
+
+int main() {
+    Stack stack;
+
+    stack.push(1);
+    stack.push(2);
+    stack.push(3);
+
+    cout << "Top element is " << stack.peek() << endl;
+    cout << "Stack size is " << stack.size() << endl;
+
+    stack.pop();
+    stack.pop();
+    stack.pop();
+
+    stack.pop(); // Trying to pop from an empty stack
+
+    return 0;
+}
+```
