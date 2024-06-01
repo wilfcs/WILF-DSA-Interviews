@@ -256,3 +256,91 @@ int main() {
     return 0;
 }
 ```
+
+# Stack impl.
+## Code ->
+```cpp
+#include <iostream>
+using namespace std;
+
+class Stack {
+private:
+    int* arr;
+    int top;
+    int capacity;
+
+public:
+    // Constructor to initialize stack
+    Stack(int size) {
+        arr = new int[size];
+        capacity = size;
+        top = -1;
+    }
+
+    // Destructor to free memory allocated for the stack
+    ~Stack() {
+        delete[] arr;
+    }
+
+    // Function to add an element to the stack
+    void push(int x) {
+        if (isFull()) {
+            cout << "Overflow: Stack is full" << endl;
+            return;
+        }
+        arr[++top] = x;
+    }
+
+    // Function to remove the top element from the stack
+    int pop() {
+        if (isEmpty()) {
+            cout << "Underflow: Stack is empty" << endl;
+            return -1;
+        }
+        return arr[top--];
+    }
+
+    // Function to return the top element of the stack
+    int peek() {
+        if (isEmpty()) {
+            cout << "Stack is empty" << endl;
+            return -1;
+        }
+        return arr[top];
+    }
+
+    // Function to check if the stack is empty
+    bool isEmpty() {
+        return top == -1;
+    }
+
+    // Function to check if the stack is full
+    bool isFull() {
+        return top == capacity - 1;
+    }
+
+    // Function to return the size of the stack
+    int size() {
+        return top + 1;
+    }
+};
+
+int main() {
+    Stack stack(5);
+
+    stack.push(1);
+    stack.push(2);
+    stack.push(3);
+
+    cout << "Top element is " << stack.peek() << endl;
+    cout << "Stack size is " << stack.size() << endl;
+
+    stack.pop();
+    stack.pop();
+    stack.pop();
+
+    stack.pop(); // Trying to pop from an empty stack
+
+    return 0;
+}
+```
