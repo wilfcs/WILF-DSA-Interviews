@@ -528,3 +528,101 @@ int main() {
     return 0;
 }
 ```
+
+# Queue impl using array
+## Code ->
+```cpp
+#include <iostream>
+using namespace std;
+
+class Queue {
+private:
+    int* arr;
+    int front;
+    int rear;
+    int capacity;
+    int count;
+
+public:
+    // Constructor to initialize queue
+    Queue(int size) {
+        arr = new int[size];
+        capacity = size;
+        front = 0;
+        rear = -1;
+        count = 0;
+    }
+
+    // Destructor to free memory allocated for the queue
+    ~Queue() {
+        delete[] arr;
+    }
+
+    // Function to add an element to the queue
+    void enqueue(int x) {
+        if (isFull()) {
+            cout << "Overflow: Queue is full" << endl;
+            return;
+        }
+        rear = (rear + 1) % capacity;
+        arr[rear] = x;
+        count++;
+    }
+
+    // Function to remove the front element from the queue
+    int dequeue() {
+        if (isEmpty()) {
+            cout << "Underflow: Queue is empty" << endl;
+            return -1;
+        }
+        int x = arr[front];
+        front = (front + 1) % capacity;
+        count--;
+        return x;
+    }
+
+    // Function to return the front element of the queue
+    int peek() {
+        if (isEmpty()) {
+            cout << "Queue is empty" << endl;
+            return -1;
+        }
+        return arr[front];
+    }
+
+    // Function to check if the queue is empty
+    bool isEmpty() {
+        return (count == 0);
+    }
+
+    // Function to check if the queue is full
+    bool isFull() {
+        return (count == capacity);
+    }
+
+    // Function to return the size of the queue
+    int size() {
+        return count;
+    }
+};
+
+int main() {
+    Queue q(5);
+
+    q.enqueue(1);
+    q.enqueue(2);
+    q.enqueue(3);
+
+    cout << "Front element is " << q.peek() << endl;
+    cout << "Queue size is " << q.size() << endl;
+
+    q.dequeue();
+    q.dequeue();
+    q.dequeue();
+
+    q.dequeue(); // Trying to dequeue from an empty queue
+
+    return 0;
+}
+
+```
