@@ -626,3 +626,129 @@ int main() {
 }
 
 ```
+
+# Binary tree impl
+## Code ->
+
+```cpp
+#include <iostream>
+using namespace std;
+
+// Node class to represent each node in the binary tree
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+
+    // Constructor to initialize node with specific value
+    Node(int data) {
+        this->data = data;
+        left = right = nullptr;
+    }
+};
+
+// BinaryTree class to manage binary tree operations
+class BinaryTree {
+private:
+    Node* root;
+
+    // Helper function for inorder traversal
+    void inorderTraversal(Node* node) {
+        if (node == nullptr) return;
+        inorderTraversal(node->left);
+        cout << node->data << " ";
+        inorderTraversal(node->right);
+    }
+
+    // Helper function for preorder traversal
+    void preorderTraversal(Node* node) {
+        if (node == nullptr) return;
+        cout << node->data << " ";
+        preorderTraversal(node->left);
+        preorderTraversal(node->right);
+    }
+
+    // Helper function for postorder traversal
+    void postorderTraversal(Node* node) {
+        if (node == nullptr) return;
+        postorderTraversal(node->left);
+        postorderTraversal(node->right);
+        cout << node->data << " ";
+    }
+
+public:
+    // Constructor to initialize binary tree with null root
+    BinaryTree() {
+        root = nullptr;
+    }
+
+    // Function to insert a new node in the binary tree
+    void insert(int data) {
+        Node* newNode = new Node(data);
+        if (root == nullptr) {
+            root = newNode;
+            return;
+        }
+
+        Node* current = root;
+        Node* parent = nullptr;
+
+        while (current != nullptr) {
+            parent = current;
+            if (data < current->data) {
+                current = current->left;
+            } else {
+                current = current->right;
+            }
+        }
+
+        if (data < parent->data) {
+            parent->left = newNode;
+        } else {
+            parent->right = newNode;
+        }
+    }
+
+    // Function for inorder traversal
+    void inorder() {
+        inorderTraversal(root);
+        cout << endl;
+    }
+
+    // Function for preorder traversal
+    void preorder() {
+        preorderTraversal(root);
+        cout << endl;
+    }
+
+    // Function for postorder traversal
+    void postorder() {
+        postorderTraversal(root);
+        cout << endl;
+    }
+};
+
+int main() {
+    BinaryTree bt;
+
+    bt.insert(10);
+    bt.insert(6);
+    bt.insert(15);
+    bt.insert(3);
+    bt.insert(8);
+    bt.insert(12);
+    bt.insert(17);
+
+    cout << "Inorder traversal: ";
+    bt.inorder();
+
+    cout << "Preorder traversal: ";
+    bt.preorder();
+
+    cout << "Postorder traversal: ";
+    bt.postorder();
+
+    return 0;
+}
+```
