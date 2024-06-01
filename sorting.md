@@ -29,12 +29,14 @@ for (int i = 0; i < n - 1; i++) {
     swap(arr[i], arr[mini]);
 }
 ```
+Worst, Avg and Best TC -> O(n^2)
 
 # Bubble Sort:
 ## Approach->
 In Bubble Sort algorithm, 
-traverse from left and compare adjacent elements and the higher one is placed at right side. 
-In this way, the largest element is moved to the rightmost end at first. 
+traverse from left and compare adjacent elements, if they are not in the sorted order then swap them and continute doing that for one complete iteration and at the end the greatest element will automatically be placed at the end or placed at right side.
+In the next iteration perform the same thing but till the second last index, that way we will get our second last greatest element at second last position. 
+In this way, the largest element is moved to the rightmost end every time. 
 This process is then continued to find the second largest and place it and so on until the data is sorted.
 
 ## Code->
@@ -58,16 +60,19 @@ void bubbleSort(int arr[], int n)
     }
 }
 ```
+Worst and Avg TC -> O(n^2)
+Best TC -> O(n)
+
 # Insertion sort
 ## Approach ->
-The idea is to insert the selected element at its right position. 
+The idea is to insert the selected element at its correct position. 
 - Select an element in each iteration from the unsorted array(using a loop).
 - Place it in its corresponding position in the sorted part and shift the remaining elements accordingly (using an inner loop and swapping).
 - The “inner while loop” basically shifts the elements using swapping.
 
 ## Code->
 ```cpp
-for (int i = 0; i <= n - 1; i++) {
+for (int i = 0; i < n; i++) {
     int j = i;
     while (j > 0 && arr[j - 1] > arr[j]) {
         swap(arr[j-1], arr[j]);
@@ -75,6 +80,7 @@ for (int i = 0; i <= n - 1; i++) {
     }
 }
 ```
+TC-> O(n^2)
 
 # Merge Sort
 
