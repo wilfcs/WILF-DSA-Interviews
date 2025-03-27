@@ -345,7 +345,7 @@ public:
 
 # [204. Count Primes](https://leetcode.com/problems/count-primes/)
 ## Approach -> 
-Seive of Eratosthenes-> The idea is to assume that every number in the range 0 to n is a prime number. so mark them as true. Then traverse every number and traverse their table and keep marking the elements in their table as false. When you keep doing that till sq. root of n then we will acquire all the prime numbers and composite numbers in our hashtable. The solution given below is beautifully optimized too..
+Seive of Eratosthenes-> The idea is to assume that every number in the range 0 to n is a prime number. so mark them as true. Then traverse every number and traverse their table and keep marking the elements in their table as false. When you keep doing that till sq. root of n then we will acquire all the prime numbers and composite numbers in our hashtable. The solution given below is beautifully optimized too.. Try coding the approach and searching about the intution because coding it is kind of tough given if you make any little changes the test cases won't pass.
 ## Code->
 ```cpp
 class Solution {
