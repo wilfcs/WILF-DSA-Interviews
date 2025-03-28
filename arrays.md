@@ -419,7 +419,15 @@ public:
 ## Approaches ->
 1. Sort the array
 2. Count sort -> Count the no. of 0s 1s and 2s and print or return them in order.
-3. DNF Algorithm -> Create low, mid and high. All of the elements to the left of low should be 0, right of high should be 2 and 1 should be in the middle of high and low. Let low and mid point to the first element and high point to last. When we encounter ->
+3. DNF Algorithm -> Create low, mid and high. The intution is as follows -> After the DNF algo is applied - All of the elements to the left of low should be 0, all of the elements from low to mid-1 will be 1, all the elements between high and the extreme right should be 2. Let low and mid point to the first element and high point to last. The mid does all the traversing part.
+
+So basically:
+0 will be present from index 0 - low-1
+1 will be present from index low - mid-1
+2 will be present from index mid - n-1
+
+
+Algo: Using mid when we encounter ->
 ```
 0    ->    swap(arr[low], arr[mid];
            low++; mid++;
@@ -428,6 +436,11 @@ public:
 
 2    ->    swap(arr[high], arr[mid]);
            high--;
+
+
+
+
+
 ```
 		repeat this process till mid crosses high.
 
